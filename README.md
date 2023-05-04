@@ -1,4 +1,5 @@
 # Template.Backend
+This is a solution template for creating an ASP.NET API with best practices
 
 ## Description
 This is a .NET project template that targets the .NET Framework 4.5.2. It provides an advanced structure for building .NET applications that can be used for your own projects.
@@ -56,7 +57,7 @@ You can also document commands to lint the code or run tests. These steps help t
 Show your appreciation to those who have contributed to the project.
 
 ## License
-For open source projects, say how it is licensed.
+This project is licensed with the [MIT license](LICENSE).
 
 ## Project status
 If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
