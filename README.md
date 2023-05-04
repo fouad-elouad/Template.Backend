@@ -5,14 +5,27 @@ This is a .NET project template that targets the .NET Framework 4.5.2. It provid
 
 ## Features
 - [x] Target .NET Framework 4.5.2
-- [x] EntityFramework
-- [x] Audit Logs for EntityFramework's operations
+- [x] Audit Operations Support
 - [x] Multi Layered Architecture
-- [x] Repository pattern
+- [x] Test Projects
+- [x] Logging Support
+
+<details>
+  <summary>Click to See More!</summary>
+
+- [x] Uses Entity Framework as DB Abstraction
 - [x] Cors Support
 - [x] Integration Tests
 - [x] Unit Tests
-- [x] Logging Support
+- [x] Repository Pattern
+- [x] Nlog Integration
+- [x] Automapper
+- [x] API Versioning
+- [x] Audit Logging
+- [x] Server Validation
+- [x] Database Factory Pattern 
+- [x] & Much More
+</details>
 
 ## Badges
 On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
