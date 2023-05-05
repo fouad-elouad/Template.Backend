@@ -260,8 +260,8 @@ namespace Template.Backend.Api.Controllers
             HttpResponseMessage response = Request.CreateResponse(httpStatusCode);
             string content = ApiHelper.SerializeObjectDepth(obj, depth);
             response.Content = new StringContent(content, Encoding.UTF8, _mediaType);
-            response.Headers.Add("X-Total-Count-Found", totalCountFound.ToString());
-            response.Headers.Add("X-Total-Count-Returned", objCount.ToString());
+            response.Headers.Add(Constants.CustomHeader_Total_Count_Found, totalCountFound.ToString());
+            response.Headers.Add(Constants.CustomHeader_Total_Count_Returned, objCount.ToString());
             return response;
         }
 
@@ -282,8 +282,8 @@ namespace Template.Backend.Api.Controllers
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
             string content = ApiHelper.SerializeObjectDepth(obj, depth);
             response.Content = new StringContent(content, Encoding.UTF8, _mediaType);
-            response.Headers.Add("X-Total-Count-Found", totalCountFound.ToString());
-            response.Headers.Add("X-Total-Count-Returned", objCount.ToString());
+            response.Headers.Add(Constants.CustomHeader_Total_Count_Found, totalCountFound.ToString());
+            response.Headers.Add(Constants.CustomHeader_Total_Count_Returned, objCount.ToString());
             return response;
         }
 
