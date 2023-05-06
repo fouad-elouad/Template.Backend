@@ -225,6 +225,20 @@ public const string FooPrefix = "api/v{version:apiVersion}/Foos";
   
 14- Update the client code: If the new model is used by client applications, you will need to update the client code to support the new model. This might involve updating the data access code, the user interface, or other parts of the client application.
 
+```csharp
+  public class FooClient : Client<Foo, FooAudit>, IFooClient
+    {
+        public FooClient()
+        {
+        }
+
+        public IEnumerable<Foo> GetAll(AuthenticationHeaderValue authHeaderValue = null)
+        {
+            return GetObjects(ApiConfiguration.FooApiRoute, authHeaderValue);
+        }
+    }
+  ```
+
 ## Support
 If you are having problems, please let us know by [raising a new issue](https://github.com/fouadapps/Template.Backend/issues/new/choose).
 
