@@ -9,6 +9,7 @@ using Unity.Lifetime;
 using Unity.RegistrationByConvention;
 using Template.Backend.Api.Exceptions;
 using System.Web.Http.ExceptionHandling;
+using Template.Backend.Api.Areas.HelpPage;
 
 namespace Template.Backend.Api
 {
@@ -16,6 +17,10 @@ namespace Template.Backend.Api
     {
         public static void Register(HttpConfiguration config)
         {
+
+            config.Formatters.Remove(config.Formatters.XmlFormatter);
+            config.Formatters.Remove(config.Formatters.FormUrlEncodedFormatter);
+            HelpPageAreaRegistration.RegisterAllAreas();
 
             config.Filters.Add(new GlobalExceptionFilterAttribute());
             config.Services.Replace(typeof(IExceptionHandler), new GlobalExceptionHandler());

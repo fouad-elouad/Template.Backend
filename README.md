@@ -10,6 +10,8 @@ This is a .NET project template that targets the .NET Framework 4.5.2. It provid
 - [x] Multi Layered Architecture
 - [x] Test Projects
 - [x] Logging Support
+- [x] API endpoints documentation
+- [x] .NET Client library
 
 <details>
   <summary>Click to See More!</summary>
@@ -50,6 +52,12 @@ The project includes logging using Nlog, which allows developers to log messages
 
 ### Error handling
 The project includes some basic error handling, with exceptions being caught and returned as appropriate HTTP error responses.
+
+### API endpoints documentation 
+The project includes basic API endpoints documentation using Microsoft.AspNet.WebApi.HelpPage so that users can easily understand how to interact with APIs.
+
+### .NET Client library
+The project includes a C# Client that wrap HTTP requests, handle authentication, and parse responses into model objects, using a client library can save development time and effort.
 
 ## Usage
 

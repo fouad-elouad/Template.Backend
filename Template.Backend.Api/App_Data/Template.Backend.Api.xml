@@ -1,0 +1,1331 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Template.Backend.Api</name>
+    </assembly>
+    <members>
+        <member name="T:Template.Backend.Api.AutoMapperConfig">
+            <summary>
+            AutoMapper Configuration
+            </summary>
+        </member>
+        <member name="P:Template.Backend.Api.AutoMapperConfig.IsInitialized">
+            <summary>
+            Gets a value indicating whether AutoMapper is initialized.
+            </summary>
+            <value>
+              <c>true</c> if AutoMapper is initialized; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="M:Template.Backend.Api.AutoMapperConfig.Configure">
+            <summary>
+            Configures AutoMapper.
+            </summary>
+        </member>
+        <member name="T:Template.Backend.Api.UnityResolver">
+            <summary>
+            Represents a dependency injection Unity container.
+            </summary>
+            <seealso cref="T:System.Web.Http.Dependencies.IDependencyResolver" />
+        </member>
+        <member name="F:Template.Backend.Api.UnityResolver.container">
+            <summary>
+            The Unity container
+            </summary>
+        </member>
+        <member name="M:Template.Backend.Api.UnityResolver.#ctor(Unity.IUnityContainer)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Template.Backend.Api.UnityResolver"/> class.
+            </summary>
+            <param name="container">The container.</param>
+            <exception cref="T:System.ArgumentNullException">container</exception>
+        </member>
+        <member name="M:Template.Backend.Api.UnityResolver.GetService(System.Type)">
+            <summary>
+            Retrieves a service from the scope.
+            </summary>
+            <param name="serviceType">The service to be retrieved.</param>
+            <returns>
+            The retrieved service.
+            </returns>
+        </member>
+        <member name="M:Template.Backend.Api.UnityResolver.GetServices(System.Type)">
+            <summary>
+            Retrieves a collection of services from the scope.
+            </summary>
+            <param name="serviceType">The collection of services to be retrieved.</param>
+            <returns>
+            The retrieved collection of services.
+            </returns>
+        </member>
+        <member name="M:Template.Backend.Api.UnityResolver.BeginScope">
+            <summary>
+            Starts a resolution scope.
+            </summary>
+            <returns>
+            The dependency scope.
+            </returns>
+        </member>
+        <member name="M:Template.Backend.Api.UnityResolver.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="M:Template.Backend.Api.UnityResolver.Dispose(System.Boolean)">
+            <summary>
+            Releases unmanaged and - optionally - managed resources.
+            </summary>
+            <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.ApiDescriptionExtensions.GetFriendlyId(System.Web.Http.Description.ApiDescription)">
+            <summary>
+            Generates an URI-friendly ID for the <see cref="T:System.Web.Http.Description.ApiDescription"/>. E.g. "Get-Values-id_name" instead of "GetValues/{id}?name={name}"
+            </summary>
+            <param name="description">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <returns>The ID as a string.</returns>
+        </member>
+        <member name="T:Template.Backend.Api.Areas.HelpPage.HelpPageConfig">
+            <summary>
+            Use this class to customize the Help Page.
+            For example you can set a custom <see cref="T:System.Web.Http.Description.IDocumentationProvider"/> to supply the documentation
+            or you can provide the samples for the requests/responses.
+            </summary>
+        </member>
+        <member name="T:Template.Backend.Api.Areas.HelpPage.Controllers.HelpController">
+            <summary>
+            The controller that will handle requests for the help page.
+            </summary>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.Helpers.Helper.SerializeDocumentationObjectDepth(System.Object,System.Int32)">
+            <summary>
+            Serializes an object with maximum depth.
+            its ignore looping by default
+            maxDepth = -1 ignore depth and preserve looping with Object reference
+            </summary>
+            <param name="obj">The object to Serialize.</param>
+            <param name="maxDepth">The maximum level to achieve for navigation properties serialization.</param>
+            <returns>Json representation of serialized object</returns>
+        </member>
+        <member name="F:Template.Backend.Api.Areas.HelpPage.Helpers.HelpPageContractResolver._includeProperty">
+            <summary>
+            boolean expression to determine included properties
+            </summary>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.Helpers.HelpPageContractResolver.#ctor(System.Func{System.Boolean})">
+            <summary>
+            Initializes a new instance of the HelpPageContractResolver class.
+            </summary>
+            <param name="includeProperty">boolean expression to determine included properties</param>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.Helpers.HelpPageContractResolver.CreateProperty(System.Reflection.MemberInfo,Newtonsoft.Json.MemberSerialization)">
+            <summary>
+            Creates a Newtonsoft.Json.Serialization.JsonProperty for the given System.Reflection.MemberInfo.
+            </summary>
+            <param name="member">The member to create a Newtonsoft.Json.Serialization.JsonProperty for.</param>
+            <param name="memberSerialization">The member's parent Newtonsoft.Json.MemberSerialization.</param>
+            <returns>A created Newtonsoft.Json.Serialization.JsonProperty for the given System.Reflection.MemberInfo.</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.Helpers.HelpPageJsonTextWriter.#ctor(System.IO.TextWriter)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Template.Backend.Api.Areas.HelpPage.Helpers.HelpPageJsonTextWriter"/> class.
+            </summary>
+            <param name="textWriter">The <see cref="T:System.IO.TextWriter" /> to write to.</param>
+        </member>
+        <member name="P:Template.Backend.Api.Areas.HelpPage.Helpers.HelpPageJsonTextWriter.CurrentDepth">
+            <summary>
+            Gets the current depth.
+            </summary>
+            <value>
+            The current depth.
+            </value>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.Helpers.HelpPageJsonTextWriter.WriteStartObject">
+            <summary>
+            Writes the beginning of a JSON object.
+            </summary>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.Helpers.HelpPageJsonTextWriter.WriteEndObject">
+            <summary>
+            Writes the end of a JSON object.
+            </summary>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.HelpPageConfigurationExtensions.SetDocumentationProvider(System.Web.Http.HttpConfiguration,System.Web.Http.Description.IDocumentationProvider)">
+            <summary>
+            Sets the documentation provider for help page.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="documentationProvider">The documentation provider.</param>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleObjects(System.Web.Http.HttpConfiguration,System.Collections.Generic.IDictionary{System.Type,System.Object})">
+            <summary>
+            Sets the objects that will be used by the formatters to produce sample requests/responses.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sampleObjects">The sample objects.</param>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleRequest(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue,System.String,System.String)">
+            <summary>
+            Sets the sample request directly for the specified media type and action.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample request.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleRequest(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue,System.String,System.String,System.String[])">
+            <summary>
+            Sets the sample request directly for the specified media type and action with parameters.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample request.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleResponse(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue,System.String,System.String)">
+            <summary>
+            Sets the sample request directly for the specified media type of the action.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample response.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleResponse(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue,System.String,System.String,System.String[])">
+            <summary>
+            Sets the sample response directly for the specified media type of the action with specific parameters.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample response.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleForMediaType(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue)">
+            <summary>
+            Sets the sample directly for all actions with the specified media type.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample.</param>
+            <param name="mediaType">The media type.</param>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleForType(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue,System.Type)">
+            <summary>
+            Sets the sample directly for all actions with the specified type and media type.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="type">The parameter type or return type of an action.</param>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.HelpPageConfigurationExtensions.SetActualRequestType(System.Web.Http.HttpConfiguration,System.Type,System.String,System.String)">
+            <summary>
+            Specifies the actual type of <see cref="T:System.Net.Http.ObjectContent`1"/> passed to the <see cref="T:System.Net.Http.HttpRequestMessage"/> in an action.
+            The help page will use this information to produce more accurate request samples.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="type">The type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.HelpPageConfigurationExtensions.SetActualRequestType(System.Web.Http.HttpConfiguration,System.Type,System.String,System.String,System.String[])">
+            <summary>
+            Specifies the actual type of <see cref="T:System.Net.Http.ObjectContent`1"/> passed to the <see cref="T:System.Net.Http.HttpRequestMessage"/> in an action.
+            The help page will use this information to produce more accurate request samples.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="type">The type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.HelpPageConfigurationExtensions.SetActualResponseType(System.Web.Http.HttpConfiguration,System.Type,System.String,System.String)">
+            <summary>
+            Specifies the actual type of <see cref="T:System.Net.Http.ObjectContent`1"/> returned as part of the <see cref="T:System.Net.Http.HttpRequestMessage"/> in an action.
+            The help page will use this information to produce more accurate response samples.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="type">The type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.HelpPageConfigurationExtensions.SetActualResponseType(System.Web.Http.HttpConfiguration,System.Type,System.String,System.String,System.String[])">
+            <summary>
+            Specifies the actual type of <see cref="T:System.Net.Http.ObjectContent`1"/> returned as part of the <see cref="T:System.Net.Http.HttpRequestMessage"/> in an action.
+            The help page will use this information to produce more accurate response samples.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="type">The type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.HelpPageConfigurationExtensions.GetHelpPageSampleGenerator(System.Web.Http.HttpConfiguration)">
+            <summary>
+            Gets the help page sample generator.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <returns>The help page sample generator.</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.HelpPageConfigurationExtensions.SetHelpPageSampleGenerator(System.Web.Http.HttpConfiguration,Template.Backend.Api.Areas.HelpPage.HelpPageSampleGenerator)">
+            <summary>
+            Sets the help page sample generator.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sampleGenerator">The help page sample generator.</param>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.HelpPageConfigurationExtensions.GetModelDescriptionGenerator(System.Web.Http.HttpConfiguration)">
+            <summary>
+            Gets the model description generator.
+            </summary>
+            <param name="config">The configuration.</param>
+            <returns>The <see cref="T:Template.Backend.Api.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator"/></returns>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.HelpPageConfigurationExtensions.GetHelpPageApiModel(System.Web.Http.HttpConfiguration,System.String)">
+            <summary>
+            Gets the model that represents an API displayed on the help page. The model is initialized on the first call and cached for subsequent calls.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="apiDescriptionId">The <see cref="T:System.Web.Http.Description.ApiDescription"/> ID.</param>
+            <returns>
+            An <see cref="T:Template.Backend.Api.Areas.HelpPage.Models.HelpPageApiModel"/>
+            </returns>
+        </member>
+        <member name="T:Template.Backend.Api.Areas.HelpPage.ModelDescriptions.ModelDescription">
+            <summary>
+            Describes a type model.
+            </summary>
+        </member>
+        <member name="T:Template.Backend.Api.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator">
+            <summary>
+            Generates model descriptions for given types.
+            </summary>
+        </member>
+        <member name="T:Template.Backend.Api.Areas.HelpPage.ModelDescriptions.ModelNameAttribute">
+            <summary>
+            Use this attribute to change the name of the <see cref="T:Template.Backend.Api.Areas.HelpPage.ModelDescriptions.ModelDescription"/> generated for a type.
+            </summary>
+        </member>
+        <member name="T:Template.Backend.Api.Areas.HelpPage.Models.HelpPageApiModel">
+            <summary>
+            The model that represents an API displayed on the help page.
+            </summary>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.Models.HelpPageApiModel.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Template.Backend.Api.Areas.HelpPage.Models.HelpPageApiModel"/> class.
+            </summary>
+        </member>
+        <member name="P:Template.Backend.Api.Areas.HelpPage.Models.HelpPageApiModel.ApiDescription">
+            <summary>
+            Gets or sets the <see cref="P:Template.Backend.Api.Areas.HelpPage.Models.HelpPageApiModel.ApiDescription"/> that describes the API.
+            </summary>
+        </member>
+        <member name="P:Template.Backend.Api.Areas.HelpPage.Models.HelpPageApiModel.UriParameters">
+            <summary>
+            Gets or sets the <see cref="T:Template.Backend.Api.Areas.HelpPage.ModelDescriptions.ParameterDescription"/> collection that describes the URI parameters for the API.
+            </summary>
+        </member>
+        <member name="P:Template.Backend.Api.Areas.HelpPage.Models.HelpPageApiModel.RequestDocumentation">
+            <summary>
+            Gets or sets the documentation for the request.
+            </summary>
+        </member>
+        <member name="P:Template.Backend.Api.Areas.HelpPage.Models.HelpPageApiModel.RequestModelDescription">
+            <summary>
+            Gets or sets the <see cref="T:Template.Backend.Api.Areas.HelpPage.ModelDescriptions.ModelDescription"/> that describes the request body.
+            </summary>
+        </member>
+        <member name="P:Template.Backend.Api.Areas.HelpPage.Models.HelpPageApiModel.RequestBodyParameters">
+            <summary>
+            Gets the request body parameter descriptions.
+            </summary>
+        </member>
+        <member name="P:Template.Backend.Api.Areas.HelpPage.Models.HelpPageApiModel.ResourceDescription">
+            <summary>
+            Gets or sets the <see cref="T:Template.Backend.Api.Areas.HelpPage.ModelDescriptions.ModelDescription"/> that describes the resource.
+            </summary>
+        </member>
+        <member name="P:Template.Backend.Api.Areas.HelpPage.Models.HelpPageApiModel.ResourceProperties">
+            <summary>
+            Gets the resource property descriptions.
+            </summary>
+        </member>
+        <member name="P:Template.Backend.Api.Areas.HelpPage.Models.HelpPageApiModel.SampleRequests">
+            <summary>
+            Gets the sample requests associated with the API.
+            </summary>
+        </member>
+        <member name="P:Template.Backend.Api.Areas.HelpPage.Models.HelpPageApiModel.SampleResponses">
+            <summary>
+            Gets the sample responses associated with the API.
+            </summary>
+        </member>
+        <member name="P:Template.Backend.Api.Areas.HelpPage.Models.HelpPageApiModel.ErrorMessages">
+            <summary>
+            Gets the error messages associated with this model.
+            </summary>
+        </member>
+        <member name="T:Template.Backend.Api.Areas.HelpPage.HelpPageSampleGenerator">
+            <summary>
+            This class will generate the samples for the help page.
+            </summary>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.HelpPageSampleGenerator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Template.Backend.Api.Areas.HelpPage.HelpPageSampleGenerator"/> class.
+            </summary>
+        </member>
+        <member name="P:Template.Backend.Api.Areas.HelpPage.HelpPageSampleGenerator.ActualHttpMessageTypes">
+            <summary>
+            Gets CLR types that are used as the content of <see cref="T:System.Net.Http.HttpRequestMessage"/> or <see cref="T:System.Net.Http.HttpResponseMessage"/>.
+            </summary>
+        </member>
+        <member name="P:Template.Backend.Api.Areas.HelpPage.HelpPageSampleGenerator.ActionSamples">
+            <summary>
+            Gets the objects that are used directly as samples for certain actions.
+            </summary>
+        </member>
+        <member name="P:Template.Backend.Api.Areas.HelpPage.HelpPageSampleGenerator.SampleObjects">
+            <summary>
+            Gets the objects that are serialized as samples by the supported formatters.
+            </summary>
+        </member>
+        <member name="P:Template.Backend.Api.Areas.HelpPage.HelpPageSampleGenerator.SampleObjectFactories">
+            <summary>
+            Gets factories for the objects that the supported formatters will serialize as samples. Processed in order,
+            stopping when the factory successfully returns a non-<see langref="null"/> object.
+            </summary>
+            <remarks>
+            Collection includes just <see cref="M:Template.Backend.Api.Areas.HelpPage.ObjectGenerator.GenerateObject(System.Type)"/> initially. Use
+            <code>SampleObjectFactories.Insert(0, func)</code> to provide an override and
+            <code>SampleObjectFactories.Add(func)</code> to provide a fallback.</remarks>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.HelpPageSampleGenerator.GetSampleRequests(System.Web.Http.Description.ApiDescription)">
+            <summary>
+            Gets the request body samples for a given <see cref="T:System.Web.Http.Description.ApiDescription"/>.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <returns>The samples keyed by media type.</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.HelpPageSampleGenerator.GetSampleResponses(System.Web.Http.Description.ApiDescription)">
+            <summary>
+            Gets the response body samples for a given <see cref="T:System.Web.Http.Description.ApiDescription"/>.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <returns>The samples keyed by media type.</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.HelpPageSampleGenerator.GetSample(System.Web.Http.Description.ApiDescription,Template.Backend.Api.Areas.HelpPage.SampleDirection)">
+            <summary>
+            Gets the request or response body samples.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <param name="sampleDirection">The value indicating whether the sample is for a request or for a response.</param>
+            <returns>The samples keyed by media type.</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.HelpPageSampleGenerator.GetActionSample(System.String,System.String,System.Collections.Generic.IEnumerable{System.String},System.Type,System.Net.Http.Formatting.MediaTypeFormatter,System.Net.Http.Headers.MediaTypeHeaderValue,Template.Backend.Api.Areas.HelpPage.SampleDirection)">
+            <summary>
+            Search for samples that are provided directly through <see cref="P:Template.Backend.Api.Areas.HelpPage.HelpPageSampleGenerator.ActionSamples"/>.
+            </summary>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+            <param name="type">The CLR type.</param>
+            <param name="formatter">The formatter.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="sampleDirection">The value indicating whether the sample is for a request or for a response.</param>
+            <returns>The sample that matches the parameters.</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.HelpPageSampleGenerator.GetSampleObject(System.Type)">
+            <summary>
+            Gets the sample object that will be serialized by the formatters. 
+            First, it will look at the <see cref="P:Template.Backend.Api.Areas.HelpPage.HelpPageSampleGenerator.SampleObjects"/>. If no sample object is found, it will try to create
+            one using <see cref="M:Template.Backend.Api.Areas.HelpPage.HelpPageSampleGenerator.DefaultSampleObjectFactory(Template.Backend.Api.Areas.HelpPage.HelpPageSampleGenerator,System.Type)"/> (which wraps an <see cref="T:Template.Backend.Api.Areas.HelpPage.ObjectGenerator"/>) and other
+            factories in <see cref="P:Template.Backend.Api.Areas.HelpPage.HelpPageSampleGenerator.SampleObjectFactories"/>.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>The sample object.</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.HelpPageSampleGenerator.ResolveHttpRequestMessageType(System.Web.Http.Description.ApiDescription)">
+            <summary>
+            Resolves the actual type of <see cref="T:System.Net.Http.ObjectContent`1"/> passed to the <see cref="T:System.Net.Http.HttpRequestMessage"/> in an action.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <returns>The type.</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.HelpPageSampleGenerator.ResolveType(System.Web.Http.Description.ApiDescription,System.String,System.String,System.Collections.Generic.IEnumerable{System.String},Template.Backend.Api.Areas.HelpPage.SampleDirection,System.Collections.ObjectModel.Collection{System.Net.Http.Formatting.MediaTypeFormatter}@)">
+            <summary>
+            Resolves the type of the action parameter or return value when <see cref="T:System.Net.Http.HttpRequestMessage"/> or <see cref="T:System.Net.Http.HttpResponseMessage"/> is used.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+            <param name="sampleDirection">The value indicating whether the sample is for a request or a response.</param>
+            <param name="formatters">The formatters.</param>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.HelpPageSampleGenerator.WriteSampleObjectUsingFormatter(System.Net.Http.Formatting.MediaTypeFormatter,System.Object,System.Type,System.Net.Http.Headers.MediaTypeHeaderValue)">
+            <summary>
+            Writes the sample object using formatter.
+            </summary>
+            <param name="formatter">The formatter.</param>
+            <param name="value">The value.</param>
+            <param name="type">The type.</param>
+            <param name="mediaType">Type of the media.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Template.Backend.Api.Areas.HelpPage.HelpPageSampleKey">
+            <summary>
+            This is used to identify the place where the sample should be applied.
+            </summary>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.HelpPageSampleKey.#ctor(System.Net.Http.Headers.MediaTypeHeaderValue)">
+            <summary>
+            Creates a new <see cref="T:Template.Backend.Api.Areas.HelpPage.HelpPageSampleKey"/> based on media type.
+            </summary>
+            <param name="mediaType">The media type.</param>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.HelpPageSampleKey.#ctor(System.Net.Http.Headers.MediaTypeHeaderValue,System.Type)">
+            <summary>
+            Creates a new <see cref="T:Template.Backend.Api.Areas.HelpPage.HelpPageSampleKey"/> based on media type and CLR type.
+            </summary>
+            <param name="mediaType">The media type.</param>
+            <param name="type">The CLR type.</param>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.HelpPageSampleKey.#ctor(Template.Backend.Api.Areas.HelpPage.SampleDirection,System.String,System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Creates a new <see cref="T:Template.Backend.Api.Areas.HelpPage.HelpPageSampleKey"/> based on <see cref="P:Template.Backend.Api.Areas.HelpPage.HelpPageSampleKey.SampleDirection"/>, controller name, action name and parameter names.
+            </summary>
+            <param name="sampleDirection">The <see cref="P:Template.Backend.Api.Areas.HelpPage.HelpPageSampleKey.SampleDirection"/>.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.HelpPageSampleKey.#ctor(System.Net.Http.Headers.MediaTypeHeaderValue,Template.Backend.Api.Areas.HelpPage.SampleDirection,System.String,System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Creates a new <see cref="T:Template.Backend.Api.Areas.HelpPage.HelpPageSampleKey"/> based on media type, <see cref="P:Template.Backend.Api.Areas.HelpPage.HelpPageSampleKey.SampleDirection"/>, controller name, action name and parameter names.
+            </summary>
+            <param name="mediaType">The media type.</param>
+            <param name="sampleDirection">The <see cref="P:Template.Backend.Api.Areas.HelpPage.HelpPageSampleKey.SampleDirection"/>.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="P:Template.Backend.Api.Areas.HelpPage.HelpPageSampleKey.ControllerName">
+            <summary>
+            Gets the name of the controller.
+            </summary>
+            <value>
+            The name of the controller.
+            </value>
+        </member>
+        <member name="P:Template.Backend.Api.Areas.HelpPage.HelpPageSampleKey.ActionName">
+            <summary>
+            Gets the name of the action.
+            </summary>
+            <value>
+            The name of the action.
+            </value>
+        </member>
+        <member name="P:Template.Backend.Api.Areas.HelpPage.HelpPageSampleKey.MediaType">
+            <summary>
+            Gets the media type.
+            </summary>
+            <value>
+            The media type.
+            </value>
+        </member>
+        <member name="P:Template.Backend.Api.Areas.HelpPage.HelpPageSampleKey.ParameterNames">
+            <summary>
+            Gets the parameter names.
+            </summary>
+        </member>
+        <member name="P:Template.Backend.Api.Areas.HelpPage.HelpPageSampleKey.SampleDirection">
+            <summary>
+            Gets the <see cref="P:Template.Backend.Api.Areas.HelpPage.HelpPageSampleKey.SampleDirection"/>.
+            </summary>
+        </member>
+        <member name="T:Template.Backend.Api.Areas.HelpPage.ImageSample">
+            <summary>
+            This represents an image sample on the help page. There's a display template named ImageSample associated with this class.
+            </summary>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.ImageSample.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Template.Backend.Api.Areas.HelpPage.ImageSample"/> class.
+            </summary>
+            <param name="src">The URL of an image.</param>
+        </member>
+        <member name="T:Template.Backend.Api.Areas.HelpPage.InvalidSample">
+            <summary>
+            This represents an invalid sample on the help page. There's a display template named InvalidSample associated with this class.
+            </summary>
+        </member>
+        <member name="T:Template.Backend.Api.Areas.HelpPage.ObjectGenerator">
+            <summary>
+            This class will create an object of a given type and populate it with sample data.
+            </summary>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.ObjectGenerator.GenerateObject(System.Type)">
+            <summary>
+            Generates an object for a given type. The type needs to be public, have a public default constructor and settable public properties/fields. Currently it supports the following types:
+            Simple types: <see cref="T:System.Int32"/>, <see cref="T:System.String"/>, <see cref="T:System.Enum"/>, <see cref="T:System.DateTime"/>, <see cref="T:System.Uri"/>, etc.
+            Complex types: POCO types.
+            Nullables: <see cref="T:System.Nullable`1"/>.
+            Arrays: arrays of simple types or complex types.
+            Key value pairs: <see cref="T:System.Collections.Generic.KeyValuePair`2"/>
+            Tuples: <see cref="T:System.Tuple`1"/>, <see cref="T:System.Tuple`2"/>, etc
+            Dictionaries: <see cref="T:System.Collections.Generic.IDictionary`2"/> or anything deriving from <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+            Collections: <see cref="T:System.Collections.Generic.IList`1"/>, <see cref="T:System.Collections.Generic.IEnumerable`1"/>, <see cref="T:System.Collections.Generic.ICollection`1"/>, <see cref="T:System.Collections.IList"/>, <see cref="T:System.Collections.IEnumerable"/>, <see cref="T:System.Collections.ICollection"/> or anything deriving from <see cref="T:System.Collections.Generic.ICollection`1"/> or <see cref="T:System.Collections.IList"/>.
+            Queryables: <see cref="T:System.Linq.IQueryable"/>, <see cref="T:System.Linq.IQueryable`1"/>.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>An object of the given type.</returns>
+        </member>
+        <member name="T:Template.Backend.Api.Areas.HelpPage.SampleDirection">
+            <summary>
+            Indicates whether the sample is used for request or response
+            </summary>
+        </member>
+        <member name="T:Template.Backend.Api.Areas.HelpPage.TextSample">
+            <summary>
+            This represents a preformatted text sample on the help page. There's a display template named TextSample associated with this class.
+            </summary>
+        </member>
+        <member name="T:Template.Backend.Api.Areas.HelpPage.XmlDocumentationProvider">
+            <summary>
+            A custom <see cref="T:System.Web.Http.Description.IDocumentationProvider"/> that reads the API documentation from an XML documentation file.
+            </summary>
+        </member>
+        <member name="M:Template.Backend.Api.Areas.HelpPage.XmlDocumentationProvider.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Template.Backend.Api.Areas.HelpPage.XmlDocumentationProvider"/> class.
+            </summary>
+            <param name="documentPath">The physical path to XML document.</param>
+        </member>
+        <member name="T:Template.Backend.Api.Configuration.ApiRouteConfiguration">
+            <summary>
+            ApiRouteConfiguration class that define The API routes
+            </summary>
+        </member>
+        <member name="F:Template.Backend.Api.Controllers.BaseApiController`2._dateFormat">
+            <summary>
+            The date format for Snapshot method
+            </summary>
+        </member>
+        <member name="F:Template.Backend.Api.Controllers.BaseApiController`2._mediaType">
+            <summary>
+            The media type
+            </summary>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.BaseApiController`2.#ctor(Template.Backend.Service.IService{`0},Template.Backend.Service.Audit.IServiceAudit{`1})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Template.Backend.Api.Controllers.BaseApiController`2" /> class.
+            </summary>
+            <param name="Service">The service.</param>
+            <param name="AuditService">The audit service.</param>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.BaseApiController`2.Count">
+            <summary>
+            entity Count.
+            </summary>
+            <returns>Entity</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.BaseApiController`2.Get">
+            <summary>
+            Gets All
+            </summary>
+            <returns>List</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.BaseApiController`2.Get(System.Int32)">
+            <summary>
+            Gets Entity by Id.
+            </summary>
+            <param name="id">ID</param>
+            <returns>Entity</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.BaseApiController`2.Get(System.Int32,System.Int32)">
+            <summary>
+            Gets the specified identifier.
+            </summary>
+            <param name="id">Entity ID .</param>
+            <param name="depth">The maximum level to achieve for navigation properties serialization.</param>
+            <returns>Entity</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.BaseApiController`2.GetPagedList(System.Int32,System.Int32)">
+            <summary>
+            Gets the paged list of Entities.
+            </summary>
+            <param name="pageNo">page index.</param>
+            <param name="pageSize">Size of the page.</param>
+            <returns>List of Entities</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.BaseApiController`2.Delete(System.Int32)">
+            <summary>
+            Deletes Entity with the specified Id.
+            </summary>
+            <param name="id">ID to Delete</param>
+            <returns>Http Response with statut code (NoContent (204) if is Deleted otherwise error message)</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.BaseApiController`2.Post(`0)">
+            <summary>
+            Insert the specified Entity.
+            </summary>
+            <param name="entity">The Entity to Insert.</param>
+            <returns>Created ressource with statut code (Created if is Inserted otherwise error message)</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.BaseApiController`2.PostList(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Insert the specified Entity List.
+            </summary>
+            <param name="entityList">The entity list.</param>
+            <returns>
+            Created ressource with statut code (Created if is Inserted otherwise error message)
+            </returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.BaseApiController`2.Put(System.Int32,`0)">
+            <summary>
+            Update the Entity with the specified ID.
+            </summary>
+            <param name="id">the Entity ID to Update.</param>
+            <param name="entity">The entity.</param>
+            <returns>
+            Http Response with statut code (OK if is Updated otherwise error message)
+            </returns>
+            <exception cref="T:Template.Backend.Model.Exceptions.BadRequestException">No values defined in request body</exception>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.BaseApiController`2.AuditId(System.Int32)">
+            <summary>
+            Gets Audit of the specified ID.
+            </summary>
+            <param name="id">The audit Id.</param>
+            <returns>Audit line</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.BaseApiController`2.ToJsonResponse(System.Collections.Generic.IEnumerable{`0},System.Net.HttpStatusCode,System.Int32,System.Int32)">
+            <summary>
+            Return Json response from List of Entity object.
+            </summary>
+            <param name="obj">List of Entities</param>
+            <param name="httpStatusCode">The HTTP status code.</param>
+            <param name="depth">The maximum level to achieve for navigation properties serialization.</param>
+            <param name="totalCountFound">The total count found.</param>
+            <returns>
+            Json response
+            </returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.BaseApiController`2.ToJsonResponse(System.Collections.Generic.IEnumerable{`0},System.Int32,System.Int32)">
+            <summary>
+            Return Json response from List of Entity object.
+            </summary>
+            <param name="obj">List of Entities</param>
+            <param name="depth">The maximum level to achieve for navigation properties serialization.</param>
+            <param name="totalCountFound">The total count found.</param>
+            <returns>
+            Json response
+            </returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.BaseApiController`2.ToJsonResponse(`0,System.Net.HttpStatusCode,System.Int32)">
+            <summary>
+            Return Json response from Entity object.
+            </summary>
+            <param name="obj">The object.</param>
+            <param name="httpStatusCode">The HTTP status code.</param>
+            <param name="depth">The maximum level to achieve for navigation properties serialization.</param>
+            <returns>
+            Json response
+            </returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.BaseApiController`2.AuditToJsonResponse(Template.Backend.Model.Audit.IAuditEntity,System.Int32)">
+            <summary>
+            Return Json response from Audit Entity object.
+            </summary>
+            <param name="obj">The object.</param>
+            <param name="depth">The maximum level to achieve for navigation properties serialization.</param>
+            <returns>Json response</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.BaseApiController`2.AuditToJsonResponse(System.Collections.Generic.IEnumerable{Template.Backend.Model.Audit.IAuditEntity},System.Int32)">
+            <summary>
+            Return Json response from List of Audit Entities object.
+            </summary>
+            <param name="obj">Object to transforme</param>
+            <param name="depth">The maximum level to achieve for navigation properties serialization.</param>
+            <returns>Json response</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.BaseApiController`2.InvalidModelStateToJsonResponse(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.IList{System.String}})">
+            <summary>
+             model state to json response.
+            </summary>
+            <param name="obj">Errors Dictionary</param>
+            <returns>Http Response that contains Errors Dictionary</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.BaseApiController`2.AddServiceErrorsToModelState(Template.Backend.Service.Validation.IValidationDictionary)">
+            <summary>
+            Add service Validation errors to Api controller model state
+            </summary>
+            <param name="validationDictionary">Validation Dictionary class</param>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.BaseApiController`2.GetSnapshot(System.String)">
+            <summary>
+            Gets the snapshot at the specified date time.
+            </summary>
+            <param name="dateTime">The date time.</param>
+            <returns>List of Objects as Json response</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.BaseApiController`2.GetSnapshot(System.String,System.Int32)">
+            <summary>
+            Gets the snapshot.
+            </summary>
+            <param name="dateTime">The date time.</param>
+            <param name="id">The identifier.</param>
+            <returns>
+            Object as Json response
+            </returns>
+        </member>
+        <member name="T:Template.Backend.Api.Controllers.CompanyApiController">
+            <summary>
+            Route="api/v1/Companies"
+            </summary>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.CompanyApiController.#ctor(Template.Backend.Service.Services.ICompanyService,Template.Backend.Service.Audit.ICompanyAuditService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Template.Backend.Api.Controllers.CompanyApiController"/> class.
+            </summary>
+            <param name="companyService">The company service.</param>
+            <param name="companyAuditService">The company audit service.</param>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.CompanyApiController.Count">
+            <summary>
+            Count
+            </summary>
+            <returns>Count</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.CompanyApiController.Get">
+            <summary>
+            Gets All companies
+            </summary>
+            <returns>List of companies</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.CompanyApiController.Get(System.Int32)">
+            <summary>
+            Gets Company by Id.
+            </summary>
+            <param name="id">ID</param>
+            <returns>company</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.CompanyApiController.Get(System.Int32,System.Int32)">
+            <summary>
+            Gets the specified identifier.
+            </summary>
+            <param name="id">Company ID .</param>
+            <param name="depth">The maximum level to achieve for navigation properties serialization.</param>
+            <returns>company</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.CompanyApiController.GetPagedList(System.Int32,System.Int32)">
+            <summary>
+            Gets the paged list of Companyes.
+            </summary>
+            <param name="pageNo">page index.</param>
+            <param name="pageSize">Size of the page.</param>
+            <returns>List of Companies</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.CompanyApiController.Delete(System.Int32)">
+            <summary>
+            Deletes company with the specified Id.
+            </summary>
+            <param name="id">ID to Delete</param>
+            <returns>Http Response with statut code (NoContent (204) if is Deleted otherwise error message)</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.CompanyApiController.Post(Template.Backend.Api.Models.CompanyDto)">
+            <summary>
+            Insert the specified company.
+            </summary>
+            <param name="companyDto">The company dto.</param>
+            <returns>
+            Http Response with statut code (OK if is Inserted otherwise error message)
+            </returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.CompanyApiController.Put(System.Int32,Template.Backend.Api.Models.CompanyDto)">
+            <summary>
+            Update the company with the specified ID.
+            </summary>
+            <param name="id">the company ID to Update.</param>
+            <param name="companyDto">The company dto.</param>
+            <returns>
+            Http Response with statut code (OK if is Updated otherwise error message)
+            </returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.CompanyApiController.Audit(System.Int32)">
+            <summary>
+            Gets Audit List of company with the specified Id.
+            its provide All operations performed on this company
+            </summary>
+            <param name="id">The Company ID.</param>
+            <returns>List of company Audits</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.CompanyApiController.AuditId(System.Int32)">
+            <summary>
+            Gets Audit of the specified ID.
+            </summary>
+            <param name="id">The audit Id.</param>
+            <returns>Audit line of Company</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.CompanyApiController.PutRestoreAudit(System.Int32,System.Int32,System.String)">
+            <summary>
+            Restore audit Values to current Company.
+            </summary>
+            <param name="id">Company Id.</param>
+            <param name="auditId">Company audit ID.</param>
+            <param name="content">Empty http content.</param>
+            <returns>Http Response with statut code (OK if is Restored otherwise error message) </returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.CompanyApiController.GetSnapshot(System.String)">
+            <summary>
+            Gets the snapshot of all entities at the specified date time.
+            </summary>
+            <param name="dateTime">The date time in the yyyyMMddTHHmmss format.</param>
+            <returns>
+            List of Company as Json response
+            </returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.CompanyApiController.GetSnapshot(System.String,System.Int32)">
+            <summary>
+            Gets the snapshot at the specified date time.
+            </summary>
+            <param name="dateTime">The date time in the yyyyMMddTHHmmss format.</param>
+            <param name="id">The ID.</param>
+            <returns>
+            Company as Json response
+            </returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.CompanyApiController.PostList(System.Collections.Generic.IEnumerable{Template.Backend.Api.Models.CompanyDto})">
+            <summary>
+            Insert the specified company List.
+            </summary>
+            <param name="companyDtoList">The company dto list.</param>
+            <returns>
+            Http Response with statut code (OK if is Inserted otherwise error message)
+            </returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.CompanyApiController.GetByName(System.String)">
+            <summary>
+            Gets Company by Name.
+            </summary>
+            <param name="name">The name.</param>
+            <returns>
+            Company
+            </returns>
+        </member>
+        <member name="T:Template.Backend.Api.Controllers.DepartmentApiController">
+            <summary>
+            Route="api/v1/Departments"
+            </summary>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.DepartmentApiController.#ctor(Template.Backend.Service.Services.IDepartmentService,Template.Backend.Service.Audit.IDepartmentAuditService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Template.Backend.Api.Controllers.DepartmentApiController"/> class.
+            </summary>
+            <param name="departmentService">The department service.</param>
+            <param name="departmentAuditService">The department audit service.</param>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.DepartmentApiController.Count">
+            <summary>
+            Count
+            </summary>
+            <returns>Count</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.DepartmentApiController.Get">
+            <summary>
+            Gets All departments
+            </summary>
+            <returns>List of departments</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.DepartmentApiController.Get(System.Int32)">
+            <summary>
+            Gets Department by Id.
+            </summary>
+            <param name="id">ID</param>
+            <returns>department</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.DepartmentApiController.Get(System.Int32,System.Int32)">
+            <summary>
+            Gets the specified identifier.
+            </summary>
+            <param name="id">Department ID .</param>
+            <param name="depth">The maximum level to achieve for navigation properties serialization.</param>
+            <returns>department</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.DepartmentApiController.GetPagedList(System.Int32,System.Int32)">
+            <summary>
+            Gets the paged list of Departmentes.
+            </summary>
+            <param name="pageNo">page index.</param>
+            <param name="pageSize">Size of the page.</param>
+            <returns>List of Departments</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.DepartmentApiController.Delete(System.Int32)">
+            <summary>
+            Deletes department with the specified Id.
+            </summary>
+            <param name="id">ID to Delete</param>
+            <returns>Http Response with statut code (NoContent (204) if is Deleted otherwise error message)</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.DepartmentApiController.Post(Template.Backend.Api.Models.DepartmentDto)">
+            <summary>
+            Insert the specified department.
+            </summary>
+            <param name="departmentDto">The department dto.</param>
+            <returns>
+            Http Response with statut code (OK if is Inserted otherwise error message)
+            </returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.DepartmentApiController.Put(System.Int32,Template.Backend.Api.Models.DepartmentDto)">
+            <summary>
+            Update the department with the specified ID.
+            </summary>
+            <param name="id">the department ID to Update.</param>
+            <param name="departmentDto">The department dto.</param>
+            <returns>
+            Http Response with statut code (OK if is Updated otherwise error message)
+            </returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.DepartmentApiController.Audit(System.Int32)">
+            <summary>
+            Gets Audit List of department with the specified Id.
+            its provide All operations performed on this department
+            </summary>
+            <param name="id">The Department ID.</param>
+            <returns>List of department Audits</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.DepartmentApiController.AuditId(System.Int32)">
+            <summary>
+            Gets Audit of the specified ID.
+            </summary>
+            <param name="id">The audit Id.</param>
+            <returns>Audit line of Department</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.DepartmentApiController.PutRestoreAudit(System.Int32,System.Int32,System.String)">
+            <summary>
+            Restore audit Values to current Department.
+            </summary>
+            <param name="id">Department Id.</param>
+            <param name="auditId">Department audit ID.</param>
+            <param name="content">Empty http content.</param>
+            <returns>Http Response with statut code (OK if is Restored otherwise error message) </returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.DepartmentApiController.GetSnapshot(System.String)">
+            <summary>
+            Gets the snapshot of all entities at the specified date time.
+            </summary>
+            <param name="dateTime">The date time in the yyyyMMddTHHmmss format.</param>
+            <returns>
+            List of Department as Json response
+            </returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.DepartmentApiController.GetSnapshot(System.String,System.Int32)">
+            <summary>
+            Gets the snapshot at the specified date time.
+            </summary>
+            <param name="dateTime">The date time in the yyyyMMddTHHmmss format.</param>
+            <param name="id">The ID.</param>
+            <returns>
+            Department as Json response
+            </returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.DepartmentApiController.PostList(System.Collections.Generic.IEnumerable{Template.Backend.Api.Models.DepartmentDto})">
+            <summary>
+            Insert the specified department List.
+            </summary>
+            <param name="departmentDtoList">The department dto list.</param>
+            <returns>
+            Http Response with statut code (OK if is Inserted otherwise error message)
+            </returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.DepartmentApiController.GetByName(System.String)">
+            <summary>
+            Gets Department by Name.
+            </summary>
+            <param name="name">The name.</param>
+            <returns>
+            Department
+            </returns>
+        </member>
+        <member name="T:Template.Backend.Api.Controllers.EmployeeApiController">
+            <summary>
+            Route="api/v1/Employees"
+            </summary>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.EmployeeApiController.#ctor(Template.Backend.Service.Services.IEmployeeService,Template.Backend.Service.Audit.IEmployeeAuditService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Template.Backend.Api.Controllers.EmployeeApiController"/> class.
+            </summary>
+            <param name="employeeService">The employee service.</param>
+            <param name="employeeAuditService">The employee audit service.</param>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.EmployeeApiController.Count">
+            <summary>
+            Count
+            </summary>
+            <returns>Count</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.EmployeeApiController.Get">
+            <summary>
+            Gets All employees
+            </summary>
+            <returns>List of employees</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.EmployeeApiController.Get(System.Int32)">
+            <summary>
+            Gets Employee by Id.
+            </summary>
+            <param name="id">ID</param>
+            <returns>employee</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.EmployeeApiController.Get(System.Int32,System.Int32)">
+            <summary>
+            Gets the specified identifier.
+            </summary>
+            <param name="id">Employee ID .</param>
+            <param name="depth">The maximum level to achieve for navigation properties serialization.</param>
+            <returns>employee</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.EmployeeApiController.GetPagedList(System.Int32,System.Int32)">
+            <summary>
+            Gets the paged list of Employeees.
+            </summary>
+            <param name="pageNo">page index.</param>
+            <param name="pageSize">Size of the page.</param>
+            <returns>List of Employees</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.EmployeeApiController.Delete(System.Int32)">
+            <summary>
+            Deletes employee with the specified Id.
+            </summary>
+            <param name="id">ID to Delete</param>
+            <returns>Http Response with statut code (NoContent (204) if is Deleted otherwise error message)</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.EmployeeApiController.Post(Template.Backend.Api.Models.EmployeeDto)">
+            <summary>
+            Insert the specified employee.
+            </summary>
+            <param name="employeeDto">The employee dto.</param>
+            <returns>
+            Http Response with statut code (OK if is Inserted otherwise error message)
+            </returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.EmployeeApiController.Put(System.Int32,Template.Backend.Api.Models.EmployeeDto)">
+            <summary>
+            Update the employee with the specified ID.
+            </summary>
+            <param name="id">the employee ID to Update.</param>
+            <param name="employeeDto">The employee dto.</param>
+            <returns>
+            Http Response with statut code (OK if is Updated otherwise error message)
+            </returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.EmployeeApiController.Audit(System.Int32)">
+            <summary>
+            Gets Audit List of employee with the specified Id.
+            its provide All operations performed on this employee
+            </summary>
+            <param name="id">The Employee ID.</param>
+            <returns>List of employee Audits</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.EmployeeApiController.AuditId(System.Int32)">
+            <summary>
+            Gets Audit of the specified ID.
+            </summary>
+            <param name="id">The audit Id.</param>
+            <returns>Audit line of Employee</returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.EmployeeApiController.PutRestoreAudit(System.Int32,System.Int32,System.String)">
+            <summary>
+            Restore audit Values to current Employee.
+            </summary>
+            <param name="id">Employee Id.</param>
+            <param name="auditId">Employee audit ID.</param>
+            <param name="content">Empty http content.</param>
+            <returns>Http Response with statut code (OK if is Restored otherwise error message) </returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.EmployeeApiController.GetSnapshot(System.String)">
+            <summary>
+            Gets the snapshot of all entities at the specified date time.
+            </summary>
+            <param name="dateTime">The date time in the yyyyMMddTHHmmss format.</param>
+            <returns>
+            List of Employee as Json response
+            </returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.EmployeeApiController.GetSnapshot(System.String,System.Int32)">
+            <summary>
+            Gets the snapshot at the specified date time.
+            </summary>
+            <param name="dateTime">The date time in the yyyyMMddTHHmmss format.</param>
+            <param name="id">The ID.</param>
+            <returns>
+            Employee as Json response
+            </returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.EmployeeApiController.PostList(System.Collections.Generic.IEnumerable{Template.Backend.Api.Models.EmployeeDto})">
+            <summary>
+            Insert the specified employee List.
+            </summary>
+            <param name="employeeDtoList">The employee dto list.</param>
+            <returns>
+            Http Response with statut code (OK if is Inserted otherwise error message)
+            </returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.EmployeeApiController.GetByName(System.String)">
+            <summary>
+            Gets Employee by Name.
+            </summary>
+            <param name="name">The name.</param>
+            <returns>
+            Employee
+            </returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.EmployeeApiController.GetByCompany(System.Int32)">
+            <summary>
+            Gets Employee list by companyID.
+            </summary>
+            <param name="companyID">The companyID.</param>
+            <returns>
+            Employee list
+            </returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.EmployeeApiController.GetByDepartment(System.Int32)">
+            <summary>
+            Gets Employee list by departmentID.
+            </summary>
+            <param name="departmentID">The departmentID.</param>
+            <returns>
+            Employee list
+            </returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.EmployeeApiController.Search(Template.Backend.Api.Models.SearchEmployeeDto)">
+            <summary>
+            Gets List of Employee with specified Search criteria.
+            </summary>
+            <param name="searchEmployeeDto">The search employee dto.</param>
+            <returns>
+            Employee list
+            </returns>
+        </member>
+        <member name="M:Template.Backend.Api.Controllers.EmployeeApiController.Search(System.Int32,System.Int32,Template.Backend.Api.Models.SearchEmployeeDto)">
+            <summary>
+            Gets PagedList of Employee with specified Search criteria.
+            </summary>
+            <param name="pageNo">The page no.</param>
+            <param name="pageSize">Size of the page.</param>
+            <param name="searchEmployeeDto">The search employee dto.</param>
+            <returns>
+            Employee list
+            </returns>
+        </member>
+        <member name="M:Template.Backend.Api.Exceptions.ApiExceptionResponse.Throw(System.Exception,System.Net.Http.HttpRequestMessage)">
+            <summary>
+            build an Http response exception from system Exception
+            with appropriate reason Phrase
+            </summary>
+            <param name="exception">The input exception.</param>
+            <param name="request">The http request.</param>
+            <returns>Http Error response</returns>
+        </member>
+        <member name="T:Template.Backend.Api.Helpers.ApiHelper">
+            <summary>
+            ApiHelper class group all most used static methods in Api Assemble
+            </summary>
+        </member>
+        <member name="M:Template.Backend.Api.Helpers.ApiHelper.SerializeObjectDepth(System.Object,System.Int32)">
+            <summary>
+            Serializes an object with maximum depth.
+            its ignore looping by default
+            maxDepth = -1 ignore depth and preserve looping with Object reference
+            </summary>
+            <param name="obj">The object to Serialize.</param>
+            <param name="maxDepth">The maximum level to achieve for navigation properties serialization.</param>
+            <returns>Json representation of serialized object</returns>
+        </member>
+        <member name="T:Template.Backend.Api.Helpers.CustomContractResolver">
+            <summary>
+            CustomContractResolver class
+            </summary>
+        </member>
+        <member name="F:Template.Backend.Api.Helpers.CustomContractResolver._includeProperty">
+            <summary>
+            boolean expression to determine included properties
+            </summary>
+        </member>
+        <member name="M:Template.Backend.Api.Helpers.CustomContractResolver.#ctor(System.Func{System.Boolean})">
+            <summary>
+            Initializes a new instance of the CustomContractResolver class.
+            </summary>
+            <param name="includeProperty">boolean expression to determine included properties</param>
+        </member>
+        <member name="M:Template.Backend.Api.Helpers.CustomContractResolver.CreateProperty(System.Reflection.MemberInfo,Newtonsoft.Json.MemberSerialization)">
+            <summary>
+            Creates a Newtonsoft.Json.Serialization.JsonProperty for the given System.Reflection.MemberInfo.
+            </summary>
+            <param name="member">The member to create a Newtonsoft.Json.Serialization.JsonProperty for.</param>
+            <param name="memberSerialization">The member's parent Newtonsoft.Json.MemberSerialization.</param>
+            <returns>A created Newtonsoft.Json.Serialization.JsonProperty for the given System.Reflection.MemberInfo.</returns>
+        </member>
+        <member name="T:Template.Backend.Api.Helpers.CustomJsonTextWriter">
+            <summary>
+            CustomJsonTextWriter class
+            </summary>
+        </member>
+        <member name="M:Template.Backend.Api.Helpers.CustomJsonTextWriter.#ctor(System.IO.TextWriter)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Template.Backend.Api.Helpers.CustomJsonTextWriter"/> class.
+            </summary>
+            <param name="textWriter">The <see cref="T:System.IO.TextWriter" /> to write to.</param>
+        </member>
+        <member name="P:Template.Backend.Api.Helpers.CustomJsonTextWriter.CurrentDepth">
+            <summary>
+            Gets the current depth.
+            </summary>
+            <value>
+            The current depth.
+            </value>
+        </member>
+        <member name="M:Template.Backend.Api.Helpers.CustomJsonTextWriter.WriteStartObject">
+            <summary>
+            Writes the beginning of a JSON object.
+            </summary>
+        </member>
+        <member name="M:Template.Backend.Api.Helpers.CustomJsonTextWriter.WriteEndObject">
+            <summary>
+            Writes the end of a JSON object.
+            </summary>
+        </member>
+        <member name="T:Template.Backend.Api.Startup">
+            <summary>
+            Startup class with Owin
+            </summary>
+        </member>
+        <member name="P:Template.Backend.Api.Startup.HttpConfiguration">
+            <summary>
+            Gets the HTTP configuration.
+            </summary>
+            <value>
+            The HTTP configuration.
+            </value>
+        </member>
+        <member name="M:Template.Backend.Api.Startup.Configuration(Owin.IAppBuilder)">
+            <summary>
+            Configures application.
+            </summary>
+            <param name="app">The application.</param>
+        </member>
+        <member name="M:Template.Backend.Api.Startup.ConfigureOAuth(Owin.IAppBuilder)">
+            <summary>
+            Configures the authentication.
+            </summary>
+            <param name="app">The application.</param>
+        </member>
+    </members>
+</doc>
