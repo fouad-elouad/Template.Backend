@@ -4,7 +4,7 @@ This is a solution template for creating an ASP.NET Web API with best practices
 ## Description
 This is a .NET project template that targets the .NET Framework 4.8.1. It provides an advanced structure for building .NET applications that can be used for your own projects.
 
-`Template.Backend.Model` and `Template.Backend.Csharp` target .Net standard 2.0 for more compatibility
+`Template.Backend.Model` and `Template.Backend.CsharpClient` target .Net standard 2.0 for more compatibility
 
 ## Features
 - [x] Target .NET Framework 4.8.1
@@ -124,7 +124,7 @@ namespace Template.Backend.Model.Audit.Entities
  ```
  
  4- Add a new DbSet: In the DbContext class of the project, add a new DbSet for the new model. This will allow you to access and manipulate the data for the new model in the database.
-
+ 
  ```csharp
         public DbSet<Foo> Foo { get; set; }
         // Audit
