@@ -2,10 +2,12 @@
 This is a solution template for creating an ASP.NET Web API with best practices
 
 ## Description
-This is a .NET project template that targets the .NET Framework 4.5.2. It provides an advanced structure for building .NET applications that can be used for your own projects.
+This is a .NET project template that targets the .NET Framework 4.8.1. It provides an advanced structure for building .NET applications that can be used for your own projects.
+
+`Template.Backend.Model` and `Template.Backend.Csharp` target .Net standard 2.0 for more compatibility
 
 ## Features
-- [x] Target .NET Framework 4.5.2
+- [x] Target .NET Framework 4.8.1
 - [x] Audit Operations Support
 - [x] Multi Layered Architecture
 - [x] Test Projects
@@ -63,7 +65,7 @@ The project includes a C# Client that wrap HTTP requests, handle authentication,
 
  1- Clone or download the repository: To get started, clone or download the repository to your local machine.
  
- 2- Open the solution file in Visual Studio 2019+: The solution file is located in the root directory of the project. Open this file in Visual Studio to start working with the project.
+ 2- Open the solution file in Visual Studio 2022: The solution file is located in the root directory of the project. Open this file in Visual Studio to start working with the project.
  
  3- Restore NuGet Packages
  

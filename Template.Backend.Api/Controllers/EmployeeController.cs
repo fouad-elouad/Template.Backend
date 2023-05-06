@@ -31,8 +31,9 @@ namespace Template.Backend.Api.Controllers
         /// </summary>
         /// <param name="employeeService">The employee service.</param>
         /// <param name="employeeAuditService">The employee audit service.</param>
-        public EmployeeApiController(IEmployeeService employeeService, IEmployeeAuditService employeeAuditService)
-            : base(employeeService, employeeAuditService)
+        /// <param name="mapper">The mapper.</param>
+        public EmployeeApiController(IEmployeeService employeeService, IEmployeeAuditService employeeAuditService, IMapper mapper)
+            : base(employeeService, employeeAuditService, mapper)
         {
             _EmployeeService = employeeService;
             _EmployeeAuditService = employeeAuditService;

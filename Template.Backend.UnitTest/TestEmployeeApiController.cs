@@ -17,6 +17,7 @@ using Template.Backend.UnitTest.Configuration;
 using Template.Backend.Api.Models;
 using Template.Backend.Model.Entities;
 using Template.Backend.Api;
+using AutoMapper;
 
 namespace Template.Backend.UnitTest
 {
@@ -34,6 +35,7 @@ namespace Template.Backend.UnitTest
         EmployeeApiController employeeApiController;
         AuditRepository<EmployeeAudit> employeeAuditRepository;
         IEmployeeAuditService employeeAuditService;
+        IMapper mapper;
 
         /// <summary>
         /// Initialize Mocks and services
@@ -49,16 +51,12 @@ namespace Template.Backend.UnitTest
             employeeAuditRepository = new AuditRepository<EmployeeAudit>(dbFactory);
             employeeAuditService = new EmployeeAuditService(employeeAuditRepository);
 
-            employeeApiController = new EmployeeApiController(employeeService, employeeAuditService);
+            mapper = AutoMapperConfig.Initialize();
+
+            employeeApiController = new EmployeeApiController(employeeService, employeeAuditService, mapper);
 
             employeeApiController.Request = new HttpRequestMessage();
             employeeApiController.Configuration = new HttpConfiguration();
-
-            // AutoMapper;
-            if (!AutoMapperConfig.IsInitialized)
-            {
-                AutoMapperConfig.Configure();
-            }
         }
 
         /// <summary>
@@ -72,7 +70,7 @@ namespace Template.Backend.UnitTest
 
             foreach (var name in shortNameList)
             {
-                EmployeeDto employeeDto = Helper.EmployeeDtoFactory(name,1);
+                EmployeeDto employeeDto = Helper.EmployeeDtoFactory(name, 1);
 
                 var actionResult2 = employeeApiController.Post(employeeDto) as ResponseMessageResult;
                 Assert.IsTrue(actionResult2.Response.IsSuccessStatusCode);
@@ -110,7 +108,7 @@ namespace Template.Backend.UnitTest
             Assert.IsFalse(actionResult.Response.IsSuccessStatusCode);
             Assert.IsNotNull(contentResult);
 
-            EmployeeDto employeeDto = Helper.EmployeeDtoFactory("TEST",1);
+            EmployeeDto employeeDto = Helper.EmployeeDtoFactory("TEST", 1);
 
             var actionResult2 = employeeApiController.Post(employeeDto) as ResponseMessageResult;
             Assert.IsTrue(actionResult2.Response.IsSuccessStatusCode);
@@ -137,7 +135,7 @@ namespace Template.Backend.UnitTest
         [TestMethod]
         public void Test_Employee_Update()
         {
-            EmployeeDto employeeDto = Helper.EmployeeDtoFactory("TEST",1);
+            EmployeeDto employeeDto = Helper.EmployeeDtoFactory("TEST", 1);
             var actionResult = employeeApiController.Post(employeeDto) as ResponseMessageResult;
 
             Assert.IsTrue(actionResult.Response.IsSuccessStatusCode);
@@ -164,7 +162,7 @@ namespace Template.Backend.UnitTest
             Assert.IsFalse(actionResult.Response.IsSuccessStatusCode);
             Assert.IsNotNull(contentResult);
 
-            EmployeeDto employeeDto = Helper.EmployeeDtoFactory("TEST",1);
+            EmployeeDto employeeDto = Helper.EmployeeDtoFactory("TEST", 1);
 
             var actionResult2 = employeeApiController.Post(employeeDto) as ResponseMessageResult;
             Assert.IsTrue(actionResult2.Response.IsSuccessStatusCode);
@@ -174,7 +172,7 @@ namespace Template.Backend.UnitTest
 
             Assert.IsNotNull(actionResult3);
             Assert.IsNotNull(employee);
-            Assert.AreEqual(1,employee.ID);
+            Assert.AreEqual(1, employee.ID);
         }
     }//CL
 }//NS

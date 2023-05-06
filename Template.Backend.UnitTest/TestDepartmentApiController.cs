@@ -17,6 +17,7 @@ using Template.Backend.UnitTest.Configuration;
 using Template.Backend.Api.Models;
 using Template.Backend.Model.Entities;
 using Template.Backend.Api;
+using AutoMapper;
 
 namespace Template.Backend.UnitTest
 {
@@ -34,6 +35,7 @@ namespace Template.Backend.UnitTest
         DepartmentApiController departmentApiController;
         AuditRepository<DepartmentAudit> departmentAuditRepository;
         IDepartmentAuditService departmentAuditService;
+        IMapper mapper;
 
         /// <summary>
         /// Initialize Mocks and services
@@ -49,16 +51,12 @@ namespace Template.Backend.UnitTest
             departmentAuditRepository = new AuditRepository<DepartmentAudit>(dbFactory);
             departmentAuditService = new DepartmentAuditService(departmentAuditRepository);
 
-            departmentApiController = new DepartmentApiController(departmentService, departmentAuditService);
+            mapper = AutoMapperConfig.Initialize();
+
+            departmentApiController = new DepartmentApiController(departmentService, departmentAuditService, mapper);
 
             departmentApiController.Request = new HttpRequestMessage();
             departmentApiController.Configuration = new HttpConfiguration();
-
-            // AutoMapper;
-            if (!AutoMapperConfig.IsInitialized)
-            {
-                AutoMapperConfig.Configure();
-            }
         }
 
         /// <summary>
@@ -174,7 +172,7 @@ namespace Template.Backend.UnitTest
 
             Assert.IsNotNull(actionResult3);
             Assert.IsNotNull(department);
-            Assert.AreEqual(1,department.ID);
+            Assert.AreEqual(1, department.ID);
         }
     }//CL
 }//NS

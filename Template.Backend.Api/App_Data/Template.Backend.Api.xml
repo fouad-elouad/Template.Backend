@@ -17,7 +17,7 @@
               <c>true</c> if AutoMapper is initialized; otherwise, <c>false</c>.
             </value>
         </member>
-        <member name="M:Template.Backend.Api.AutoMapperConfig.Configure">
+        <member name="M:Template.Backend.Api.AutoMapperConfig.Initialize">
             <summary>
             Configures AutoMapper.
             </summary>
@@ -622,12 +622,13 @@
             The media type
             </summary>
         </member>
-        <member name="M:Template.Backend.Api.Controllers.BaseApiController`2.#ctor(Template.Backend.Service.IService{`0},Template.Backend.Service.Audit.IServiceAudit{`1})">
+        <member name="M:Template.Backend.Api.Controllers.BaseApiController`2.#ctor(Template.Backend.Service.IService{`0},Template.Backend.Service.Audit.IServiceAudit{`1},AutoMapper.IMapper)">
             <summary>
             Initializes a new instance of the <see cref="T:Template.Backend.Api.Controllers.BaseApiController`2" /> class.
             </summary>
             <param name="Service">The service.</param>
             <param name="AuditService">The audit service.</param>
+            <param name="mapper">The mapper.</param>
         </member>
         <member name="M:Template.Backend.Api.Controllers.BaseApiController`2.Count">
             <summary>
@@ -790,12 +791,13 @@
             Route="api/v1/Companies"
             </summary>
         </member>
-        <member name="M:Template.Backend.Api.Controllers.CompanyApiController.#ctor(Template.Backend.Service.Services.ICompanyService,Template.Backend.Service.Audit.ICompanyAuditService)">
+        <member name="M:Template.Backend.Api.Controllers.CompanyApiController.#ctor(Template.Backend.Service.Services.ICompanyService,Template.Backend.Service.Audit.ICompanyAuditService,AutoMapper.IMapper)">
             <summary>
             Initializes a new instance of the <see cref="T:Template.Backend.Api.Controllers.CompanyApiController"/> class.
             </summary>
             <param name="companyService">The company service.</param>
             <param name="companyAuditService">The company audit service.</param>
+            <param name="mapper">The mapper.</param>
         </member>
         <member name="M:Template.Backend.Api.Controllers.CompanyApiController.Count">
             <summary>
@@ -924,12 +926,13 @@
             Route="api/v1/Departments"
             </summary>
         </member>
-        <member name="M:Template.Backend.Api.Controllers.DepartmentApiController.#ctor(Template.Backend.Service.Services.IDepartmentService,Template.Backend.Service.Audit.IDepartmentAuditService)">
+        <member name="M:Template.Backend.Api.Controllers.DepartmentApiController.#ctor(Template.Backend.Service.Services.IDepartmentService,Template.Backend.Service.Audit.IDepartmentAuditService,AutoMapper.IMapper)">
             <summary>
             Initializes a new instance of the <see cref="T:Template.Backend.Api.Controllers.DepartmentApiController"/> class.
             </summary>
             <param name="departmentService">The department service.</param>
             <param name="departmentAuditService">The department audit service.</param>
+            <param name="mapper">The mapper.</param>
         </member>
         <member name="M:Template.Backend.Api.Controllers.DepartmentApiController.Count">
             <summary>
@@ -1058,12 +1061,13 @@
             Route="api/v1/Employees"
             </summary>
         </member>
-        <member name="M:Template.Backend.Api.Controllers.EmployeeApiController.#ctor(Template.Backend.Service.Services.IEmployeeService,Template.Backend.Service.Audit.IEmployeeAuditService)">
+        <member name="M:Template.Backend.Api.Controllers.EmployeeApiController.#ctor(Template.Backend.Service.Services.IEmployeeService,Template.Backend.Service.Audit.IEmployeeAuditService,AutoMapper.IMapper)">
             <summary>
             Initializes a new instance of the <see cref="T:Template.Backend.Api.Controllers.EmployeeApiController"/> class.
             </summary>
             <param name="employeeService">The employee service.</param>
             <param name="employeeAuditService">The employee audit service.</param>
+            <param name="mapper">The mapper.</param>
         </member>
         <member name="M:Template.Backend.Api.Controllers.EmployeeApiController.Count">
             <summary>

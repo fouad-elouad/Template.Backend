@@ -19,15 +19,18 @@ namespace Template.Backend.Api
         /// <summary>
         /// Configures AutoMapper.
         /// </summary>
-        public static void Configure()
+        public static IMapper Initialize()
         {
-            Mapper.Initialize(x =>
+            var configuration = new MapperConfiguration(cfg =>
             {
-                x.AddProfile<ApiToDomainMappingProfile>();
+                cfg.AddProfile<ApiToDomainMappingProfile>();
             });
-
-            Mapper.Configuration.AssertConfigurationIsValid();
+            #if DEBUG
+            configuration.AssertConfigurationIsValid();
+            #endif
             IsInitialized = true;
+            return configuration.CreateMapper();
+            
         }//
     }
 }

@@ -10,11 +10,12 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Template.Backend.Data</RootNamespace>
     <AssemblyName>Template.Backend.Data</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -91,7 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Template.Backend.Model\Template.Backend.Model.csproj">
-      <Project>{9C7D539A-1516-4850-A7A3-4BB9647505E6}</Project>
+      <Project>{e8077dc7-41dd-47b8-99c5-693735520049}</Project>
       <Name>Template.Backend.Model</Name>
     </ProjectReference>
   </ItemGroup>

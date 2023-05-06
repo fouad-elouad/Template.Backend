@@ -10,6 +10,7 @@ using Unity.RegistrationByConvention;
 using Template.Backend.Api.Exceptions;
 using System.Web.Http.ExceptionHandling;
 using Template.Backend.Api.Areas.HelpPage;
+using AutoMapper;
 
 namespace Template.Backend.Api
 {
@@ -35,10 +36,11 @@ namespace Template.Backend.Api
 
             unityContainer.RegisterType<IDbFactory, DbFactory>(new PerResolveLifetimeManager());
 
-            config.DependencyResolver = new UnityResolver(unityContainer);
-
             // AutoMapper;
-            AutoMapperConfig.Configure();
+            IMapper mapper = AutoMapperConfig.Initialize();
+            unityContainer.RegisterInstance<IMapper>(mapper);
+
+            config.DependencyResolver = new UnityResolver(unityContainer);
 
             // API Version
             var constraintResolver = new DefaultInlineConstraintResolver()

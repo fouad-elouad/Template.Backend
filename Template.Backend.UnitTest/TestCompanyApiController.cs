@@ -17,6 +17,7 @@ using Template.Backend.UnitTest.Configuration;
 using Template.Backend.Api.Models;
 using Template.Backend.Model.Entities;
 using Template.Backend.Api;
+using AutoMapper;
 
 namespace Template.Backend.UnitTest
 {
@@ -34,6 +35,7 @@ namespace Template.Backend.UnitTest
         CompanyApiController companyApiController;
         AuditRepository<CompanyAudit> companyAuditRepository;
         ICompanyAuditService companyAuditService;
+        IMapper mapper;
 
         /// <summary>
         /// Initialize Mocks and services
@@ -49,16 +51,18 @@ namespace Template.Backend.UnitTest
             companyAuditRepository = new AuditRepository<CompanyAudit>(dbFactory);
             companyAuditService = new CompanyAuditService(companyAuditRepository);
 
-            companyApiController = new CompanyApiController(companyService, companyAuditService);
+            // AutoMapper;
+            //if (!AutoMapperConfig.IsInitialized)
+            //{
+                mapper = AutoMapperConfig.Initialize();
+            //}
+
+            companyApiController = new CompanyApiController(companyService, companyAuditService, mapper);
 
             companyApiController.Request = new HttpRequestMessage();
             companyApiController.Configuration = new HttpConfiguration();
 
-            // AutoMapper;
-            if (!AutoMapperConfig.IsInitialized)
-            {
-                AutoMapperConfig.Configure();
-            }
+            
         }
 
         /// <summary>

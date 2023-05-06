@@ -33,8 +33,9 @@ namespace Template.Backend.Api.Controllers
         /// </summary>
         /// <param name="companyService">The company service.</param>
         /// <param name="companyAuditService">The company audit service.</param>
-        public CompanyApiController(ICompanyService companyService, ICompanyAuditService companyAuditService)
-            : base(companyService, companyAuditService)
+        /// <param name="mapper">The mapper.</param>
+        public CompanyApiController(ICompanyService companyService, ICompanyAuditService companyAuditService, IMapper mapper)
+            : base(companyService, companyAuditService, mapper)
         {
             _CompanyService = companyService;
             _CompanyAuditService = companyAuditService;

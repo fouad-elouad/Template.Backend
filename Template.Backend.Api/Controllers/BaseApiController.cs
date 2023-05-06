@@ -37,16 +37,19 @@ namespace Template.Backend.Api.Controllers
         protected const string _mediaType = "application/json";
         private readonly IService<Entity> _Service;
         private readonly IServiceAudit<AuditEntity> _AuditService;
+        protected readonly IMapper Mapper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseApiController{Entity, AuditEntity}" /> class.
         /// </summary>
         /// <param name="Service">The service.</param>
         /// <param name="AuditService">The audit service.</param>
-        public BaseApiController(IService<Entity> Service, IServiceAudit<AuditEntity> AuditService)
+        /// <param name="mapper">The mapper.</param>
+        public BaseApiController(IService<Entity> Service, IServiceAudit<AuditEntity> AuditService, IMapper mapper)
         {
             _Service = Service;
             _AuditService = AuditService;
+            Mapper = mapper;
         }
 
         /// <summary>

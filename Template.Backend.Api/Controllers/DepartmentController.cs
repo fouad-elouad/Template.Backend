@@ -31,8 +31,9 @@ namespace Template.Backend.Api.Controllers
         /// </summary>
         /// <param name="departmentService">The department service.</param>
         /// <param name="departmentAuditService">The department audit service.</param>
-        public DepartmentApiController(IDepartmentService departmentService, IDepartmentAuditService departmentAuditService)
-            : base(departmentService, departmentAuditService)
+        /// <param name="mapper">The mapper.</param>
+        public DepartmentApiController(IDepartmentService departmentService, IDepartmentAuditService departmentAuditService, IMapper mapper)
+            : base(departmentService, departmentAuditService, mapper)
         {
             _DepartmentService = departmentService;
             _DepartmentAuditService = departmentAuditService;

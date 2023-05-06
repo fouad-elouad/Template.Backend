@@ -5,7 +5,6 @@ using Template.Backend.Data.SpecificRepositories;
 using Template.Backend.Model.Audit;
 using Template.Backend.Model.Audit.Entities;
 using Template.Backend.Model.Entities;
-using Template.Backend.Model.Exceptions;
 using Template.Backend.Service.Audit;
 using Template.Backend.Service.Services;
 using Template.Backend.Service.Validation;
