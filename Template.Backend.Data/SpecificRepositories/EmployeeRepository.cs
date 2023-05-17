@@ -1,9 +1,8 @@
-﻿using Template.Backend.Data.Helpers;
+﻿using Microsoft.EntityFrameworkCore;
 using Template.Backend.Data.Repositories;
+using Template.Backend.Data.Utilities;
 using Template.Backend.Model.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Template.Backend.Model.Enums;
 
 namespace Template.Backend.Data.SpecificRepositories
 {
@@ -17,7 +16,7 @@ namespace Template.Backend.Data.SpecificRepositories
         /// Constructor
         /// </summary>
         /// <param name="dbFactory"></param>
-        public EmployeeRepository(IDbFactory dbFactory) : base(dbFactory)
+        public EmployeeRepository(StarterDbContext dbContext) : base(dbContext)
         {
         }
 
@@ -100,6 +99,19 @@ namespace Template.Backend.Data.SpecificRepositories
         {
             return CheckIsUnique(s => s.Name == name && s.ID != Id);
         }
+
+        public Employee? FindById(int id, NestedObjectDepth nestedObjectDepth)
+        {
+            switch (nestedObjectDepth)
+            {
+                case NestedObjectDepth.FirstLevel:
+                    return _dbSet.Include(c => c.Company).Include(c=>c.Department).FirstOrDefault(c => c.ID == id);
+                case NestedObjectDepth.SecondLevel:
+                    return _dbSet.Include(c => c.Company).ThenInclude(e=>e.Employees).Include(c => c.Department).ThenInclude(e=>e.Employees).FirstOrDefault(c => c.ID == id);
+                default:
+                    return _dbSet.Find(id);
+            }
+        }
     }
 
     /// <summary>
@@ -139,5 +151,7 @@ namespace Template.Backend.Data.SpecificRepositories
         /// Count
         /// </returns>
         int SearchCount(Employee searchedEmployee, DateTime? startBirthDate,DateTime? endBirthDate);
+
+        Employee? FindById(int id, NestedObjectDepth nestedObjectDepth);
     }
 }

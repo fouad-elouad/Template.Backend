@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿
 
 namespace Template.Backend.Service.Validation
 {
@@ -20,6 +20,12 @@ namespace Template.Backend.Service.Validation
         /// </summary>
         /// <returns></returns>
         Dictionary<string, IList<string>> ToDictionary();
+
+        /// <summary>
+        /// Get Errors Dictionary from ValidationDictionary class
+        /// </summary>
+        /// <returns></returns>
+        IReadOnlyDictionary<string, IReadOnlyList<string>> ToReadOnlyDictionary();
 
 
         /// <summary>

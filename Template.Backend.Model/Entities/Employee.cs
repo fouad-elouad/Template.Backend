@@ -1,5 +1,4 @@
-﻿using System;
-using Template.Backend.Model.Common;
+﻿using Template.Backend.Model.Common;
 
 namespace Template.Backend.Model.Entities
 {
@@ -10,8 +9,8 @@ namespace Template.Backend.Model.Entities
         public DateTime? CreatedOn { get; set; }
 
         // ManyToOne
-        public virtual Company Company { get; set; }
-        public virtual Department Department { get; set; }
+        public Company? Company { get; set; }
+        public Department? Department { get; set; }
 
     }
 }

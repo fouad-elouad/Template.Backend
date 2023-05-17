@@ -1,28 +1,23 @@
-﻿using AutoMapper;
-using Template.Backend.Api.Configuration;
-using Template.Backend.Api.Exceptions;
-using Template.Backend.Api.Models;
-using Template.Backend.Model.Audit.Entities;
+﻿using Template.Backend.Model.Audit.Entities;
 using Template.Backend.Model.Entities;
-using Template.Backend.Model.Exceptions;
 using Template.Backend.Service.Audit;
 using Template.Backend.Service.Services;
-using Microsoft.Web.Http;
-using NLog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Web.Http;
-using System.Web.Http.Description;
+using Microsoft.AspNetCore.Mvc;
+using Template.Backend.Api.Models;
+using System.Net.Mime;
+using AutoMapper;
+using Template.Backend.Api.Configuration;
+using Template.Backend.Model.Exceptions;
+using Template.Backend.Model.Enums;
 
 namespace Template.Backend.Api.Controllers
 {
     /// <summary>
     /// Route="api/v1/Companies"
     /// </summary>
+    [ApiController]
     [ApiVersion("1")]
-    [RoutePrefix(ApiRouteConfiguration.CompanyPrefix)]
+    [Route(ApiRouteConfiguration.CompanyPrefix)]
     public class CompanyApiController : BaseApiController<Company, CompanyAudit>
     {
         private ICompanyService _CompanyService;
@@ -33,22 +28,17 @@ namespace Template.Backend.Api.Controllers
         /// </summary>
         /// <param name="companyService">The company service.</param>
         /// <param name="companyAuditService">The company audit service.</param>
-        public CompanyApiController(ICompanyService companyService, ICompanyAuditService companyAuditService)
-            : base(companyService, companyAuditService)
+        public CompanyApiController(ICompanyService companyService, ICompanyAuditService companyAuditService, IMapper mapper, ILogger<Company> logger)
+            : base(companyService, companyAuditService, mapper, logger)
         {
             _CompanyService = companyService;
             _CompanyAuditService = companyAuditService;
         }
 
-        /// <summary>
-        /// Count
-        /// </summary>
-        /// <returns>Count</returns>
-        [ResponseType(typeof(int))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
         [Route(ApiRouteConfiguration.CountSuffix), HttpGet]
-        public override IHttpActionResult Count()
+        public override IActionResult Count()
         {
-            _logger.Info("API: HttpGet Count Company");
             return base.Count();
         }
 
@@ -56,11 +46,10 @@ namespace Template.Backend.Api.Controllers
         /// Gets All companies
         /// </summary>
         /// <returns>List of companies</returns>
-        [ResponseType(typeof(IEnumerable<Company>))]
-        [Route(), HttpGet]
-        public override IHttpActionResult Get()
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Company>))]
+        [HttpGet]
+        public IActionResult Get()
         {
-            _logger.Info("API: HttpGet Get Company");
             return base.Get();
         }
 
@@ -69,11 +58,10 @@ namespace Template.Backend.Api.Controllers
         /// </summary>
         /// <param name="id">ID</param>
         /// <returns>company</returns>
-        [ResponseType(typeof(Company))]
-        [Route(ApiRouteConfiguration.IdSuffix), HttpGet]
-        public override IHttpActionResult Get(int id)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Company))]
+        [HttpGet(ApiRouteConfiguration.IdSuffix)]
+        public IActionResult Get(int id)
         {
-            _logger.Info("API: HttpGet Get(id) Company id={0}", id);
             return base.Get(id);
         }
 
@@ -81,14 +69,22 @@ namespace Template.Backend.Api.Controllers
         /// Gets the specified identifier.
         /// </summary>
         /// <param name="id">Company ID .</param>
-        /// <param name="depth">The maximum level to achieve for navigation properties serialization.</param>
+        /// <param name="nestedObjectDepth">The maximum level to achieve for navigation properties serialization.</param>
         /// <returns>company</returns>
-        [ResponseType(typeof(Company))]
-        [Route(ApiRouteConfiguration.IdDepthSuffix), HttpGet]
-        public override IHttpActionResult Get(int id, int depth)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Company))]
+        [HttpGet(ApiRouteConfiguration.IdDepthSuffix)]
+        public IActionResult Get(int id, NestedObjectDepth nestedObjectDepth)
         {
-            _logger.Info("API: HttpGet Get(id,depth) Company id={0}, depth={1}", id, depth);
-            return base.Get(id, depth);
+            _logger.LogInformation($"Get {typeof(Company).Name} with Id {id} and {nestedObjectDepth}");
+            var entity = _CompanyService.FindById(id, nestedObjectDepth);
+            if (entity != null)
+            {
+                return Ok(entity);
+            }
+            else
+            {
+                throw new IdNotFoundException($"No element found for this id {id}");
+            }
         }
 
         /// <summary>
@@ -97,11 +93,11 @@ namespace Template.Backend.Api.Controllers
         /// <param name="pageNo">page index.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <returns>List of Companies</returns>
-        [ResponseType(typeof(IEnumerable<Company>))]
-        [Route(), HttpGet]
-        public override IHttpActionResult GetPagedList([FromUri] int pageNo, int pageSize)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Company>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Route(ApiRouteConfiguration.Pagination), HttpGet]
+        public IActionResult GetPagedList([FromQuery] int pageNo, [FromQuery] int pageSize)
         {
-            _logger.Info("API: HttpGet GetPagedList Company");
             return base.GetPagedList(pageNo, pageSize);
         }
 
@@ -110,10 +106,11 @@ namespace Template.Backend.Api.Controllers
         /// </summary>
         /// <param name="id">ID to Delete</param>
         /// <returns>Http Response with statut code (NoContent (204) if is Deleted otherwise error message)</returns>
-        [Route(ApiRouteConfiguration.IdSuffix), HttpDelete]
-        public override IHttpActionResult Delete(int id)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [HttpDelete(ApiRouteConfiguration.IdSuffix)]
+        public IActionResult Delete(int id)
         {
-            _logger.Info("API: HttpDelete Delete Company id={0}", id);
             return base.Delete(id);
         }
 
@@ -124,12 +121,13 @@ namespace Template.Backend.Api.Controllers
         /// <returns>
         /// Http Response with statut code (OK if is Inserted otherwise error message)
         /// </returns>
-        [ResponseType(typeof(Company))]
-        [Route(), HttpPost]
-        public IHttpActionResult Post([FromBody] CompanyDto companyDto)
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Company))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [HttpPost]
+        public IActionResult Post([FromBody] CompanyDto companyDto)
         {
-            _logger.Info("API: HttpPost Post Company");
-            Company company = Mapper.Map<CompanyDto, Company>(companyDto);
+            Company company = _mapper.Map<CompanyDto, Company>(companyDto);
             return base.Post(company);
         }
 
@@ -141,20 +139,14 @@ namespace Template.Backend.Api.Controllers
         /// <returns>
         /// Http Response with statut code (OK if is Updated otherwise error message)
         /// </returns>
-        [Route(ApiRouteConfiguration.IdSuffix), HttpPut]
-        public IHttpActionResult Put(int id, CompanyDto companyDto)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [HttpPut(ApiRouteConfiguration.IdSuffix)]
+        public IActionResult Put(int id, [FromBody] CompanyDto companyDto)
         {
-            _logger.Info("API: HttpPut Put Company id={0}", id);
-            if (_CompanyService.CheckIfExist(o => o.ID == id))
-            {
-                Company company = Mapper.Map<CompanyDto, Company>(companyDto);
-                return base.Put(id, company);
-            }
-            else
-            {
-                return ResponseMessage(ApiExceptionResponse.Throw(
-                    new IdNotFoundException("No element found for this id"), Request));
-            }
+            Company company = _mapper.Map<CompanyDto, Company>(companyDto);
+            return base.Put(id, company);
         }
 
 
@@ -164,22 +156,12 @@ namespace Template.Backend.Api.Controllers
         /// </summary>
         /// <param name="id">The Company ID.</param>
         /// <returns>List of company Audits</returns>
-        [ResponseType(typeof(IEnumerable<CompanyAudit>))]
-        [Route(ApiRouteConfiguration.AuditSuffix), HttpGet]
-        public IHttpActionResult Audit(int id)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<CompanyAudit>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet(ApiRouteConfiguration.AuditSuffix)]
+        public IActionResult Audit(int id)
         {
-            _logger.Info("API: HttpGet Audit Company id={0}", id);
-
-            IEnumerable<CompanyAudit> companyAudit = _CompanyAuditService.GetAuditById(id);
-
-            if (companyAudit != null && companyAudit.Any())
-            {
-                return ResponseMessage(AuditToJsonResponse(companyAudit, 2));
-            }
-            else
-            {
-                return ResponseMessage(ApiExceptionResponse.Throw(new IdNotFoundException("No element found for this id"), Request));
-            }
+            return base.Audit(id);
         }
 
         /// <summary>
@@ -187,29 +169,36 @@ namespace Template.Backend.Api.Controllers
         /// </summary>
         /// <param name="id">The audit Id.</param>
         /// <returns>Audit line of Company</returns>
-        [ResponseType(typeof(CompanyAudit))]
-        [Route(ApiRouteConfiguration.AuditIdSuffix), HttpGet]
-        public override IHttpActionResult AuditId(int id)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CompanyAudit))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet(ApiRouteConfiguration.AuditIdSuffix)]
+        public IActionResult AuditId(int id)
         {
-            _logger.Info("API: HttpGet AuditId Company id={0}", id);
             return base.AuditId(id);
         }
 
         /// <summary>
         /// Restore audit Values to current Company.
         /// </summary>
-        /// <param name="id">Company Id.</param>
+        /// <param name="id">Company Id, To restore deleted entity make id=0.</param>
         /// <param name="auditId">Company audit ID.</param>
         /// <param name="content">Empty http content.</param>
         /// <returns>Http Response with statut code (OK if is Restored otherwise error message) </returns>
-        [Route(ApiRouteConfiguration.AuditRestoreSuffix), HttpPut]
-        public IHttpActionResult PutRestoreAudit(int id, int auditId, [FromBody] string content)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpPut(ApiRouteConfiguration.AuditRestoreSuffix)]
+        public IActionResult RestoreAudit(int id, int auditId)
         {
-            _logger.Info("API: HttpPut PutRestoreAudit Company id={0}, auditId={1}", id, auditId);
-            Company company = _CompanyService.GetById(id);
+            _logger.LogInformation($"RestoreAudit for {typeof(Company).Name} with Id {id} from {typeof(CompanyAudit).Name} with Id {auditId}");
+            
 
             CompanyAudit companyAudit = _CompanyAuditService.GetById(auditId);
-            if (company == null)
+            if (companyAudit == null )
+                throw new IdNotFoundException($"No element found for this auditId {auditId}");
+
+            Company company = _CompanyService.GetById(id);
+
+            if (id == 0) // restore deleted company
             {
                 company = new Company();
                 _CompanyService.Restore(company, companyAudit);
@@ -217,10 +206,23 @@ namespace Template.Backend.Api.Controllers
             }
             else
             {
+                if (company == null)
+                    throw new IdNotFoundException($"No element found for this Id {id}");
+                if (company.ID != companyAudit.ID)
+                    throw new BadRequestException($"Invalid Audit for this Id {id} and auditId {auditId}");
+
                 _CompanyService.Restore(company, companyAudit);
+                _CompanyService.Update(company);
             }
 
-            _CompanyService.Save(User.Identity.Name);
+            // model state test
+            if (!_CompanyService.GetValidationDictionary().IsValid() || !ModelState.IsValid)
+            {
+                AddServiceErrorsToModelState(_CompanyService.GetValidationDictionary());
+                throw new ModelStateException("One or more validation errors occurred.", _CompanyService.GetValidationDictionary().ToReadOnlyDictionary());
+            }
+
+            _CompanyService.Save();
 
             return Ok();
         }
@@ -232,11 +234,11 @@ namespace Template.Backend.Api.Controllers
         /// <returns>
         /// List of Company as Json response
         /// </returns>
-        [ResponseType(typeof(IEnumerable<CompanyAudit>))]
-        [Route(ApiRouteConfiguration.SnapshotSuffix), HttpGet]
-        public override IHttpActionResult GetSnapshot(string dateTime)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<CompanyAudit>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet(ApiRouteConfiguration.SnapshotSuffix)]
+        public IActionResult GetSnapshot(string dateTime)
         {
-            _logger.Info("API: HttpGet GetSnapshot Company date={0}", dateTime);
             return base.GetSnapshot(dateTime);
         }
 
@@ -248,11 +250,11 @@ namespace Template.Backend.Api.Controllers
         /// <returns>
         /// Company as Json response
         /// </returns>
-        [ResponseType(typeof(Company))]
-        [Route(ApiRouteConfiguration.SnapshotIdSuffix), HttpGet]
-        public override IHttpActionResult GetSnapshot(string dateTime, int id)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Company))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet(ApiRouteConfiguration.SnapshotIdSuffix)]
+        public IActionResult GetSnapshot(string dateTime, int id)
         {
-            _logger.Info("API: HttpGet GetSnapshot Company dateTime={0}, id={1}", dateTime, id);
             return base.GetSnapshot(dateTime, id);
         }
 
@@ -263,16 +265,21 @@ namespace Template.Backend.Api.Controllers
         /// <returns>
         /// Http Response with statut code (OK if is Inserted otherwise error message)
         /// </returns>
-        [ResponseType(typeof(IEnumerable<Company>))]
-        [Route(ApiRouteConfiguration.ItemsSuffix), HttpPost]
-        public IHttpActionResult PostList([FromBody] IEnumerable<CompanyDto> companyDtoList)
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(IEnumerable<Company>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [HttpPost(ApiRouteConfiguration.ItemsSuffix)]
+        public IActionResult PostList([FromBody] IEnumerable<CompanyDto> companyDtoList)
         {
-            _logger.Info("API: HttpPost Post CompanyList");
-            IEnumerable<Company> companyList = Mapper.Map<IEnumerable<CompanyDto>, IEnumerable<Company>>(companyDtoList);
-            if (!_CompanyService.HugeInsertValidation(companyList))
+            _logger.LogInformation($"PostList {typeof(Company).Name} count : {companyDtoList?.Count()}");
+
+            IEnumerable<Company> companyList = _mapper.Map<IEnumerable<CompanyDto>, IEnumerable<Company>>(companyDtoList);
+
+            // model state test
+            if (!_CompanyService.HugeInsertValidation(companyList) || !ModelState.IsValid)
             {
                 AddServiceErrorsToModelState(_CompanyService.GetValidationDictionary());
-                return ResponseMessage(InvalidModelStateToJsonResponse(_CompanyService.GetValidationDictionary().ToDictionary()));
+                throw new ModelStateException("One or more validation errors occurred.", _CompanyService.GetValidationDictionary().ToReadOnlyDictionary());
             }
 
             return base.PostList(companyList);
@@ -285,19 +292,19 @@ namespace Template.Backend.Api.Controllers
         /// <returns>
         /// Company
         /// </returns>
-        [ResponseType(typeof(Company))]
-        [Route(), HttpGet]
-        public IHttpActionResult GetByName([FromUri] string name)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Company))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet(ApiRouteConfiguration.SearchSuffix)]
+        public IActionResult GetByName([FromQuery] string name)
         {
-            _logger.Info("API: HttpGet GetByName Company name={0}", name);
             Company company = _CompanyService.Get(c => c.Name == name);
             if (company != null)
             {
-                return ResponseMessage(ToJsonResponse(company, HttpStatusCode.OK, _detailsDepth));
+                return Ok(company);
             }
             else
             {
-                return ResponseMessage(ApiExceptionResponse.Throw(new NoElementFoundException("No element found for this shorName"), Request));
+                throw new NoElementFoundException($"No element found for this name {name}");
             }
         }
     }

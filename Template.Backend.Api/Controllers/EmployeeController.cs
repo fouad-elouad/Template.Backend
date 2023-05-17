@@ -1,52 +1,44 @@
-﻿using AutoMapper;
-using Template.Backend.Api.Configuration;
-using Template.Backend.Api.Exceptions;
-using Template.Backend.Api.Models;
-using Template.Backend.Model.Audit.Entities;
+﻿using Template.Backend.Model.Audit.Entities;
 using Template.Backend.Model.Entities;
-using Template.Backend.Model.Exceptions;
 using Template.Backend.Service.Audit;
 using Template.Backend.Service.Services;
-using Microsoft.Web.Http;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Web.Http;
-using System.Web.Http.Description;
+using Microsoft.AspNetCore.Mvc;
+using Template.Backend.Api.Models;
+using System.Net.Mime;
+using AutoMapper;
+using Template.Backend.Api.Configuration;
+using Template.Backend.Model.Exceptions;
+using Template.Backend.Model.Enums;
 
 namespace Template.Backend.Api.Controllers
 {
     /// <summary>
     /// Route="api/v1/Employees"
     /// </summary>
+    [ApiController]
     [ApiVersion("1")]
-    [RoutePrefix(ApiRouteConfiguration.EmployeePrefix)]
-    public class EmployeeApiController : BaseApiController<Employee, EmployeeAudit>
+    [Route(ApiRouteConfiguration.EmployeePrefix)]
+    public class EmployeeController : BaseApiController<Employee, EmployeeAudit>
     {
         private IEmployeeService _EmployeeService;
         private IEmployeeAuditService _EmployeeAuditService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EmployeeApiController"/> class.
+        /// Initializes a new instance of the <see cref="EmployeeController"/> class.
         /// </summary>
         /// <param name="employeeService">The employee service.</param>
         /// <param name="employeeAuditService">The employee audit service.</param>
-        public EmployeeApiController(IEmployeeService employeeService, IEmployeeAuditService employeeAuditService)
-            : base(employeeService, employeeAuditService)
+        public EmployeeController(IEmployeeService employeeService, IEmployeeAuditService employeeAuditService, IMapper mapper, ILogger<Employee> logger)
+            : base(employeeService, employeeAuditService, mapper, logger)
         {
             _EmployeeService = employeeService;
             _EmployeeAuditService = employeeAuditService;
         }
 
-        /// <summary>
-        /// Count
-        /// </summary>
-        /// <returns>Count</returns>
-        [ResponseType(typeof(int))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
         [Route(ApiRouteConfiguration.CountSuffix), HttpGet]
-        public override IHttpActionResult Count()
+        public override IActionResult Count()
         {
-            _logger.Info("API: HttpGet Count Employee");
             return base.Count();
         }
 
@@ -54,11 +46,10 @@ namespace Template.Backend.Api.Controllers
         /// Gets All employees
         /// </summary>
         /// <returns>List of employees</returns>
-        [ResponseType(typeof(IEnumerable<Employee>))]
-        [Route(), HttpGet]
-        public override IHttpActionResult Get()
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Employee>))]
+        [HttpGet]
+        public IActionResult Get()
         {
-            _logger.Info("API: HttpGet Get Employee");
             return base.Get();
         }
 
@@ -67,11 +58,10 @@ namespace Template.Backend.Api.Controllers
         /// </summary>
         /// <param name="id">ID</param>
         /// <returns>employee</returns>
-        [ResponseType(typeof(Employee))]
-        [Route(ApiRouteConfiguration.IdSuffix), HttpGet]
-        public override IHttpActionResult Get(int id)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Employee))]
+        [HttpGet(ApiRouteConfiguration.IdSuffix)]
+        public IActionResult Get(int id)
         {
-            _logger.Info("API: HttpGet Get(id) Employee id={0}", id);
             return base.Get(id);
         }
 
@@ -79,14 +69,22 @@ namespace Template.Backend.Api.Controllers
         /// Gets the specified identifier.
         /// </summary>
         /// <param name="id">Employee ID .</param>
-        /// <param name="depth">The maximum level to achieve for navigation properties serialization.</param>
+        /// <param name="nestedObjectDepth">The maximum level to achieve for navigation properties serialization.</param>
         /// <returns>employee</returns>
-        [ResponseType(typeof(Employee))]
-        [Route(ApiRouteConfiguration.IdDepthSuffix), HttpGet]
-        public override IHttpActionResult Get(int id, int depth)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Employee))]
+        [HttpGet(ApiRouteConfiguration.IdDepthSuffix)]
+        public IActionResult Get(int id, NestedObjectDepth nestedObjectDepth)
         {
-            _logger.Info("API: HttpGet Get(id,depth) Employee id={0}, depth={1}", id, depth);
-            return base.Get(id, depth);
+            _logger.LogInformation($"Get {typeof(Employee).Name} with Id {id} and {nestedObjectDepth}");
+            var entity = _EmployeeService.FindById(id, nestedObjectDepth);
+            if (entity != null)
+            {
+                return Ok(entity);
+            }
+            else
+            {
+                throw new IdNotFoundException($"No element found for this id {id}");
+            }
         }
 
         /// <summary>
@@ -95,11 +93,11 @@ namespace Template.Backend.Api.Controllers
         /// <param name="pageNo">page index.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <returns>List of Employees</returns>
-        [ResponseType(typeof(IEnumerable<Employee>))]
-        [Route(), HttpGet]
-        public override IHttpActionResult GetPagedList([FromUri] int pageNo, int pageSize)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Employee>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Route(ApiRouteConfiguration.Pagination), HttpGet]
+        public IActionResult GetPagedList([FromQuery] int pageNo, [FromQuery] int pageSize)
         {
-            _logger.Info("API: HttpGet GetPagedList Employee");
             return base.GetPagedList(pageNo, pageSize);
         }
 
@@ -108,10 +106,11 @@ namespace Template.Backend.Api.Controllers
         /// </summary>
         /// <param name="id">ID to Delete</param>
         /// <returns>Http Response with statut code (NoContent (204) if is Deleted otherwise error message)</returns>
-        [Route(ApiRouteConfiguration.IdSuffix), HttpDelete]
-        public override IHttpActionResult Delete(int id)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [HttpDelete(ApiRouteConfiguration.IdSuffix)]
+        public IActionResult Delete(int id)
         {
-            _logger.Info("API: HttpDelete Delete Employee id={0}", id);
             return base.Delete(id);
         }
 
@@ -122,12 +121,13 @@ namespace Template.Backend.Api.Controllers
         /// <returns>
         /// Http Response with statut code (OK if is Inserted otherwise error message)
         /// </returns>
-        [ResponseType(typeof(Employee))]
-        [Route(), HttpPost]
-        public IHttpActionResult Post([FromBody] EmployeeDto employeeDto)
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Employee))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [HttpPost]
+        public IActionResult Post([FromBody] EmployeeDto employeeDto)
         {
-            _logger.Info("API: HttpPost Post Employee");
-            Employee employee = Mapper.Map<EmployeeDto, Employee>(employeeDto);
+            Employee employee = _mapper.Map<EmployeeDto, Employee>(employeeDto);
             return base.Post(employee);
         }
 
@@ -139,21 +139,16 @@ namespace Template.Backend.Api.Controllers
         /// <returns>
         /// Http Response with statut code (OK if is Updated otherwise error message)
         /// </returns>
-        [Route(ApiRouteConfiguration.IdSuffix), HttpPut]
-        public IHttpActionResult Put(int id, EmployeeDto employeeDto)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [HttpPut(ApiRouteConfiguration.IdSuffix)]
+        public IActionResult Put(int id, [FromBody] EmployeeDto employeeDto)
         {
-            _logger.Info("API: HttpPut Put Employee id={0}", id);
-            if (_EmployeeService.CheckIfExist(o => o.ID == id))
-            {
-                Employee employee = Mapper.Map<EmployeeDto, Employee>(employeeDto);
-                return base.Put(id, employee);
-            }
-            else
-            {
-                return ResponseMessage(ApiExceptionResponse.Throw(
-                    new IdNotFoundException("No element found for this id"), Request));
-            }
+            Employee employee = _mapper.Map<EmployeeDto, Employee>(employeeDto);
+            return base.Put(id, employee);
         }
+
 
         /// <summary>
         /// Gets Audit List of employee with the specified Id.
@@ -161,22 +156,12 @@ namespace Template.Backend.Api.Controllers
         /// </summary>
         /// <param name="id">The Employee ID.</param>
         /// <returns>List of employee Audits</returns>
-        [ResponseType(typeof(IEnumerable<EmployeeAudit>))]
-        [Route(ApiRouteConfiguration.AuditSuffix), HttpGet]
-        public IHttpActionResult Audit(int id)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<EmployeeAudit>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet(ApiRouteConfiguration.AuditSuffix)]
+        public IActionResult Audit(int id)
         {
-            _logger.Info("API: HttpGet Audit Employee id={0}", id);
-
-            IEnumerable<EmployeeAudit> employeeAudit = _EmployeeAuditService.GetAuditById(id);
-
-            if (employeeAudit != null && employeeAudit.Any())
-            {
-                return ResponseMessage(AuditToJsonResponse(employeeAudit, 2));
-            }
-            else
-            {
-                return ResponseMessage(ApiExceptionResponse.Throw(new IdNotFoundException("No element found for this id"), Request));
-            }
+            return base.Audit(id);
         }
 
         /// <summary>
@@ -184,29 +169,36 @@ namespace Template.Backend.Api.Controllers
         /// </summary>
         /// <param name="id">The audit Id.</param>
         /// <returns>Audit line of Employee</returns>
-        [ResponseType(typeof(EmployeeAudit))]
-        [Route(ApiRouteConfiguration.AuditIdSuffix), HttpGet]
-        public override IHttpActionResult AuditId(int id)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EmployeeAudit))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet(ApiRouteConfiguration.AuditIdSuffix)]
+        public IActionResult AuditId(int id)
         {
-            _logger.Info("API: HttpGet AuditId Employee id={0}", id);
             return base.AuditId(id);
         }
 
         /// <summary>
         /// Restore audit Values to current Employee.
         /// </summary>
-        /// <param name="id">Employee Id.</param>
+        /// <param name="id">Employee Id, To restore deleted entity make id=0.</param>
         /// <param name="auditId">Employee audit ID.</param>
         /// <param name="content">Empty http content.</param>
         /// <returns>Http Response with statut code (OK if is Restored otherwise error message) </returns>
-        [Route(ApiRouteConfiguration.AuditRestoreSuffix), HttpPut]
-        public IHttpActionResult PutRestoreAudit(int id, int auditId, [FromBody] string content)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpPut(ApiRouteConfiguration.AuditRestoreSuffix)]
+        public IActionResult RestoreAudit(int id, int auditId)
         {
-            _logger.Info("API: HttpPut PutRestoreAudit Employee id={0}, auditId={1}", id, auditId);
-            Employee employee = _EmployeeService.GetById(id);
+            _logger.LogInformation($"RestoreAudit for {typeof(Employee).Name} with Id {id} from {typeof(EmployeeAudit).Name} with Id {auditId}");
+            
 
             EmployeeAudit employeeAudit = _EmployeeAuditService.GetById(auditId);
-            if (employee == null)
+            if (employeeAudit == null )
+                throw new IdNotFoundException($"No element found for this auditId {auditId}");
+
+            Employee employee = _EmployeeService.GetById(id);
+
+            if (id == 0) // restore deleted employee
             {
                 employee = new Employee();
                 _EmployeeService.Restore(employee, employeeAudit);
@@ -214,10 +206,23 @@ namespace Template.Backend.Api.Controllers
             }
             else
             {
+                if (employee == null)
+                    throw new IdNotFoundException($"No element found for this Id {id}");
+                if (employee.ID != employeeAudit.ID)
+                    throw new BadRequestException($"Invalid Audit for this Id {id} and auditId {auditId}");
+
                 _EmployeeService.Restore(employee, employeeAudit);
+                _EmployeeService.Update(employee);
             }
 
-            _EmployeeService.Save(User.Identity.Name);
+            // model state test
+            if (!_EmployeeService.GetValidationDictionary().IsValid() || !ModelState.IsValid)
+            {
+                AddServiceErrorsToModelState(_EmployeeService.GetValidationDictionary());
+                throw new ModelStateException("One or more validation errors occurred.", _EmployeeService.GetValidationDictionary().ToReadOnlyDictionary());
+            }
+
+            _EmployeeService.Save();
 
             return Ok();
         }
@@ -229,11 +234,11 @@ namespace Template.Backend.Api.Controllers
         /// <returns>
         /// List of Employee as Json response
         /// </returns>
-        [ResponseType(typeof(IEnumerable<EmployeeAudit>))]
-        [Route(ApiRouteConfiguration.SnapshotSuffix), HttpGet]
-        public override IHttpActionResult GetSnapshot(string dateTime)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<EmployeeAudit>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet(ApiRouteConfiguration.SnapshotSuffix)]
+        public IActionResult GetSnapshot(string dateTime)
         {
-            _logger.Info("API: HttpGet GetSnapshot Employee date={0}", dateTime);
             return base.GetSnapshot(dateTime);
         }
 
@@ -245,11 +250,11 @@ namespace Template.Backend.Api.Controllers
         /// <returns>
         /// Employee as Json response
         /// </returns>
-        [ResponseType(typeof(Employee))]
-        [Route(ApiRouteConfiguration.SnapshotIdSuffix), HttpGet]
-        public override IHttpActionResult GetSnapshot(string dateTime, int id)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Employee))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet(ApiRouteConfiguration.SnapshotIdSuffix)]
+        public IActionResult GetSnapshot(string dateTime, int id)
         {
-            _logger.Info("API: HttpGet GetSnapshot Employee dateTime={0}, id={1}", dateTime, id);
             return base.GetSnapshot(dateTime, id);
         }
 
@@ -260,16 +265,21 @@ namespace Template.Backend.Api.Controllers
         /// <returns>
         /// Http Response with statut code (OK if is Inserted otherwise error message)
         /// </returns>
-        [ResponseType(typeof(IEnumerable<Employee>))]
-        [Route(ApiRouteConfiguration.ItemsSuffix), HttpPost]
-        public IHttpActionResult PostList([FromBody] IEnumerable<EmployeeDto> employeeDtoList)
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(IEnumerable<Employee>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [HttpPost(ApiRouteConfiguration.ItemsSuffix)]
+        public IActionResult PostList([FromBody] IEnumerable<EmployeeDto> employeeDtoList)
         {
-            _logger.Info("API: HttpPost Post EmployeeList");
-            IEnumerable<Employee> employeeList = Mapper.Map<IEnumerable<EmployeeDto>, IEnumerable<Employee>>(employeeDtoList);
-            if (!_EmployeeService.HugeInsertValidation(employeeList))
+            _logger.LogInformation($"PostList {typeof(Employee).Name} count : {employeeDtoList?.Count()}");
+
+            IEnumerable<Employee> employeeList = _mapper.Map<IEnumerable<EmployeeDto>, IEnumerable<Employee>>(employeeDtoList);
+
+            // model state test
+            if (!_EmployeeService.HugeInsertValidation(employeeList) || !ModelState.IsValid)
             {
                 AddServiceErrorsToModelState(_EmployeeService.GetValidationDictionary());
-                return ResponseMessage(InvalidModelStateToJsonResponse(_EmployeeService.GetValidationDictionary().ToDictionary()));
+                throw new ModelStateException("One or more validation errors occurred.", _EmployeeService.GetValidationDictionary().ToReadOnlyDictionary());
             }
 
             return base.PostList(employeeList);
@@ -282,80 +292,20 @@ namespace Template.Backend.Api.Controllers
         /// <returns>
         /// Employee
         /// </returns>
-        [ResponseType(typeof(Employee))]
-        [Route(), HttpGet]
-        public IHttpActionResult GetByName([FromUri] string name)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Employee))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet(ApiRouteConfiguration.SearchSuffix)]
+        public IActionResult GetByName([FromQuery] string name)
         {
-            _logger.Info("API: HttpGet GetByName Employee name={0}", name);
             Employee employee = _EmployeeService.Get(c => c.Name == name);
             if (employee != null)
             {
-                return ResponseMessage(ToJsonResponse(employee, HttpStatusCode.OK, _detailsDepth));
+                return Ok(employee);
             }
-            return ResponseMessage(ApiExceptionResponse.Throw(new NoElementFoundException("No element found for this shorName"), Request));
-        }
-
-        /// <summary>
-        /// Gets Employee list by companyID.
-        /// </summary>
-        /// <param name="companyID">The companyID.</param>
-        /// <returns>
-        /// Employee list
-        /// </returns>
-        [ResponseType(typeof(IEnumerable<Employee>))]
-        [Route(), HttpGet]
-        public IHttpActionResult GetByCompany([FromUri] int companyID)
-        {
-            _logger.Info("API: HttpGet GetByCompany Employee companyID={0}", companyID);
-            IEnumerable<Employee> employeeList = _EmployeeService.GetMany(c => c.CompanyID == companyID);
-            if (employeeList != null && employeeList.Any())
+            else
             {
-                return ResponseMessage(ToJsonResponse(employeeList, HttpStatusCode.OK, _detailsDepth));
+                throw new NoElementFoundException($"No element found for this name {name}");
             }
-            return ResponseMessage(ApiExceptionResponse.Throw(new NoElementFoundException("No element found for this companyID"), Request));
-        }
-
-        /// <summary>
-        /// Gets Employee list by departmentID.
-        /// </summary>
-        /// <param name="departmentID">The departmentID.</param>
-        /// <returns>
-        /// Employee list
-        /// </returns>
-        [ResponseType(typeof(IEnumerable<Employee>))]
-        [Route(), HttpGet]
-        public IHttpActionResult GetByDepartment([FromUri] int departmentID)
-        {
-            _logger.Info("API: HttpGet GetByDepartment Employee departmentID={0}", departmentID);
-            IEnumerable<Employee> employeeList = _EmployeeService.GetMany(c => c.DepartmentID == departmentID);
-            if (employeeList != null && employeeList.Any())
-            {
-                return ResponseMessage(ToJsonResponse(employeeList, HttpStatusCode.OK, _detailsDepth));
-            }
-            return ResponseMessage(ApiExceptionResponse.Throw(new NoElementFoundException("No element found for this departmentID"), Request));
-        }
-
-        /// <summary>
-        /// Gets List of Employee with specified Search criteria.
-        /// </summary>
-        /// <param name="searchEmployeeDto">The search employee dto.</param>
-        /// <returns>
-        /// Employee list
-        /// </returns>
-        [ResponseType(typeof(IEnumerable<Employee>))]
-        [Route(ApiRouteConfiguration.SearchSuffix), HttpPost]
-        public IHttpActionResult Search([FromBody] SearchEmployeeDto searchEmployeeDto)
-        {
-            _logger.Info("API: HttpPost Search Employee");
-            Employee searchEmployee = Mapper.Map<EmployeeDto, Employee>(searchEmployeeDto);
-            IEnumerable<Employee> employeeList = _EmployeeService.Search(searchEmployee,
-                                            searchEmployeeDto.startBirthDate, searchEmployeeDto.endBirthDate);
-
-            if (employeeList != null && employeeList.Any())
-            {
-                return ResponseMessage(ToJsonResponse(employeeList, HttpStatusCode.OK, _detailsDepth));
-            }
-            return ResponseMessage(ApiExceptionResponse.Throw(new NoElementFoundException("No element found"), Request));
         }
 
         /// <summary>
@@ -367,12 +317,13 @@ namespace Template.Backend.Api.Controllers
         /// <returns>
         /// Employee list
         /// </returns>
-        [ResponseType(typeof(IEnumerable<Employee>))]
-        [Route(ApiRouteConfiguration.SearchSuffix), HttpPost]
-        public IHttpActionResult Search([FromUri] int pageNo, int pageSize, [FromBody] SearchEmployeeDto searchEmployeeDto)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Employee>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpPost(ApiRouteConfiguration.SearchSuffix)]
+        public IActionResult Search([FromQuery] int pageNo, [FromQuery] int pageSize, [FromBody] SearchEmployeeDto searchEmployeeDto)
         {
-            _logger.Info("API: HttpPost Search Employee");
-            Employee searchEmployee = Mapper.Map<EmployeeDto, Employee>(searchEmployeeDto);
+            _logger.LogInformation($"Search Paged {typeof(Employee).Name}");
+            Employee searchEmployee = _mapper.Map<EmployeeDto, Employee>(searchEmployeeDto);
             IEnumerable<Employee> employeeList = _EmployeeService.Search(searchEmployee,
                         searchEmployeeDto.startBirthDate, searchEmployeeDto.endBirthDate, pageNo, pageSize);
 
@@ -380,9 +331,13 @@ namespace Template.Backend.Api.Controllers
             {
                 int count = _EmployeeService.SearchCount(searchEmployee,
                         searchEmployeeDto.startBirthDate, searchEmployeeDto.endBirthDate);
-                return ResponseMessage(ToJsonResponse(employeeList, HttpStatusCode.OK, _detailsDepth, count));
+                AddCountHeaders(employeeList, count);
+                return Ok(employeeList);
             }
-            return ResponseMessage(ApiExceptionResponse.Throw(new NoElementFoundException("No element found"), Request));
+            else
+            {
+                throw new NoElementFoundException($"No element found");
+            }
         }
     }
 }

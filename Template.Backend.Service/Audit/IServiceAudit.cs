@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Template.Backend.Model.Audit;
 using System.Linq.Expressions;
 
 namespace Template.Backend.Service.Audit
@@ -8,7 +7,7 @@ namespace Template.Backend.Service.Audit
     /// IService interface
     /// </summary>
     /// <typeparam name="T">class</typeparam>
-    public interface IServiceAudit<T> where T : class
+    public interface IServiceAudit<T> where T : IAuditEntity
     {
 
         IEnumerable<T> GetAuditById(int id);

@@ -1,5 +1,6 @@
-﻿using Template.Backend.Model.Audit.Entities;
-using System.Data.Entity.ModelConfiguration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Template.Backend.Model.Audit.Entities;
 
 namespace Template.Backend.Data.Audit.Configuration
 {
@@ -8,11 +9,11 @@ namespace Template.Backend.Data.Audit.Configuration
     ///  CompanyAuditConfiguration class
     ///  Allows database configuration to be performed for an entity type in a model
     /// </summary>
-    class CompanyAuditConfiguration : EntityTypeConfiguration<CompanyAudit>
+    class CompanyAuditConfiguration : IEntityTypeConfiguration<CompanyAudit>
     {
-        public CompanyAuditConfiguration()
+        public void Configure(EntityTypeBuilder<CompanyAudit> builder)
         {
-            ToTable("CompanyAudit").HasKey(a => a.CompanyAuditID);
+            builder.ToTable("CompanyAudit").HasKey(a => a.CompanyAuditID);
         }
     }
 }

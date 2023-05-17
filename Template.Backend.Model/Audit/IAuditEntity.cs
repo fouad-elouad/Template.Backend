@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using Template.Backend.Model.Enums;
 
 namespace Template.Backend.Model.Audit
 {
@@ -8,9 +9,8 @@ namespace Template.Backend.Model.Audit
         DateTime? CreatedDate { get; set; }
         int ID { get; set; }
         AuditOperations AuditOperation { get; set; }
-        string LoggedUserName { get; set; }
-        DateTime? CreatedOn{ get; set; }
+        string? LoggedUserName { get; set; }
+        DateTime? CreatedOn { get; set; }
     }
 
-    public enum AuditOperations { INSERT = 1, UPDATE, DELETE }
 }

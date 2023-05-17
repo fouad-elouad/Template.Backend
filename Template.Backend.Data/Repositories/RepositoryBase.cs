@@ -1,10 +1,7 @@
-﻿using Template.Backend.Data.Helpers;
+﻿using Microsoft.EntityFrameworkCore;
 using Template.Backend.Model.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
 using System.Linq.Expressions;
+using Template.Backend.Data.Utilities;
 using Template.Backend.Model;
 
 namespace Template.Backend.Data.Repositories
@@ -17,32 +14,18 @@ namespace Template.Backend.Data.Repositories
     /// <typeparam name="T">class</typeparam>
     public abstract class RepositoryBase<T> where T : class
     {
-        private IDbContext _dataContext;
-        protected readonly IDbSet<T> _dbSet;
+        protected StarterDbContext _dataContext;
+        protected readonly DbSet<T> _dbSet;
         private const int _defaultLimit = 10000;
-
-        protected IDbFactory DbFactory
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Return current context if not instantiate new one
-        /// </summary>
-        protected IDbContext DbContext
-        {
-            get { return _dataContext ?? (_dataContext = DbFactory.Init()); }
-        }
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="dbFactory"></param>
-        protected RepositoryBase(IDbFactory dbFactory)
+        protected RepositoryBase(StarterDbContext dbContext)
         {
-            DbFactory = dbFactory;
-            _dbSet = DbContext.Set<T>();
+            _dataContext = dbContext;
+            _dbSet = _dataContext.Set<T>();
         }
 
         /// <summary>
@@ -62,9 +45,7 @@ namespace Template.Backend.Data.Repositories
         /// <param name="entities">entites to add</param>
         public virtual void AddRange(IEnumerable<T> entities)
         {
-            // can't call AddRange on dbSet interface
-            var DbSet = (DbSet<T>)_dbSet;
-            DbSet.AddRange(entities);
+            _dbSet.AddRange(entities);
         }
 
         /// <summary>
@@ -97,9 +78,7 @@ namespace Template.Backend.Data.Repositories
         public virtual void Delete(Expression<Func<T, bool>> where)
         {
             IEnumerable<T> objects = _dbSet.Where<T>(where).AsEnumerable();
-            // can't call AddRange on dbSet interface
-            var DbSet = (DbSet<T>)_dbSet;
-            DbSet.RemoveRange(objects);
+            _dbSet.RemoveRange(objects);
         }
 
         /// <summary>
@@ -124,16 +103,6 @@ namespace Template.Backend.Data.Repositories
         /// <param name="id">Id of entity to find</param>
         /// <returns>Founded entity</returns>
         public virtual T GetById(int id)
-        {
-            return _dbSet.Find(id);
-        }
-
-        /// <summary>
-        /// Finds an entity with the primary key values
-        /// </summary>
-        /// <param name="id">Id of entity to find</param>
-        /// <returns>Founded entity</returns>
-        public virtual T GetById(string id)
         {
             return _dbSet.Find(id);
         }

@@ -2,9 +2,8 @@
 using Template.Backend.Data.SpecificRepositories;
 using Template.Backend.Model.Audit.Entities;
 using Template.Backend.Model.Entities;
+using Template.Backend.Model.Enums;
 using Template.Backend.Service.Validation;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Template.Backend.Service.Services
 {
@@ -27,6 +26,8 @@ namespace Template.Backend.Service.Services
         /// <param name="Id">The identifier.</param>
         /// <returns></returns>
         bool CheckIsUnique(string name, int Id);
+
+        Department? FindById(int id, NestedObjectDepth nestedObjectDepth);
 
         /// <summary>
         /// Logic and database Validation
@@ -67,7 +68,7 @@ namespace Template.Backend.Service.Services
         /// <param name="Department">Entity to add</param>
         public override void Add(Department Department)
         {
-            if (this.ValidateDepartment(Department))
+            if (this.Validate(Department))
                 base.Add(Department);
         }
 
@@ -79,7 +80,7 @@ namespace Template.Backend.Service.Services
         /// <param name="entity">Entity to Update</param>
         public override void Update(Department Department)
         {
-            if (this.ValidateDepartment(Department))
+            if (this.Validate(Department))
                 base.Update(Department);
         }
 
@@ -94,12 +95,17 @@ namespace Template.Backend.Service.Services
             return _DepartmentRepository.CheckIsUnique(name, Id);
         }
 
+        public Department? FindById(int id, NestedObjectDepth nestedObjectDepth)
+        {
+            return _DepartmentRepository.FindById(id, nestedObjectDepth);
+        }
+
         /// <summary>
         /// Logic and database Validation
         /// </summary>
         /// <param name="departmentToValidate"></param>
         /// <returns>Validation state</returns>
-        protected bool ValidateDepartment(Department departmentToValidate)
+        protected bool Validate(Department departmentToValidate)
         {
             // Database validation
             if (string.IsNullOrWhiteSpace(departmentToValidate.Name))
@@ -127,8 +133,8 @@ namespace Template.Backend.Service.Services
         public bool HugeInsertValidation(IEnumerable<Department> departmentListToValidate)
         {
             int line = 1;
-            bool isRequeredNameMessage = false;
-            string requeredNameMessage = "Name is required lignes ";
+            bool isRequiredNameMessage = false;
+            string requiredNameMessage = "Name is required lignes ";
             bool isDuplicatedNameMessage = false;
             string duplicatedNameMessage = "Name already exist lignes ";
             foreach (var department in departmentListToValidate)
@@ -136,8 +142,8 @@ namespace Template.Backend.Service.Services
                 // Database validation
                 if (string.IsNullOrWhiteSpace(department.Name))
                 {
-                    isRequeredNameMessage = true;
-                    requeredNameMessage += line + ",";
+                    isRequiredNameMessage = true;
+                    requiredNameMessage += line + ",";
                 }
 
                 // unique
@@ -156,8 +162,8 @@ namespace Template.Backend.Service.Services
                 line++;
             }
 
-            if (isRequeredNameMessage)
-                GetValidationDictionary().AddError(nameof(Department.Name), requeredNameMessage);
+            if (isRequiredNameMessage)
+                GetValidationDictionary().AddError(nameof(Department.Name), requiredNameMessage);
             if (isDuplicatedNameMessage)
                 GetValidationDictionary().AddError(nameof(Department.Name), duplicatedNameMessage);
 

@@ -1,6 +1,5 @@
-﻿using Template.Backend.Service.Validation;
-using System;
-using System.Collections.Generic;
+﻿using Template.Backend.Model;
+using Template.Backend.Service.Validation;
 using System.Linq.Expressions;
 
 namespace Template.Backend.Service
@@ -9,7 +8,7 @@ namespace Template.Backend.Service
     /// IService interface
     /// </summary>
     /// <typeparam name="T">class</typeparam>
-    public interface IService<T> where T : class
+    public interface IService<T> where T : IEntity
     {
         /// <summary>
         /// Mark the specified entity as added.
@@ -77,8 +76,7 @@ namespace Template.Backend.Service
         /// <summary>
         /// Saves the current context.
         /// </summary>
-        /// <param name="userName">Name of the user.</param>
-        void Save(string userName);
+        void Save();
 
         /// <summary>
         /// Gets the validation dictionary.

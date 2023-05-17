@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace Template.Backend.Model
 {
     public interface IEntity

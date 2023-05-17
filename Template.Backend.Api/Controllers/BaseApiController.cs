@@ -1,27 +1,17 @@
-﻿using AutoMapper;
-using Template.Backend.Api.Exceptions;
-using Template.Backend.Api.Helpers;
-using Template.Backend.Service;
+﻿using Template.Backend.Service;
 using Template.Backend.Service.Audit;
-using Template.Backend.Service.Validation;
-using NLog;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Web.Http;
-using System.Web.Http.Description;
-using System.Web.Http.Results;
+using Microsoft.AspNetCore.Mvc;
 using Template.Backend.Model.Exceptions;
-using Template.Backend.Model.Audit;
+using Template.Backend.Service.Validation;
 using Template.Backend.Model;
+using Template.Backend.Model.Audit;
+using AutoMapper;
+using System.Globalization;
+using Template.Backend.Api.Utilities;
 
 namespace Template.Backend.Api.Controllers
 {
-    public abstract class BaseApiController<Entity, AuditEntity> : ApiController where Entity : class where AuditEntity : class
+    public abstract class BaseApiController<Entity, AuditEntity> : ControllerBase where Entity : IEntity where AuditEntity : IAuditEntity
     {
         protected const int _detailsDepth = 2;
         protected const int _getAllDepth = 1;
@@ -29,7 +19,6 @@ namespace Template.Backend.Api.Controllers
         /// The date format for Snapshot method
         /// </summary>
         protected const string _dateFormat = "yyyyMMddTHHmmss";
-        protected readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
         /// The media type
@@ -37,44 +26,49 @@ namespace Template.Backend.Api.Controllers
         protected const string _mediaType = "application/json";
         private readonly IService<Entity> _Service;
         private readonly IServiceAudit<AuditEntity> _AuditService;
+        protected readonly IMapper _mapper;
+        protected readonly ILogger<Entity> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseApiController{Entity, AuditEntity}" /> class.
         /// </summary>
         /// <param name="Service">The service.</param>
         /// <param name="AuditService">The audit service.</param>
-        public BaseApiController(IService<Entity> Service, IServiceAudit<AuditEntity> AuditService)
+        public BaseApiController(IService<Entity> Service, IServiceAudit<AuditEntity> AuditService, IMapper mapper, ILogger<Entity> logger)
         {
             _Service = Service;
             _AuditService = AuditService;
+            _mapper = mapper;
+            _logger = logger;
         }
 
         /// <summary>
         /// entity Count.
         /// </summary>
         /// <returns>Entity</returns>
-        public virtual IHttpActionResult Count()
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [NonAction]
+        public virtual IActionResult Count()
         {
+            _logger.LogInformation($"Count for {typeof(Entity).Name} entity");
             int count = _Service.Count();
-            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, count);
-            return ResponseMessage(response);
+            return Ok(count);
         }
 
         /// <summary>
-        /// Gets All
+        /// Get All.
         /// </summary>
-        /// <returns>List</returns>
-        public virtual IHttpActionResult Get()
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [NonAction]
+        protected virtual IActionResult Get()
         {
-            int count = _Service.Count();
-            IEnumerable<Entity> list = _Service.GetAll();
-            if (list != null && list.Any())
-            {
-                return ResponseMessage(ToJsonResponse(list, _getAllDepth, count));
-            }
+            _logger.LogInformation($"GetAll for {typeof(Entity).Name} entity");
+            var entities = _Service.GetAll();
+            if (entities != null && entities.Any())
+                return Ok(entities);
             else
             {
-                return ResponseMessage(ApiExceptionResponse.Throw(new NoElementFoundException("No element found"), Request));
+                throw new IdNotFoundException($"No element found for {typeof(Entity).Name} entity");
             }
         }
 
@@ -83,31 +77,151 @@ namespace Template.Backend.Api.Controllers
         /// </summary>
         /// <param name="id">ID</param>
         /// <returns>Entity</returns>
-        public virtual IHttpActionResult Get(int id)
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [NonAction]
+        protected virtual IActionResult Get(int id)
         {
+            _logger.LogInformation($"Search for {typeof(Entity).Name} with Id {id}");
             var entity = _Service.GetById(id);
             if (entity != null)
-                return ResponseMessage(ToJsonResponse(entity, HttpStatusCode.OK, _detailsDepth));
+                return Ok(entity);
             else
             {
-                return ResponseMessage(ApiExceptionResponse.Throw(new IdNotFoundException("No element found for this id"), Request));
+                throw new IdNotFoundException($"No element found for this id {id}");
             }
         }
 
         /// <summary>
-        /// Gets the specified identifier.
+        /// Insert the specified Entity.
         /// </summary>
-        /// <param name="id">Entity ID .</param>
-        /// <param name="depth">The maximum level to achieve for navigation properties serialization.</param>
-        /// <returns>Entity</returns>
-        public virtual IHttpActionResult Get(int id, int depth)
+        /// <param name="entity">The Entity to Insert.</param>
+        /// <returns>Created ressource with statut code (Created if is Inserted otherwise error message)</returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [NonAction]
+        public virtual IActionResult Post([FromBody] Entity entity)
         {
-            var list = _Service.GetById(id);
-            if (list != null)
-                return ResponseMessage(ToJsonResponse(list, HttpStatusCode.OK, depth));
+            _logger.LogInformation($"Post {typeof(Entity).Name}");
+            _Service.Add(entity);
+
+            // model state test
+            if (!_Service.GetValidationDictionary().IsValid() || !ModelState.IsValid)
+            {
+                AddServiceErrorsToModelState(_Service.GetValidationDictionary());
+                throw new ModelStateException("One or more validation errors occurred.", _Service.GetValidationDictionary().ToReadOnlyDictionary());
+            }
+
+            _Service.Save();
+            var actionName = nameof(Get);
+            var routeValues = new { id = entity.ID };
+            return CreatedAtAction(actionName, routeValues, entity);
+        }
+
+        /// <summary>
+        /// Insert the specified Entities.
+        /// </summary>
+        /// <param name="entities">The Entities to Insert.</param>
+        /// <returns>Created ressource with statut code (Created if is Inserted otherwise error message)</returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [NonAction]
+        public virtual IActionResult PostList([FromBody] IEnumerable<Entity> entities)
+        {
+            _logger.LogInformation($"PostList {typeof(Entity).Name}");
+            _Service.AddRange(entities);
+            _Service.Save();
+            var actionName = nameof(Get);
+            return CreatedAtAction(actionName, entities);
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [NonAction]
+        public virtual IActionResult Put(int id, [FromBody] Entity entity)
+        {
+            _logger.LogInformation($"Put {typeof(Entity).Name} with Id {id}");
+            if (entity != null)
+            {
+                if (!_Service.CheckIfExist(e => e.ID == id))
+                {
+                    throw new IdNotFoundException($"No element found for this id {id} for {typeof(Entity)?.Name}");
+                }
+                entity.ID = id;
+                _Service.Update(entity);
+
+                // model state test
+                if (!_Service.GetValidationDictionary().IsValid() || !ModelState.IsValid)
+                {
+                    AddServiceErrorsToModelState(_Service.GetValidationDictionary());
+                    throw new ModelStateException("One or more validation errors occurred.", _Service.GetValidationDictionary().ToReadOnlyDictionary());
+                }
+
+                _Service.Save();
+
+                return Ok();
+            }
             else
             {
-                return ResponseMessage(ApiExceptionResponse.Throw(new IdNotFoundException("No element found for this id"), Request));
+                throw new BadRequestException($"No values defined in request body for {typeof(Entity)?.Name}");
+            }
+        }
+
+        /// <summary>
+        /// Gets Audit of the specified ID.
+        /// </summary>
+        /// <param name="id">The audit Id.</param>
+        /// <returns>Audit line</returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [NonAction]
+        public virtual IActionResult AuditId(int id)
+        {
+            _logger.LogInformation($"Search for {typeof(AuditEntity).Name} with Id {id}");
+            AuditEntity auditEntity = _AuditService.GetById(id);
+
+            if (auditEntity != null)
+                return Ok(auditEntity);
+            else
+            {
+                throw new IdNotFoundException($"No element found for this id {id}");
+            }
+        }
+
+        /// <summary>
+        /// Deletes Entity with the specified Id.
+        /// </summary>
+        /// <param name="id">ID to Delete</param>
+        /// <returns>Http Response with statut code (NoContent (204) if is Deleted otherwise error message)</returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [NonAction]
+        public virtual IActionResult Delete(int id)
+        {
+            _logger.LogInformation($"Delete {typeof(Entity).Name} with Id {id}");
+            if (id > 0)
+            {
+                _Service.Delete(id);
+                _Service.Save();
+                return NoContent();
+            }
+            throw new CanNotBeDeletedException($"Not a valid Id {id} for {typeof(Entity)?.Name}");
+        }
+
+        /// <summary>
+        /// Gets Audit List of company with the specified Id.
+        /// its provide All operations performed on this company
+        /// </summary>
+        /// <param name="id">The Company ID.</param>
+        /// <returns>List of company Audits</returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [NonAction]
+        public virtual IActionResult Audit(int id)
+        {
+            _logger.LogInformation($"Audit {typeof(Entity).Name} with Id {id}");
+            IEnumerable<AuditEntity> auditEntity = _AuditService.GetAuditById(id);
+
+            if (auditEntity != null && auditEntity.Any())
+            {
+                return Ok(auditEntity);
+            }
+            else
+            {
+                throw new NoElementFoundException($"No element found for this id {id} for {typeof(AuditEntity)?.Name}");
             }
         }
 
@@ -117,233 +231,94 @@ namespace Template.Backend.Api.Controllers
         /// <param name="pageNo">page index.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <returns>List of Entities</returns>
-        public virtual IHttpActionResult GetPagedList(int pageNo, int pageSize)
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [NonAction]
+        public virtual IActionResult GetPagedList(int pageNo, int pageSize)
         {
+            _logger.LogInformation($"GetPagedList {typeof(Entity).Name} with pageNo {pageNo} and pageSize {pageSize}");
             int count = _Service.Count();
             IEnumerable<Entity> list = _Service.GetPagedList(pageNo, pageSize);
+
             if (list != null && list.Any())
             {
-                return ResponseMessage(ToJsonResponse(list, _detailsDepth, count));
-            }
+                AddCountHeaders(list, count);
+                return Ok(list);
+            }  
             else
             {
-                return ResponseMessage(ApiExceptionResponse.Throw(new NoElementFoundException("No element found"), Request));
+                throw new NoElementFoundException($"No element found for {typeof(Entity).Name} entity");
             }
         }
 
         /// <summary>
-        /// Deletes Entity with the specified Id.
+        /// Gets the snapshot at the specified date time.
         /// </summary>
-        /// <param name="id">ID to Delete</param>
-        /// <returns>Http Response with statut code (NoContent (204) if is Deleted otherwise error message)</returns>
-        public virtual IHttpActionResult Delete(int id)
-        {
-            if (id > 0)
-            {
-                _Service.Delete(id);
-                _Service.Save(User.Identity.Name);
-                return new StatusCodeResult(HttpStatusCode.NoContent, Request);
-            }
-            return ResponseMessage(ApiExceptionResponse.Throw(new BusinessException("Not a valid Id"), Request));
-        }
-
-        /// <summary>
-        /// Insert the specified Entity.
-        /// </summary>
-        /// <param name="entity">The Entity to Insert.</param>
-        /// <returns>Created ressource with statut code (Created if is Inserted otherwise error message)</returns>
+        /// <param name="dateTime">The date time.</param>
+        /// <returns>List of Objects as Json response</returns>
         [ApiExplorerSettings(IgnoreApi = true)]
-        public virtual IHttpActionResult Post([FromBody] Entity entity)
+        [NonAction]
+        public virtual IActionResult GetSnapshot(string dateTime)
         {
-            _Service.Add(entity);
-
-            // model state test
-            if (!_Service.GetValidationDictionary().IsValid() || !ModelState.IsValid)
+            try
             {
-                AddServiceErrorsToModelState(_Service.GetValidationDictionary());
-                return ResponseMessage(InvalidModelStateToJsonResponse(_Service.GetValidationDictionary().ToDictionary()));
-            }
+                _logger.LogInformation($"GetSnapshot {typeof(Entity).Name} with dateTime {dateTime}");
 
-            _Service.Save(User.Identity.Name);
-            return ResponseMessage(ToJsonResponse(entity, HttpStatusCode.Created));
-        }
+                DateTime dateParsed = DateTime.ParseExact(dateTime, _dateFormat, CultureInfo.InvariantCulture,
+                                                    DateTimeStyles.AdjustToUniversal);
 
-        /// <summary>
-        /// Insert the specified Entity List.
-        /// </summary>
-        /// <param name="entityList">The entity list.</param>
-        /// <returns>
-        /// Created ressource with statut code (Created if is Inserted otherwise error message)
-        /// </returns>
-        [ApiExplorerSettings(IgnoreApi = true)]
-        public virtual IHttpActionResult PostList([FromBody] IEnumerable<Entity> entityList)
-        {
-            _Service.AddRange(entityList);
+                IEnumerable<AuditEntity> entityAuditList = _AuditService.GetAllSnapshot(dateParsed);
 
-            // model state test
-            if (!_Service.GetValidationDictionary().IsValid() || !ModelState.IsValid)
-            {
-                AddServiceErrorsToModelState(_Service.GetValidationDictionary());
-                return ResponseMessage(InvalidModelStateToJsonResponse(_Service.GetValidationDictionary().ToDictionary()));
-            }
-
-            _Service.Save(User.Identity.Name);
-            return ResponseMessage(ToJsonResponse(entityList, HttpStatusCode.Created));
-        }
-
-        /// <summary>
-        /// Update the Entity with the specified ID.
-        /// </summary>
-        /// <param name="id">the Entity ID to Update.</param>
-        /// <param name="entity">The entity.</param>
-        /// <returns>
-        /// Http Response with statut code (OK if is Updated otherwise error message)
-        /// </returns>
-        /// <exception cref="BadRequestException">No values defined in request body</exception>
-        [ApiExplorerSettings(IgnoreApi = true)]
-        public virtual IHttpActionResult Put(int id, Entity entity)
-        {
-            if (entity != null)
-            {
-                IEntity iEntity = (IEntity)entity;
-                iEntity.ID = id;
-                Entity entityToUpdate = (Entity)iEntity;
-                _Service.Update(entityToUpdate);
-
-                // model state test
-                if (!_Service.GetValidationDictionary().IsValid() || !ModelState.IsValid)
+                if (entityAuditList != null && entityAuditList.Any())
                 {
-                    HttpResponseMessage responseMsg = InvalidModelStateToJsonResponse(_Service.GetValidationDictionary().ToDictionary());
-                    return ResponseMessage(responseMsg);
+                    IEnumerable<Entity> entityList = _mapper.Map<IEnumerable<AuditEntity>,
+                                                IEnumerable<Entity>>(entityAuditList);
+                    return Ok(entityAuditList);
                 }
-
-                _Service.Save(User.Identity.Name);
-
-                return Ok();
+                else
+                {
+                    throw new NoElementFoundException($"No element found for this dateTime {dateTime} for {typeof(AuditEntity)?.Name}");
+                }
             }
-            else
+            catch (FormatException)
             {
-                throw new BadRequestException("No values defined in request body");
+                throw new DateTimeFormatException($"DateTime parameter format {_dateFormat}");
             }
         }
 
         /// <summary>
-        /// Gets Audit of the specified ID.
+        /// Gets the snapshot.
         /// </summary>
-        /// <param name="id">The audit Id.</param>
-        /// <returns>Audit line</returns>
-        public virtual IHttpActionResult AuditId(int id)
-        {
-            AuditEntity auditEntity = _AuditService.GetById(id);
-
-            if (auditEntity != null)
-                return ResponseMessage(AuditToJsonResponse((IAuditEntity)auditEntity, 2));
-
-            return ResponseMessage(ApiExceptionResponse.Throw(new NoElementFoundException("Audit not found"), Request));
-        }
-
-        /// <summary>
-        /// Return Json response from List of Entity object.
-        /// </summary>
-        /// <param name="obj">List of Entities</param>
-        /// <param name="httpStatusCode">The HTTP status code.</param>
-        /// <param name="depth">The maximum level to achieve for navigation properties serialization.</param>
-        /// <param name="totalCountFound">The total count found.</param>
+        /// <param name="dateTime">The date time.</param>
+        /// <param name="id">The identifier.</param>
         /// <returns>
-        /// Json response
+        /// Object as Json response
         /// </returns>
-        protected HttpResponseMessage ToJsonResponse(IEnumerable<Entity> obj, HttpStatusCode httpStatusCode, int depth = 2, int totalCountFound = 0)
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [NonAction]
+        public virtual IActionResult GetSnapshot(string dateTime, int id)
         {
-            int objCount = obj.Count();
-            if (totalCountFound < objCount)
-                totalCountFound = objCount;
-            HttpResponseMessage response = Request.CreateResponse(httpStatusCode);
-            string content = ApiHelper.SerializeObjectDepth(obj, depth);
-            response.Content = new StringContent(content, Encoding.UTF8, _mediaType);
-            response.Headers.Add(Constants.CustomHeader_Total_Count_Found, totalCountFound.ToString());
-            response.Headers.Add(Constants.CustomHeader_Total_Count_Returned, objCount.ToString());
-            return response;
-        }
+            try
+            {
+                _logger.LogInformation($"GetSnapshot {typeof(Entity).Name} with dateTime {dateTime} and Id {id}");
+                DateTime dateParsed = DateTime.ParseExact(dateTime, _dateFormat, CultureInfo.InvariantCulture,
+                                                    DateTimeStyles.AdjustToUniversal);
 
-        /// <summary>
-        /// Return Json response from List of Entity object.
-        /// </summary>
-        /// <param name="obj">List of Entities</param>
-        /// <param name="depth">The maximum level to achieve for navigation properties serialization.</param>
-        /// <param name="totalCountFound">The total count found.</param>
-        /// <returns>
-        /// Json response
-        /// </returns>
-        protected HttpResponseMessage ToJsonResponse(IEnumerable<Entity> obj, int depth = 1, int totalCountFound = 0)
-        {
-            int objCount = obj.Count();
-            if (totalCountFound < objCount)
-                totalCountFound = objCount;
-            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
-            string content = ApiHelper.SerializeObjectDepth(obj, depth);
-            response.Content = new StringContent(content, Encoding.UTF8, _mediaType);
-            response.Headers.Add(Constants.CustomHeader_Total_Count_Found, totalCountFound.ToString());
-            response.Headers.Add(Constants.CustomHeader_Total_Count_Returned, objCount.ToString());
-            return response;
-        }
+                AuditEntity auditEntity = _AuditService.GetByIdSnapshot(dateParsed, id);
 
-        /// <summary>
-        /// Return Json response from Entity object.
-        /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <param name="httpStatusCode">The HTTP status code.</param>
-        /// <param name="depth">The maximum level to achieve for navigation properties serialization.</param>
-        /// <returns>
-        /// Json response
-        /// </returns>
-        protected HttpResponseMessage ToJsonResponse(Entity obj, HttpStatusCode httpStatusCode, int depth = 1)
-        {
-            HttpResponseMessage response = Request.CreateResponse(httpStatusCode);
-            string content = ApiHelper.SerializeObjectDepth(obj, depth);
-            response.Content = new StringContent(content, Encoding.UTF8, _mediaType);
-            return response;
-        }
-
-        /// <summary>
-        /// Return Json response from Audit Entity object.
-        /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <param name="depth">The maximum level to achieve for navigation properties serialization.</param>
-        /// <returns>Json response</returns>
-        protected HttpResponseMessage AuditToJsonResponse(IAuditEntity obj, int depth = 1)
-        {
-            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
-            string content = ApiHelper.SerializeObjectDepth(obj, depth);
-            response.Content = new StringContent(content, Encoding.UTF8, _mediaType);
-            return response;
-        }
-
-        /// <summary>
-        /// Return Json response from List of Audit Entities object.
-        /// </summary>
-        /// <param name="obj">Object to transforme</param>
-        /// <param name="depth">The maximum level to achieve for navigation properties serialization.</param>
-        /// <returns>Json response</returns>
-        protected HttpResponseMessage AuditToJsonResponse(IEnumerable<IAuditEntity> obj, int depth = 1)
-        {
-            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
-            string content = ApiHelper.SerializeObjectDepth(obj, depth);
-            response.Content = new StringContent(content, Encoding.UTF8, _mediaType);
-            return response;
-        }
-
-        /// <summary>
-        ///  model state to json response.
-        /// </summary>
-        /// <param name="obj">Errors Dictionary</param>
-        /// <returns>Http Response that contains Errors Dictionary</returns>
-        protected HttpResponseMessage InvalidModelStateToJsonResponse(Dictionary<string, IList<string>> obj)
-        {
-            HttpResponseMessage response = Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Invalid models state");
-            string content = ApiHelper.SerializeObjectDepth(obj, 3);
-            response.Content = new StringContent(content, Encoding.UTF8, _mediaType);
-            response.ReasonPhrase = "ModelStateException";
-            return response;
+                if (auditEntity != null)
+                {
+                    Entity entity = _mapper.Map<AuditEntity, Entity>(auditEntity);
+                    return Ok(entity);
+                }
+                else
+                {
+                    throw new IdNotFoundException($"No Snapshot found for this {id} on {dateTime}");
+                }
+            }
+            catch (FormatException)
+            {
+                throw new DateTimeFormatException($"DateTime parameter format {_dateFormat}");
+            }
         }
 
         /// <summary>
@@ -367,80 +342,10 @@ namespace Template.Backend.Api.Controllers
             }
         }
 
-        /// <summary>
-        /// Gets the snapshot at the specified date time.
-        /// </summary>
-        /// <param name="dateTime">The date time.</param>
-        /// <returns>List of Objects as Json response</returns>
-        public virtual IHttpActionResult GetSnapshot(string dateTime)
+        protected void AddCountHeaders(IEnumerable<Entity> list, int count)
         {
-            try
-            {
-                IEnumerable<AuditEntity> entityAuditList;
-                IEnumerable<Entity> entityList;
-                DateTime dateParsed = DateTime.ParseExact(dateTime, _dateFormat, CultureInfo.InvariantCulture,
-                                                    DateTimeStyles.AdjustToUniversal);
-
-                entityAuditList = _AuditService.GetAllSnapshot(dateParsed);
-
-                if (entityAuditList != null && entityAuditList.Any())
-                {
-                    entityList = Mapper.Map<IEnumerable<AuditEntity>,
-                                                IEnumerable<Entity>>(entityAuditList);
-                    return ResponseMessage(ToJsonResponse(entityList, 2));
-                }
-                else
-                {
-                    return ResponseMessage(ApiExceptionResponse.Throw(new NoElementFoundException("No element found"), Request));
-                }
-            }
-            catch (FormatException)
-            {
-                return ResponseMessage(ApiExceptionResponse.Throw(new DateTimeFormatException("DateTime parameter format yyyyMMddThhmmss"), Request));
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Gets the snapshot.
-        /// </summary>
-        /// <param name="dateTime">The date time.</param>
-        /// <param name="id">The identifier.</param>
-        /// <returns>
-        /// Object as Json response
-        /// </returns>
-        public virtual IHttpActionResult GetSnapshot(string dateTime, int id)
-        {
-            try
-            {
-                AuditEntity auditEntity;
-                Entity entity;
-                DateTime dateParsed = DateTime.ParseExact(dateTime, _dateFormat, CultureInfo.InvariantCulture,
-                                                    DateTimeStyles.AdjustToUniversal);
-
-                auditEntity = _AuditService.GetByIdSnapshot(dateParsed, id);
-
-                if (auditEntity != null)
-                {
-                    entity = Mapper.Map<AuditEntity, Entity>(auditEntity);
-                    return ResponseMessage(ToJsonResponse(entity, HttpStatusCode.OK));
-                }
-                else
-                {
-                    return ResponseMessage(ApiExceptionResponse.Throw(new IdNotFoundException("No Snapshot found for this id"), Request));
-                }
-            }
-            catch (FormatException)
-            {
-                return ResponseMessage(ApiExceptionResponse.Throw(new DateTimeFormatException("DateTime parameter format yyyyMMddThhmmss"), Request));
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            HttpContext.Response.Headers.Add(Constants.CustomHeader_total_count_found, count.ToString());
+            HttpContext.Response.Headers.Add(Constants.CustomHeader_total_count_returned, list?.Count().ToString());
         }
     }
 }

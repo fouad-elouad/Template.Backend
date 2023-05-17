@@ -2,9 +2,9 @@
 using Template.Backend.Data.SpecificRepositories;
 using Template.Backend.Model.Audit.Entities;
 using Template.Backend.Model.Entities;
+using Template.Backend.Model.Enums;
 using Template.Backend.Service.Validation;
-using System.Collections.Generic;
-using System.Linq;
+
 
 namespace Template.Backend.Service.Services
 {
@@ -27,6 +27,8 @@ namespace Template.Backend.Service.Services
         /// <param name="Id">The identifier.</param>
         /// <returns></returns>
         bool CheckIsUnique(string name, int Id);
+
+        Company? FindById(int id, NestedObjectDepth nestedObjectDepth);
 
         /// <summary>
         /// Logic and database Validation
@@ -67,7 +69,7 @@ namespace Template.Backend.Service.Services
         /// <param name="Company">Entity to add</param>
         public override void Add(Company Company)
         {
-            if (this.ValidateCompany(Company))
+            if (this.Validate(Company))
                 base.Add(Company);
         }
 
@@ -79,7 +81,7 @@ namespace Template.Backend.Service.Services
         /// <param name="entity">Entity to Update</param>
         public override void Update(Company Company)
         {
-            if (this.ValidateCompany(Company))
+            if (this.Validate(Company))
                 base.Update(Company);
         }
 
@@ -94,12 +96,17 @@ namespace Template.Backend.Service.Services
             return _CompanyRepository.CheckIsUnique(name, Id);
         }
 
+        public Company? FindById(int id, NestedObjectDepth nestedObjectDepth)
+        {
+            return _CompanyRepository.FindById(id, nestedObjectDepth);
+        }
+
         /// <summary>
         /// Logic and database Validation
         /// </summary>
         /// <param name="companyToValidate"></param>
         /// <returns>Validation state</returns>
-        protected bool ValidateCompany(Company companyToValidate)
+        protected bool Validate(Company companyToValidate)
         {
             // Database validation
             if (string.IsNullOrWhiteSpace(companyToValidate.Name))
@@ -132,10 +139,10 @@ namespace Template.Backend.Service.Services
         public bool HugeInsertValidation(IEnumerable<Company> companyListToValidate)
         {
             int line = 1;
-            bool isRequeredNameMessage = false;
-            string requeredNameMessage = "Name is required lignes ";
-            bool isRequeredCreationDateMessage = false;
-            string requeredCreationDateMessage = "CreationDate Name is required lignes ";
+            bool isRequiredNameMessage = false;
+            string requiredNameMessage = "Name is required lignes ";
+            bool isRequiredCreationDateMessage = false;
+            string requiredCreationDateMessage = "CreationDate Name is required lignes ";
             bool isDuplicatedNameMessage = false;
             string duplicatedNameMessage = "Name already exist lignes ";
             foreach (var company in companyListToValidate)
@@ -143,15 +150,15 @@ namespace Template.Backend.Service.Services
                 // Database validation
                 if (string.IsNullOrWhiteSpace(company.Name))
                 {
-                    isRequeredNameMessage = true;
-                    requeredNameMessage += line + ",";
+                    isRequiredNameMessage = true;
+                    requiredNameMessage += line + ",";
                 }
 
                 // Database validation
                 if (company.CreationDate == null)
                 {
-                    isRequeredCreationDateMessage = true;
-                    requeredCreationDateMessage += line + ",";
+                    isRequiredCreationDateMessage = true;
+                    requiredCreationDateMessage += line + ",";
                 }
 
                 // unique
@@ -162,7 +169,7 @@ namespace Template.Backend.Service.Services
                 }
 
                 // unique
-                if (companyListToValidate.Count(c => c.Name == company.Name) > 1)
+                else if (companyListToValidate.Count(c => c.Name == company.Name) > 1)
                 {
                     isDuplicatedNameMessage = true;
                     duplicatedNameMessage += line + ",";
@@ -170,10 +177,10 @@ namespace Template.Backend.Service.Services
                 line++;
             }
 
-            if (isRequeredNameMessage)
-                GetValidationDictionary().AddError(nameof(Company.Name), requeredNameMessage);
-            if (isRequeredCreationDateMessage)
-                GetValidationDictionary().AddError(nameof(Company.CreationDate), requeredCreationDateMessage);
+            if (isRequiredNameMessage)
+                GetValidationDictionary().AddError(nameof(Company.Name), requiredNameMessage);
+            if (isRequiredCreationDateMessage)
+                GetValidationDictionary().AddError(nameof(Company.CreationDate), requiredCreationDateMessage);
             if (isDuplicatedNameMessage)
                 GetValidationDictionary().AddError(nameof(Company.Name), duplicatedNameMessage);
 

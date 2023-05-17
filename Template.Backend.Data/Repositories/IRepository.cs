@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
 namespace Template.Backend.Data.Repositories
 {
@@ -53,19 +51,13 @@ namespace Template.Backend.Data.Repositories
         /// <returns></returns>
         T GetById(int id);
 
-        /// <summary>
-        /// Gets entity the by Id.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns></returns>
-        T GetById(string id);
 
         /// <summary>
         /// Gets entity based on where espression.
         /// </summary>
         /// <param name="where">The where.</param>
         /// <returns>Entity</returns>
-        T Get(Expression<Func<T, bool>> where);
+        T Get(Expression<Func<T, bool>>? where);
 
         /// <summary>
         /// Gets all Entites.
@@ -87,7 +79,7 @@ namespace Template.Backend.Data.Repositories
         /// </summary>
         /// <param name="where">The where clause.</param>
         /// <returns></returns>
-        T GetAsNoTraking(Expression<Func<T, bool>> where);
+        T? GetAsNoTraking(Expression<Func<T, bool>> where);
 
         /// <summary>
         /// Gets the paged list.
@@ -118,6 +110,6 @@ namespace Template.Backend.Data.Repositories
         /// <returns>
         /// The Count
         /// </returns>
-        int Count(Expression<Func<T, bool>> where = null);
+        int Count(Expression<Func<T, bool>>? where = null);
     }
 }

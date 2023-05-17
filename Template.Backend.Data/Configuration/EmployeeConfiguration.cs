@@ -1,7 +1,6 @@
-﻿using Template.Backend.Model.Entities;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.Infrastructure.Annotations;
-using System.Data.Entity.ModelConfiguration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Template.Backend.Model.Entities;
 
 namespace Template.Backend.Data.Configuration
 {
@@ -10,26 +9,24 @@ namespace Template.Backend.Data.Configuration
     ///  EmployeeConfiguration class
     ///  Allows database configuration to be performed for an entity type in a model
     /// </summary>
-    class EmployeeConfiguration : EntityTypeConfiguration<Employee>
+    class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
     {
-        public EmployeeConfiguration()
+        public void Configure(EntityTypeBuilder<Employee> builder)
         {
-            ToTable("Employees");
+            builder.ToTable("Employees");
 
             // Properties
-            Property(a => a.Name).IsRequired()
-            .HasMaxLength(256)
-            .HasColumnAnnotation(
-            IndexAnnotation.AnnotationName,
-            new IndexAnnotation(
-            new IndexAttribute("UI_Name") { IsUnique = true }));
+            builder.HasIndex(a => a.Name)
+           .IsUnique();
 
-            Property(a => a.BirthDate).IsRequired();
-            Property(a => a.Address).IsRequired();
-            Property(a => a.CompanyID).IsRequired();
+            builder.Property(a => a.Name).IsRequired();
 
-            Property(a => a.DepartmentID).IsOptional();
-            Property(a => a.Phone).IsOptional();
+            builder.Property(a => a.BirthDate).IsRequired();
+            builder.Property(a => a.Address).IsRequired();
+            builder.Property(a => a.CompanyID).IsRequired();
+
+            builder.Property(a => a.DepartmentID).IsRequired(false);
+            builder.Property(a => a.Phone).IsRequired(false);
         }
     }
 }

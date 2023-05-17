@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Data.Entity;
-using Template.Backend.Data.Repositories;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Template.Backend.Data.Audit
 {
@@ -14,31 +10,18 @@ namespace Template.Backend.Data.Audit
     /// <typeparam name="T">class</typeparam>
     public class AuditRepository<T> : IAuditRepository<T> where T : class
     {
-        private IDbContext dataContext;
-        private readonly IDbSet<T> dbSet;
 
-        protected IDbFactory DbFactory
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Return current context if not instantiate new one
-        /// </summary>
-        protected IDbContext DbContext
-        {
-            get { return dataContext ?? (dataContext = DbFactory.Init()); }
-        }
+        protected StarterDbContext _dataContext;
+        protected readonly DbSet<T> _dbSet;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="dbFactory"></param>
-        public AuditRepository(IDbFactory dbFactory)
+        public AuditRepository(StarterDbContext dbContext)
         {
-            DbFactory = dbFactory;
-            dbSet = DbContext.Set<T>();
+            _dataContext = dbContext;
+            _dbSet = _dataContext.Set<T>();
         }
 
 
@@ -49,7 +32,7 @@ namespace Template.Backend.Data.Audit
         /// <returns>Founded entity</returns>
         public virtual T GetById(int id)
         {
-            return dbSet.Find(id);
+            return _dbSet.Find(id);
         }
 
         /// <summary>
@@ -58,7 +41,7 @@ namespace Template.Backend.Data.Audit
         /// <returns>List of entities</returns>
         public virtual IEnumerable<T> GetAll()
         {
-            return dbSet.AsNoTracking().ToList();
+            return _dbSet.AsNoTracking().ToList();
         }
 
         /// <summary>
@@ -68,7 +51,7 @@ namespace Template.Backend.Data.Audit
         /// <returns>List of entities</returns>
         public virtual IEnumerable<T> GetMany(Expression<Func<T, bool>> where)
         {
-            return dbSet.Where(where).AsNoTracking().ToList();
+            return _dbSet.Where(where).AsNoTracking().ToList();
         }
 
         /// <summary>
@@ -84,7 +67,7 @@ namespace Template.Backend.Data.Audit
                         Func<T, int> groupBy, Func<IGrouping<int, T>, T> selector,
                         Expression<Func<T, bool>> AuditOperationwhere)
         {
-            return dbSet.Where(where).OrderBy(orderBy).GroupBy(groupBy).Select(selector)
+            return _dbSet.Where(where).OrderBy(orderBy).GroupBy(groupBy).Select(selector)
                         .AsQueryable().Where(AuditOperationwhere).AsNoTracking().ToList();
         }
 
@@ -96,7 +79,7 @@ namespace Template.Backend.Data.Audit
         /// <returns>object snapshot</returns>
         public virtual T GetByIdSnapshot(Expression<Func<T, bool>> where, Func<T, DateTime?> orderBy)
         {
-            return dbSet.Where(where).OrderByDescending(orderBy).AsQueryable()
+            return _dbSet.Where(where).OrderByDescending(orderBy).AsQueryable()
                         .AsNoTracking().FirstOrDefault();
         }
 
@@ -108,7 +91,7 @@ namespace Template.Backend.Data.Audit
         /// <returns>object</returns>
         public virtual T Get(Expression<Func<T, bool>> where, Func<T, DateTime> orderBy)
         {
-            return dbSet.Where(where).OrderByDescending(orderBy).AsQueryable()
+            return _dbSet.Where(where).OrderByDescending(orderBy).AsQueryable()
                         .AsNoTracking().FirstOrDefault();
         }
 
@@ -125,7 +108,7 @@ namespace Template.Backend.Data.Audit
                         Func<T, int> groupBy, Func<IGrouping<int, T>, T> selector,
                         Expression<Func<T, bool>> AuditOperationwhere)
         {
-            return dbSet.Where(where).OrderBy(orderBy).GroupBy(groupBy).Select(selector)
+            return _dbSet.Where(where).OrderBy(orderBy).GroupBy(groupBy).Select(selector)
                         .AsQueryable().Where(AuditOperationwhere).AsNoTracking().ToList();
         }
     }

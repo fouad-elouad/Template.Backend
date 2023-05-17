@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
+
 
 namespace Template.Backend.Service.Validation
 {
@@ -47,8 +47,10 @@ namespace Template.Backend.Service.Validation
             else
             {
                 // New key
-                IList<string> list = new List<string>();
-                list.Add(errorMessage);
+                IList<string> list = new List<string>
+                {
+                    errorMessage
+                };
                 ErrorsDictionary.Add(key, list);
             }
         }
@@ -60,6 +62,12 @@ namespace Template.Backend.Service.Validation
         public Dictionary<string, IList<string>> ToDictionary()
         {
             return ErrorsDictionary;
+        }
+
+        public IReadOnlyDictionary<string, IReadOnlyList<string>> ToReadOnlyDictionary()
+        {
+            return new ReadOnlyDictionary<string, IReadOnlyList<string>>
+                (ErrorsDictionary.ToDictionary(k => k.Key, v => (IReadOnlyList<string>) v.Value.ToList().AsReadOnly()));
         }
     }
 }

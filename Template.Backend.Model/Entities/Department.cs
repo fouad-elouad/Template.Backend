@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Template.Backend.Model.Common;
+﻿using Template.Backend.Model.Common;
 
 namespace Template.Backend.Model.Entities
 {
@@ -11,6 +9,6 @@ namespace Template.Backend.Model.Entities
         public DateTime? CreatedOn { get; set; }
 
         // One2many relation
-        public virtual ICollection<Employee> Employees { get; set; }
+        public IList<Employee> Employees { get; set; } = new List<Employee>();
     }
 }

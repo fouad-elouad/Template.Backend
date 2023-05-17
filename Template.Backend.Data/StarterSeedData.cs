@@ -1,24 +1,21 @@
 ﻿using Template.Backend.Model.Entities;
-using System.Collections.Generic;
-using System.Data.Entity;
 
 namespace Template.Backend.Data
 {
     /// <summary>
-    /// derived class for seeding the database
+    /// seeding data
     /// </summary>
-    class StarterSeedData : DropCreateDatabaseIfModelChanges<StarterDbContext>
+    public static class StarterSeedData
     {
-        /// <summary>
-        /// add data to the context for seeding
-        /// </summary>
-        /// <param name="context">The context to seed</param>
-        protected override void Seed(StarterDbContext context)
+        public static void SeedData(StarterDbContext context)
         {
-            context.Companies.AddRange(GetCompanies());
-            context.Commit("System Seed");
+            // Seed, if necessary
+            if (!context.Companies.Any())
+            {
+                context.AddRange(GetCompanies());
+                context.SaveChanges();
+            }
         }
-
 
         // Company Seed
         private static List<Company> GetCompanies()
@@ -27,9 +24,11 @@ namespace Template.Backend.Data
             {
                 new Company {
                     Name = "A SARL",
+                    CreationDate = new DateTime(2020,10,10),
                 },
                 new Company {
                     Name = "B SARL AU",
+                    CreationDate = new DateTime(2019,01,15),
                 }
             };
         }

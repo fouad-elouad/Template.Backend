@@ -1,9 +1,5 @@
-﻿
-namespace Template.Backend.Api.Configuration
+﻿namespace Template.Backend.Api.Configuration
 {
-    /// <summary>
-    /// ApiRouteConfiguration class that define The API routes
-    /// </summary>
     internal static class ApiRouteConfiguration
     {
         // Api controller prefix
@@ -14,7 +10,8 @@ namespace Template.Backend.Api.Configuration
 
         // Routes suffix
         public const string IdSuffix = "{id:int}";
-        public const string IdDepthSuffix = "{id:int}/{depth:int}";
+        public const string Pagination = "Pagination";
+        public const string IdDepthSuffix = "{id:int}/{nestedObjectDepth:alpha}";
         public const string AuditIdSuffix = "AuditId/{id:int}";
         public const string SearchSuffix = "Search";
         public const string AuditSuffix = "Audit/{id:int}";

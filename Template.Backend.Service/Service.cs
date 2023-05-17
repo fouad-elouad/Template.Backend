@@ -1,7 +1,5 @@
 ﻿using Template.Backend.Data.Repositories;
 using Template.Backend.Service.Validation;
-using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace Template.Backend.Service
@@ -127,9 +125,9 @@ namespace Template.Backend.Service
             return _repository.Get(where);
         }
 
-        public void Save(string userName)
+        public void Save()
         {
-            _unitOfWork.Commit(userName);
+            _unitOfWork.Commit();
         }
 
         public IValidationDictionary GetValidationDictionary()

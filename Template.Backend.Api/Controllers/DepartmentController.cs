@@ -1,26 +1,23 @@
-﻿using AutoMapper;
-using Template.Backend.Api.Configuration;
-using Template.Backend.Api.Exceptions;
-using Template.Backend.Api.Models;
-using Template.Backend.Model.Audit.Entities;
+﻿using Template.Backend.Model.Audit.Entities;
 using Template.Backend.Model.Entities;
-using Template.Backend.Model.Exceptions;
 using Template.Backend.Service.Audit;
 using Template.Backend.Service.Services;
-using Microsoft.Web.Http;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Web.Http;
-using System.Web.Http.Description;
+using Microsoft.AspNetCore.Mvc;
+using Template.Backend.Api.Models;
+using System.Net.Mime;
+using AutoMapper;
+using Template.Backend.Api.Configuration;
+using Template.Backend.Model.Exceptions;
+using Template.Backend.Model.Enums;
 
 namespace Template.Backend.Api.Controllers
 {
     /// <summary>
     /// Route="api/v1/Departments"
     /// </summary>
+    [ApiController]
     [ApiVersion("1")]
-    [RoutePrefix(ApiRouteConfiguration.DepartmentPrefix)]
+    [Route(ApiRouteConfiguration.DepartmentPrefix)]
     public class DepartmentApiController : BaseApiController<Department, DepartmentAudit>
     {
         private IDepartmentService _DepartmentService;
@@ -31,22 +28,17 @@ namespace Template.Backend.Api.Controllers
         /// </summary>
         /// <param name="departmentService">The department service.</param>
         /// <param name="departmentAuditService">The department audit service.</param>
-        public DepartmentApiController(IDepartmentService departmentService, IDepartmentAuditService departmentAuditService)
-            : base(departmentService, departmentAuditService)
+        public DepartmentApiController(IDepartmentService departmentService, IDepartmentAuditService departmentAuditService, IMapper mapper, ILogger<Department> logger)
+            : base(departmentService, departmentAuditService, mapper, logger)
         {
             _DepartmentService = departmentService;
             _DepartmentAuditService = departmentAuditService;
         }
 
-        /// <summary>
-        /// Count
-        /// </summary>
-        /// <returns>Count</returns>
-        [ResponseType(typeof(int))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
         [Route(ApiRouteConfiguration.CountSuffix), HttpGet]
-        public override IHttpActionResult Count()
+        public override IActionResult Count()
         {
-            _logger.Info("API: HttpGet Count Department");
             return base.Count();
         }
 
@@ -54,11 +46,10 @@ namespace Template.Backend.Api.Controllers
         /// Gets All departments
         /// </summary>
         /// <returns>List of departments</returns>
-        [ResponseType(typeof(IEnumerable<Department>))]
-        [Route(), HttpGet]
-        public override IHttpActionResult Get()
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Department>))]
+        [HttpGet]
+        public IActionResult Get()
         {
-            _logger.Info("API: HttpGet Get Department");
             return base.Get();
         }
 
@@ -67,11 +58,10 @@ namespace Template.Backend.Api.Controllers
         /// </summary>
         /// <param name="id">ID</param>
         /// <returns>department</returns>
-        [ResponseType(typeof(Department))]
-        [Route(ApiRouteConfiguration.IdSuffix), HttpGet]
-        public override IHttpActionResult Get(int id)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Department))]
+        [HttpGet(ApiRouteConfiguration.IdSuffix)]
+        public IActionResult Get(int id)
         {
-            _logger.Info("API: HttpGet Get(id) Department id={0}", id);
             return base.Get(id);
         }
 
@@ -79,14 +69,22 @@ namespace Template.Backend.Api.Controllers
         /// Gets the specified identifier.
         /// </summary>
         /// <param name="id">Department ID .</param>
-        /// <param name="depth">The maximum level to achieve for navigation properties serialization.</param>
+        /// <param name="nestedObjectDepth">The maximum level to achieve for navigation properties serialization.</param>
         /// <returns>department</returns>
-        [ResponseType(typeof(Department))]
-        [Route(ApiRouteConfiguration.IdDepthSuffix), HttpGet]
-        public override IHttpActionResult Get(int id, int depth)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Department))]
+        [HttpGet(ApiRouteConfiguration.IdDepthSuffix)]
+        public IActionResult Get(int id, NestedObjectDepth nestedObjectDepth)
         {
-            _logger.Info("API: HttpGet Get(id,depth) Department id={0}, depth={1}", id, depth);
-            return base.Get(id, depth);
+            _logger.LogInformation($"Get {typeof(Department).Name} with Id {id} and {nestedObjectDepth}");
+            var entity = _DepartmentService.FindById(id, nestedObjectDepth);
+            if (entity != null)
+            {
+                return Ok(entity);
+            }
+            else
+            {
+                throw new IdNotFoundException($"No element found for this id {id}");
+            }
         }
 
         /// <summary>
@@ -95,11 +93,11 @@ namespace Template.Backend.Api.Controllers
         /// <param name="pageNo">page index.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <returns>List of Departments</returns>
-        [ResponseType(typeof(IEnumerable<Department>))]
-        [Route(), HttpGet]
-        public override IHttpActionResult GetPagedList([FromUri] int pageNo, int pageSize)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Department>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Route(ApiRouteConfiguration.Pagination), HttpGet]
+        public IActionResult GetPagedList([FromQuery] int pageNo, [FromQuery] int pageSize)
         {
-            _logger.Info("API: HttpGet GetPagedList Department");
             return base.GetPagedList(pageNo, pageSize);
         }
 
@@ -108,10 +106,11 @@ namespace Template.Backend.Api.Controllers
         /// </summary>
         /// <param name="id">ID to Delete</param>
         /// <returns>Http Response with statut code (NoContent (204) if is Deleted otherwise error message)</returns>
-        [Route(ApiRouteConfiguration.IdSuffix), HttpDelete]
-        public override IHttpActionResult Delete(int id)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [HttpDelete(ApiRouteConfiguration.IdSuffix)]
+        public IActionResult Delete(int id)
         {
-            _logger.Info("API: HttpDelete Delete Department id={0}", id);
             return base.Delete(id);
         }
 
@@ -122,12 +121,13 @@ namespace Template.Backend.Api.Controllers
         /// <returns>
         /// Http Response with statut code (OK if is Inserted otherwise error message)
         /// </returns>
-        [ResponseType(typeof(Department))]
-        [Route(), HttpPost]
-        public IHttpActionResult Post([FromBody] DepartmentDto departmentDto)
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Department))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [HttpPost]
+        public IActionResult Post([FromBody] DepartmentDto departmentDto)
         {
-            _logger.Info("API: HttpPost Post Department");
-            Department department = Mapper.Map<DepartmentDto, Department>(departmentDto);
+            Department department = _mapper.Map<DepartmentDto, Department>(departmentDto);
             return base.Post(department);
         }
 
@@ -139,21 +139,16 @@ namespace Template.Backend.Api.Controllers
         /// <returns>
         /// Http Response with statut code (OK if is Updated otherwise error message)
         /// </returns>
-        [Route(ApiRouteConfiguration.IdSuffix), HttpPut]
-        public IHttpActionResult Put(int id, DepartmentDto departmentDto)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [HttpPut(ApiRouteConfiguration.IdSuffix)]
+        public IActionResult Put(int id, [FromBody] DepartmentDto departmentDto)
         {
-            _logger.Info("API: HttpPut Put Department id={0}", id);
-            if (_DepartmentService.CheckIfExist(o => o.ID == id))
-            {
-                Department department = Mapper.Map<DepartmentDto, Department>(departmentDto);
-                return base.Put(id, department);
-            }
-            else
-            {
-                return ResponseMessage(ApiExceptionResponse.Throw(
-                    new IdNotFoundException("No element found for this id"), Request));
-            }
+            Department department = _mapper.Map<DepartmentDto, Department>(departmentDto);
+            return base.Put(id, department);
         }
+
 
         /// <summary>
         /// Gets Audit List of department with the specified Id.
@@ -161,22 +156,12 @@ namespace Template.Backend.Api.Controllers
         /// </summary>
         /// <param name="id">The Department ID.</param>
         /// <returns>List of department Audits</returns>
-        [ResponseType(typeof(IEnumerable<DepartmentAudit>))]
-        [Route(ApiRouteConfiguration.AuditSuffix), HttpGet]
-        public IHttpActionResult Audit(int id)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<DepartmentAudit>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet(ApiRouteConfiguration.AuditSuffix)]
+        public IActionResult Audit(int id)
         {
-            _logger.Info("API: HttpGet Audit Department id={0}", id);
-
-            IEnumerable<DepartmentAudit> departmentAudit = _DepartmentAuditService.GetAuditById(id);
-
-            if (departmentAudit != null && departmentAudit.Any())
-            {
-                return ResponseMessage(AuditToJsonResponse(departmentAudit, 2));
-            }
-            else
-            {
-                return ResponseMessage(ApiExceptionResponse.Throw(new IdNotFoundException("No element found for this id"), Request));
-            }
+            return base.Audit(id);
         }
 
         /// <summary>
@@ -184,29 +169,36 @@ namespace Template.Backend.Api.Controllers
         /// </summary>
         /// <param name="id">The audit Id.</param>
         /// <returns>Audit line of Department</returns>
-        [ResponseType(typeof(DepartmentAudit))]
-        [Route(ApiRouteConfiguration.AuditIdSuffix), HttpGet]
-        public override IHttpActionResult AuditId(int id)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DepartmentAudit))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet(ApiRouteConfiguration.AuditIdSuffix)]
+        public IActionResult AuditId(int id)
         {
-            _logger.Info("API: HttpGet AuditId Department id={0}", id);
             return base.AuditId(id);
         }
 
         /// <summary>
         /// Restore audit Values to current Department.
         /// </summary>
-        /// <param name="id">Department Id.</param>
+        /// <param name="id">Department Id, To restore deleted entity make id=0.</param>
         /// <param name="auditId">Department audit ID.</param>
         /// <param name="content">Empty http content.</param>
         /// <returns>Http Response with statut code (OK if is Restored otherwise error message) </returns>
-        [Route(ApiRouteConfiguration.AuditRestoreSuffix), HttpPut]
-        public IHttpActionResult PutRestoreAudit(int id, int auditId, [FromBody] string content)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpPut(ApiRouteConfiguration.AuditRestoreSuffix)]
+        public IActionResult RestoreAudit(int id, int auditId)
         {
-            _logger.Info("API: HttpPut PutRestoreAudit Department id={0}, auditId={1}", id, auditId);
-            Department department = _DepartmentService.GetById(id);
+            _logger.LogInformation($"RestoreAudit for {typeof(Department).Name} with Id {id} from {typeof(DepartmentAudit).Name} with Id {auditId}");
+            
 
             DepartmentAudit departmentAudit = _DepartmentAuditService.GetById(auditId);
-            if (department == null)
+            if (departmentAudit == null )
+                throw new IdNotFoundException($"No element found for this auditId {auditId}");
+
+            Department department = _DepartmentService.GetById(id);
+
+            if (id == 0) // restore deleted department
             {
                 department = new Department();
                 _DepartmentService.Restore(department, departmentAudit);
@@ -214,10 +206,23 @@ namespace Template.Backend.Api.Controllers
             }
             else
             {
+                if (department == null)
+                    throw new IdNotFoundException($"No element found for this Id {id}");
+                if (department.ID != departmentAudit.ID)
+                    throw new BadRequestException($"Invalid Audit for this Id {id} and auditId {auditId}");
+
                 _DepartmentService.Restore(department, departmentAudit);
+                _DepartmentService.Update(department);
             }
 
-            _DepartmentService.Save(User.Identity.Name);
+            // model state test
+            if (!_DepartmentService.GetValidationDictionary().IsValid() || !ModelState.IsValid)
+            {
+                AddServiceErrorsToModelState(_DepartmentService.GetValidationDictionary());
+                throw new ModelStateException("One or more validation errors occurred.", _DepartmentService.GetValidationDictionary().ToReadOnlyDictionary());
+            }
+
+            _DepartmentService.Save();
 
             return Ok();
         }
@@ -229,11 +234,11 @@ namespace Template.Backend.Api.Controllers
         /// <returns>
         /// List of Department as Json response
         /// </returns>
-        [ResponseType(typeof(IEnumerable<DepartmentAudit>))]
-        [Route(ApiRouteConfiguration.SnapshotSuffix), HttpGet]
-        public override IHttpActionResult GetSnapshot(string dateTime)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<DepartmentAudit>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet(ApiRouteConfiguration.SnapshotSuffix)]
+        public IActionResult GetSnapshot(string dateTime)
         {
-            _logger.Info("API: HttpGet GetSnapshot Department date={0}", dateTime);
             return base.GetSnapshot(dateTime);
         }
 
@@ -245,11 +250,11 @@ namespace Template.Backend.Api.Controllers
         /// <returns>
         /// Department as Json response
         /// </returns>
-        [ResponseType(typeof(Department))]
-        [Route(ApiRouteConfiguration.SnapshotIdSuffix), HttpGet]
-        public override IHttpActionResult GetSnapshot(string dateTime, int id)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Department))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet(ApiRouteConfiguration.SnapshotIdSuffix)]
+        public IActionResult GetSnapshot(string dateTime, int id)
         {
-            _logger.Info("API: HttpGet GetSnapshot Department dateTime={0}, id={1}", dateTime, id);
             return base.GetSnapshot(dateTime, id);
         }
 
@@ -260,16 +265,21 @@ namespace Template.Backend.Api.Controllers
         /// <returns>
         /// Http Response with statut code (OK if is Inserted otherwise error message)
         /// </returns>
-        [ResponseType(typeof(IEnumerable<Department>))]
-        [Route(ApiRouteConfiguration.ItemsSuffix), HttpPost]
-        public IHttpActionResult PostList([FromBody] IEnumerable<DepartmentDto> departmentDtoList)
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(IEnumerable<Department>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [HttpPost(ApiRouteConfiguration.ItemsSuffix)]
+        public IActionResult PostList([FromBody] IEnumerable<DepartmentDto> departmentDtoList)
         {
-            _logger.Info("API: HttpPost Post DepartmentList");
-            IEnumerable<Department> departmentList = Mapper.Map<IEnumerable<DepartmentDto>, IEnumerable<Department>>(departmentDtoList);
-            if (!_DepartmentService.HugeInsertValidation(departmentList))
+            _logger.LogInformation($"PostList {typeof(Department).Name} count : {departmentDtoList?.Count()}");
+
+            IEnumerable<Department> departmentList = _mapper.Map<IEnumerable<DepartmentDto>, IEnumerable<Department>>(departmentDtoList);
+
+            // model state test
+            if (!_DepartmentService.HugeInsertValidation(departmentList) || !ModelState.IsValid)
             {
                 AddServiceErrorsToModelState(_DepartmentService.GetValidationDictionary());
-                return ResponseMessage(InvalidModelStateToJsonResponse(_DepartmentService.GetValidationDictionary().ToDictionary()));
+                throw new ModelStateException("One or more validation errors occurred.", _DepartmentService.GetValidationDictionary().ToReadOnlyDictionary());
             }
 
             return base.PostList(departmentList);
@@ -282,19 +292,19 @@ namespace Template.Backend.Api.Controllers
         /// <returns>
         /// Department
         /// </returns>
-        [ResponseType(typeof(Department))]
-        [Route(), HttpGet]
-        public IHttpActionResult GetByName([FromUri] string name)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Department))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet(ApiRouteConfiguration.SearchSuffix)]
+        public IActionResult GetByName([FromQuery] string name)
         {
-            _logger.Info("API: HttpGet GetByName Department name={0}", name);
             Department department = _DepartmentService.Get(c => c.Name == name);
             if (department != null)
             {
-                return ResponseMessage(ToJsonResponse(department, HttpStatusCode.OK, _detailsDepth));
+                return Ok(department);
             }
             else
             {
-                return ResponseMessage(ApiExceptionResponse.Throw(new NoElementFoundException("No element found for this shorName"), Request));
+                throw new NoElementFoundException($"No element found for this name {name}");
             }
         }
     }

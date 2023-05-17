@@ -1,5 +1,5 @@
-﻿using System;
-using Template.Backend.Model.Common;
+﻿using Template.Backend.Model.Common;
+using Template.Backend.Model.Enums;
 
 namespace Template.Backend.Model.Audit.Entities
 {
@@ -11,6 +11,6 @@ namespace Template.Backend.Model.Audit.Entities
         public DateTime? CreatedDate { get; set; }
         public DateTime? CreatedOn { get; set; }
         public AuditOperations AuditOperation { get; set; }
-        public string LoggedUserName { get; set; }
+        public string? LoggedUserName { get; set; }
     }
 }

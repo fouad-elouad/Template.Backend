@@ -1,5 +1,7 @@
-﻿using Template.Backend.Data.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using Template.Backend.Data.Repositories;
 using Template.Backend.Model.Entities;
+using Template.Backend.Model.Enums;
 
 namespace Template.Backend.Data.SpecificRepositories
 {
@@ -13,13 +15,26 @@ namespace Template.Backend.Data.SpecificRepositories
         /// Constructor
         /// </summary>
         /// <param name="dbFactory"></param>
-        public DepartmentRepository(IDbFactory dbFactory) : base(dbFactory)
+        public DepartmentRepository(StarterDbContext dbContext) : base(dbContext)
         {
         }
 
         public bool CheckIsUnique(string name, int Id)
         {
             return CheckIsUnique(s => s.Name == name && s.ID != Id);
+        }
+
+        public Department? FindById(int id, NestedObjectDepth nestedObjectDepth)
+        {
+            switch (nestedObjectDepth)
+            {
+                case NestedObjectDepth.FirstLevel:
+                    return _dbSet.Include(c => c.Employees).FirstOrDefault(c => c.ID == id);
+                case NestedObjectDepth.SecondLevel:
+                    return _dbSet.Include(c => c.Employees).ThenInclude(e => e.Department).FirstOrDefault(c => c.ID == id);
+                default:
+                    return _dbSet.Find(id);
+            }
         }
     }
 
@@ -35,5 +50,7 @@ namespace Template.Backend.Data.SpecificRepositories
         /// <param name="Id">The identifier.</param>
         /// <returns></returns>
         bool CheckIsUnique(string name, int Id);
+
+        Department? FindById(int id, NestedObjectDepth nestedObjectDepth);
     }
 }

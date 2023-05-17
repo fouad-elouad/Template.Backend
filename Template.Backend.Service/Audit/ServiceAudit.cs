@@ -1,9 +1,7 @@
 ﻿using Template.Backend.Model.Audit;
 using Template.Backend.Data.Audit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
+using Template.Backend.Model.Enums;
 
 namespace Template.Backend.Service.Audit
 {

@@ -1,22 +1,23 @@
 # Template.Backend
-This is a solution template for creating an ASP.NET Web API with best practices
+This is a solution template for creating an ASP.NET Core Web API migrated from .NET Framework To .NET 7
 
 ## Description
-This is a .NET project template that targets the .NET Framework 4.5.2. It provides an advanced structure for building .NET applications that can be used for your own projects.
+This is a .NET project template that targets the .NET 7.0. It provides an advanced structure for building .NET applications that can be used for your own projects.
 
 ## Features
-- [x] Target .NET Framework 4.5.2
+- [x] Target .NET 7.0
 - [x] Audit Operations Support
 - [x] Multi Layered Architecture
 - [x] Test Projects
 - [x] Logging Support
-- [x] API endpoints documentation
+- [x] API endpoints documentation (Swagger)
 - [x] .NET Client library
+- [x] Docker support
 
 <details>
   <summary>Click to See More!</summary>
 
-- [x] Uses Entity Framework as DB Abstraction
+- [x] Uses Entity Framework Core 7 as DB Abstraction
 - [x] Cors Support
 - [x] Integration Tests
 - [x] Unit Tests
@@ -26,7 +27,6 @@ This is a .NET project template that targets the .NET Framework 4.5.2. It provid
 - [x] API Versioning
 - [x] Audit Logging
 - [x] Server Validation
-- [x] Database Factory Pattern 
 - [x] & Much More
 </details>
 
@@ -36,7 +36,7 @@ This is a .NET project template that targets the .NET Framework 4.5.2. It provid
 The project follows a layered architecture pattern, with separate layers for the API controllers, services, repositories, and data access code. This helps to promote separation of concerns and makes the code easier to maintain and test.
 
 ### ORM
-The project uses Entity Framework as its Object-Relational Mapping (ORM) framework, which allows developers to map C# objects to database tables and provides many features for managing data, such as querying, updating, and deleting.
+The project uses Entity Framework Core 7 as its Object-Relational Mapping (ORM) framework, which allows developers to map C# objects to database tables and provides many features for managing data, such as querying, updating, and deleting.
 
 ### Database
 The project uses local SQL Server as its database engine.
@@ -45,16 +45,17 @@ The project uses local SQL Server as its database engine.
 The project includes a basic API with CRUD (Create, Read, Update, Delete) operations for a single entity, implemented in a controller.
 
 ### Dependency Injection
-The project uses the Unity injection framework to manage the dependencies between the various components.
+The project uses the Microsoft built in injection framework to manage the dependencies between the various components.
 
 ### Logging
 The project includes logging using Nlog, which allows developers to log messages to various targets, such as console, file.
+Use some features of Archiving log files
 
 ### Error handling
 The project includes some basic error handling, with exceptions being caught and returned as appropriate HTTP error responses.
 
 ### API endpoints documentation 
-The project includes basic API endpoints documentation using Microsoft.AspNet.WebApi.HelpPage so that users can easily understand how to interact with APIs.
+The project includes basic API endpoints documentation using Swagger so that users can easily understand how to interact with APIs.
 
 ### .NET Client library
 The project includes a C# Client that wrap HTTP requests, handle authentication, and parse responses into model objects, using a client library can save development time and effort.
@@ -63,7 +64,7 @@ The project includes a C# Client that wrap HTTP requests, handle authentication,
 
  1- Clone or download the repository: To get started, clone or download the repository to your local machine.
  
- 2- Open the solution file in Visual Studio 2019+: The solution file is located in the root directory of the project. Open this file in Visual Studio to start working with the project.
+ 2- Open the solution file in Visual Studio 2022: The solution file is located in the root directory of the project. Open this file in Visual Studio to start working with the project.
  
  3- Restore NuGet Packages
  
@@ -73,14 +74,18 @@ The project includes a C# Client that wrap HTTP requests, handle authentication,
  
  ### Database Configuration
 
-The template is configured to use a local database by default [(localdb)\MSSQLLocalDB]. This ensures that all users will be able to run the solution without needing to set up additional infrastructure over Visual studio.
+The template is configured to use a local database by default [(localdb)\MSSQLLocalDB]. This ensures that all users will be able to run the solution without needing to set up additional infrastructure over Visual studio, you need to use a SQL Server instance if you want to target other platforms than windows.
 
-If you would like to use a custom intance of SQL Server, you will need to update **Template.Backend.Api/Web.config**
+If you would like to use a custom intance of SQL Server, you will need to update **Template.Backend.Api/appsettings.json** or **Template.Backend.Api/appsettings.Developement.json** for development environment
 
-Verify that the **connectionString** points to a valid SQL Server instance. 
+Verify that the **ConnectionStrings** points to a valid SQL Server instance. 
 
 When you run the application the database will be automatically created (if necessary) and the latest migrations will be applied.
  
+ ### Docker
+
+ In order to build and start the solution with Docker, you will need to point to a SQL Server instance instead of using LocalDB (supported only on windows). 
+
  ### Add New Model
  
 1- Create a new class for the new model: In the Models folder of the project, create a new class for the new model you want to add. Give the class a descriptive name that reflects what the model represents.
@@ -217,7 +222,7 @@ public const string FooPrefix = "api/v{version:apiVersion}/Foos";
    ```csharp
   
     [ApiVersion("1")]
-    [RoutePrefix(ApiRouteConfiguration.FooPrefix)]
+    [Route(ApiRouteConfiguration.FooPrefix)]
     public class FooApiController : BaseApiController<Foo, FooAudit>
   ```
 

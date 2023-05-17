@@ -11,7 +11,6 @@ namespace Template.Backend.Data.Repositories
         /// <summary>
         /// SaveChanges to database
         /// </summary>
-        /// <param name="userName">Logged user name.</param>
-        void Commit(string userName);
+        void Commit();
     }
 }

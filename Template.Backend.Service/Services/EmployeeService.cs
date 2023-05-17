@@ -2,10 +2,9 @@
 using Template.Backend.Data.SpecificRepositories;
 using Template.Backend.Model.Audit.Entities;
 using Template.Backend.Model.Entities;
+using Template.Backend.Model.Enums;
 using Template.Backend.Service.Validation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+
 
 namespace Template.Backend.Service.Services
 {
@@ -28,6 +27,8 @@ namespace Template.Backend.Service.Services
         /// <param name="Id">The identifier.</param>
         /// <returns></returns>
         bool CheckIsUnique(string name, int Id);
+
+        Employee? FindById(int id, NestedObjectDepth nestedObjectDepth);
 
         /// <summary>
         /// Logic and database Validation
@@ -94,7 +95,7 @@ namespace Template.Backend.Service.Services
         /// <param name="employee">Entity to add</param>
         public override void Add(Employee employee)
         {
-            if (this.ValidateEmployee(employee))
+            if (this.Validate(employee))
                 base.Add(employee);
         }
 
@@ -106,7 +107,7 @@ namespace Template.Backend.Service.Services
         /// <param name="employee">Entity to Update</param>
         public override void Update(Employee employee)
         {
-            if (this.ValidateEmployee(employee))
+            if (this.Validate(employee))
                 base.Update(employee);
         }
 
@@ -121,12 +122,17 @@ namespace Template.Backend.Service.Services
             return _EmployeeRepository.CheckIsUnique(name, Id);
         }
 
+        public Employee? FindById(int id, NestedObjectDepth nestedObjectDepth)
+        {
+            return _EmployeeRepository.FindById(id, nestedObjectDepth);
+        }
+
         /// <summary>
         /// Logic and database Validation
         /// </summary>
         /// <param name="employeeToValidate"></param>
         /// <returns>Validation state</returns>
-        protected bool ValidateEmployee(Employee employeeToValidate)
+        protected bool Validate(Employee employeeToValidate)
         {
             // Database validation
             if (string.IsNullOrWhiteSpace(employeeToValidate.Name))
@@ -169,14 +175,14 @@ namespace Template.Backend.Service.Services
         public bool HugeInsertValidation(IEnumerable<Employee> employeeListToValidate)
         {
             int line = 1;
-            bool isRequeredNameMessage = false;
-            string requeredNameMessage = "Name is required lignes ";
-            bool isRequeredBirthDateMessage = false;
-            string requeredBirthDateMessage = "BirthDate is required lignes ";
-            bool isRequeredAddressMessage = false;
-            string requeredAddressMessage = "Address is required lignes ";
-            bool isRequeredCompanyIDMessage = false;
-            string requeredCompanyIDMessage = "CompanyID is required lignes ";
+            bool isRequiredNameMessage = false;
+            string requiredNameMessage = "Name is required lignes ";
+            bool isRequiredBirthDateMessage = false;
+            string requiredBirthDateMessage = "BirthDate is required lignes ";
+            bool isRequiredAddressMessage = false;
+            string requiredAddressMessage = "Address is required lignes ";
+            bool isRequiredCompanyIDMessage = false;
+            string requiredCompanyIDMessage = "CompanyID is required lignes ";
             bool isDuplicatedNameMessage = false;
             string duplicatedNameMessage = "Name already exist lignes ";
             foreach (var employee in employeeListToValidate)
@@ -184,26 +190,26 @@ namespace Template.Backend.Service.Services
                 // Database validation
                 if (string.IsNullOrWhiteSpace(employee.Name))
                 {
-                    isRequeredNameMessage = true;
-                    requeredNameMessage += line + ",";
+                    isRequiredNameMessage = true;
+                    requiredNameMessage += line + ",";
                 }
 
                 if (employee.BirthDate == null)
                 {
-                    isRequeredBirthDateMessage = true;
-                    requeredBirthDateMessage += line + ",";
+                    isRequiredBirthDateMessage = true;
+                    requiredBirthDateMessage += line + ",";
                 }
 
                 if (employee.Address == null)
                 {
-                    isRequeredAddressMessage = true;
-                    requeredAddressMessage += line + ",";
+                    isRequiredAddressMessage = true;
+                    requiredAddressMessage += line + ",";
                 }
 
                 if (employee.CompanyID == null)
                 {
-                    isRequeredCompanyIDMessage = true;
-                    requeredCompanyIDMessage += line + ",";
+                    isRequiredCompanyIDMessage = true;
+                    requiredCompanyIDMessage += line + ",";
                 }
 
                 // unique
@@ -222,14 +228,14 @@ namespace Template.Backend.Service.Services
                 line++;
             }
 
-            if (isRequeredNameMessage)
-                GetValidationDictionary().AddError(nameof(Employee.Name), requeredNameMessage);
-            if (isRequeredBirthDateMessage)
-                GetValidationDictionary().AddError(nameof(Employee.BirthDate), requeredBirthDateMessage);
-            if (isRequeredAddressMessage)
-                GetValidationDictionary().AddError(nameof(Employee.Address), requeredAddressMessage);
-            if (isRequeredCompanyIDMessage)
-                GetValidationDictionary().AddError(nameof(Employee.CompanyID), requeredCompanyIDMessage);
+            if (isRequiredNameMessage)
+                GetValidationDictionary().AddError(nameof(Employee.Name), requiredNameMessage);
+            if (isRequiredBirthDateMessage)
+                GetValidationDictionary().AddError(nameof(Employee.BirthDate), requiredBirthDateMessage);
+            if (isRequiredAddressMessage)
+                GetValidationDictionary().AddError(nameof(Employee.Address), requiredAddressMessage);
+            if (isRequiredCompanyIDMessage)
+                GetValidationDictionary().AddError(nameof(Employee.CompanyID), requiredCompanyIDMessage);
             if (isDuplicatedNameMessage)
                 GetValidationDictionary().AddError(nameof(Employee.Name), duplicatedNameMessage);
 

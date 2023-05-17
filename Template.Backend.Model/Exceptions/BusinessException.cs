@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace Template.Backend.Model.Exceptions
 {
@@ -24,8 +23,15 @@ namespace Template.Backend.Model.Exceptions
     [Serializable]
     public class ModelStateException : BusinessException
     {
+        public IReadOnlyDictionary<string, IReadOnlyList<string>>? Errors { get; }
+
         public ModelStateException(string message) : base(message)
         {
+        }
+
+        public ModelStateException(string message, IReadOnlyDictionary<string, IReadOnlyList<string>>? errors) : base(message)
+        {
+            Errors = errors;
         }
     }
 
@@ -124,6 +130,14 @@ namespace Template.Backend.Model.Exceptions
     public class TaskCanceledBusinessException : BusinessException
     {
         public TaskCanceledBusinessException(string message) : base(message)
+        {
+        }
+    }
+
+    [Serializable]
+    public class UnknownException : BusinessException
+    {
+        public UnknownException(string message) : base(message)
         {
         }
     }
