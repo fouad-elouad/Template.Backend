@@ -5,11 +5,13 @@ VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Template.Backend.Api", "Template.Backend.Api\Template.Backend.Api.csproj", "{5833B81B-B5FD-464E-BC8E-B463AF37F58B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template.Backend.Model", "Template.Backend.Model\Template.Backend.Model.csproj", "{48981CAC-5BD0-4E8F-A401-02661DE63BB8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Template.Backend.Model", "Template.Backend.Model\Template.Backend.Model.csproj", "{48981CAC-5BD0-4E8F-A401-02661DE63BB8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template.Backend.Data", "Template.Backend.Data\Template.Backend.Data.csproj", "{346F93C8-1244-46B0-B622-2E5C192E2FEB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Template.Backend.Data", "Template.Backend.Data\Template.Backend.Data.csproj", "{346F93C8-1244-46B0-B622-2E5C192E2FEB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template.Backend.Service", "Template.Backend.Service\Template.Backend.Service.csproj", "{98BE5068-D62F-4FB3-A8DE-BBE4F0F9052E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Template.Backend.Service", "Template.Backend.Service\Template.Backend.Service.csproj", "{98BE5068-D62F-4FB3-A8DE-BBE4F0F9052E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template.Backend.UnitTest", "Template.Backend.UnitTest\Template.Backend.UnitTest.csproj", "{2D822A6E-9E0D-4673-8118-F5067E2CDA72}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{98BE5068-D62F-4FB3-A8DE-BBE4F0F9052E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98BE5068-D62F-4FB3-A8DE-BBE4F0F9052E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{98BE5068-D62F-4FB3-A8DE-BBE4F0F9052E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D822A6E-9E0D-4673-8118-F5067E2CDA72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D822A6E-9E0D-4673-8118-F5067E2CDA72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D822A6E-9E0D-4673-8118-F5067E2CDA72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D822A6E-9E0D-4673-8118-F5067E2CDA72}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

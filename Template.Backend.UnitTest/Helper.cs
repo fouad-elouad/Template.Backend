@@ -1,47 +1,118 @@
-﻿using Newtonsoft.Json;
-using Template.Backend.Api.Models;
-using System.Web.Http.Results;
+﻿using Template.Backend.Api.Models;
+using Template.Backend.Model.Entities;
+using Template.Backend.Model;
 
-namespace Template.Backend.UnitTest
+namespace Template.Backend.UnitTest;
+
+internal class Helper
 {
-    public class Helper
+
+    public static void IncrementRowVersion<Entity>(Entity entity) where Entity : IEntity
     {
-        public const string UserName = "UnitTest";
+        entity.RowVersion++;
+    }
 
-        public static T DeserializeObject<T>(ResponseMessageResult responseResult) where T : class
+    public static IEnumerable<Company> CompanyFactory(int count)
+    {
+        IList<Company> companies = new List<Company>(count);
+        for (int i = 1; i <= count; i++)
         {
-            string json = responseResult.Response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-            return JsonConvert.DeserializeObject<T>(json);
+            companies.Add(
+                new Company
+                {
+                    CreatedOn = DateTime.Now,
+                    CreationDate = DateTime.Now,
+                    ID = i,
+                    Name = "Name" + i,
+                    RowVersion = 0
+                });
         }
+        return companies;
+    }
 
-        public static CompanyDto CompanyDtoFactory(string name)
+    public static IEnumerable<CompanyDto> CompanyDtoFactory(int count)
+    {
+        IList<CompanyDto> companies = new List<CompanyDto>(count);
+        for (int i = 1; i <= count; i++)
         {
-            return new CompanyDto
-            {
-                Name = name,
-                CreationDate = new System.DateTime(2020,01,01)
-            };
+            companies.Add(
+                new CompanyDto
+                {
+                    CreationDate = DateTime.Now,
+                    ID = i,
+                    Name = "Name" + i,
+                });
         }
+        return companies;
+    }
 
-        public static EmployeeDto EmployeeDtoFactory(string name, int companyID, int? departmentID = null)
+    public static IEnumerable<Employee> EmployeeFactory(int count)
+    {
+        IList<Employee> employees = new List<Employee>(count);
+        for (int i = 1; i <= count; i++)
         {
-            return new EmployeeDto
-            {
-                Name = name,
-                Address = "TTEST",
-                BirthDate = new System.DateTime(2001, 01, 01),
-                CompanyID = companyID,
-                DepartmentID = departmentID,
-                Phone = null
-            };
+            employees.Add(
+                new Employee
+                {
+                    Address = "Address",
+                    BirthDate = new DateTime(2020,10,10),
+                    CompanyID = 1,
+                    CreatedOn = DateTime.Now,
+                    ID = i,
+                    Name = "Name" + i,
+                    RowVersion = 0
+                });
         }
+        return employees;
+    }
 
-        public static DepartmentDto DepartmentDtoFactory(string name)
+    public static IEnumerable<EmployeeDto> EmployeeDtoFactory(int count)
+    {
+        IList<EmployeeDto> employees = new List<EmployeeDto>(count);
+        for (int i = 1; i <= count; i++)
         {
-            return new DepartmentDto
-            {
-                Name = name
-            };
+            employees.Add(
+                new EmployeeDto
+                {
+                    ID = i,
+                    Name = "Name" + i,
+                    Address = "Address",
+                    BirthDate = new DateTime(2020, 10, 10),
+                    CompanyID = 1,
+                });
         }
+        return employees;
+    }
+
+    public static IEnumerable<Department> DepartmentFactory(int count)
+    {
+        IList<Department> departments = new List<Department>(count);
+        for (int i = 1; i <= count; i++)
+        {
+            departments.Add(
+                new Department
+                {
+                    CreatedOn = DateTime.Now,
+                    ID = i,
+                    Name = "Name" + i,
+                    RowVersion = 0
+                });
+        }
+        return departments;
+    }
+
+    public static IEnumerable<DepartmentDto> DepartmentDtoFactory(int count)
+    {
+        IList<DepartmentDto> departments = new List<DepartmentDto>(count);
+        for (int i = 1; i <= count; i++)
+        {
+            departments.Add(
+                new DepartmentDto
+                {
+                    ID = i,
+                    Name = "Name" + i,
+                });
+        }
+        return departments;
     }
 }

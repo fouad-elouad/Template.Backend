@@ -18,17 +18,17 @@ namespace Template.Backend.Api.Controllers
     [ApiController]
     [ApiVersion("1")]
     [Route(ApiRouteConfiguration.EmployeePrefix)]
-    public class EmployeeController : BaseApiController<Employee, EmployeeAudit>
+    public class EmployeeApiController : BaseApiController<Employee, EmployeeAudit>
     {
         private IEmployeeService _EmployeeService;
         private IEmployeeAuditService _EmployeeAuditService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EmployeeController"/> class.
+        /// Initializes a new instance of the <see cref="EmployeeApiController"/> class.
         /// </summary>
         /// <param name="employeeService">The employee service.</param>
         /// <param name="employeeAuditService">The employee audit service.</param>
-        public EmployeeController(IEmployeeService employeeService, IEmployeeAuditService employeeAuditService, IMapper mapper, ILogger<Employee> logger)
+        public EmployeeApiController(IEmployeeService employeeService, IEmployeeAuditService employeeAuditService, IMapper mapper, ILogger<Employee> logger)
             : base(employeeService, employeeAuditService, mapper, logger)
         {
             _EmployeeService = employeeService;

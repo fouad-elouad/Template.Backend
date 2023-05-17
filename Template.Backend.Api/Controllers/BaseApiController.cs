@@ -344,8 +344,8 @@ namespace Template.Backend.Api.Controllers
 
         protected void AddCountHeaders(IEnumerable<Entity> list, int count)
         {
-            HttpContext.Response.Headers.Add(Constants.CustomHeader_total_count_found, count.ToString());
-            HttpContext.Response.Headers.Add(Constants.CustomHeader_total_count_returned, list?.Count().ToString());
+            HttpContext?.Response?.Headers?.Add(Constants.CustomHeader_total_count_found, count.ToString());
+            HttpContext?.Response?.Headers?.Add(Constants.CustomHeader_total_count_returned, list?.Count().ToString());
         }
     }
 }
