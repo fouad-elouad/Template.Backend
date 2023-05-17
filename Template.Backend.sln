@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Template.Backend.Service", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template.Backend.UnitTest", "Template.Backend.UnitTest\Template.Backend.UnitTest.csproj", "{2D822A6E-9E0D-4673-8118-F5067E2CDA72}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template.Backend.IntegrationTest", "Template.Backend.IntegrationTest\Template.Backend.IntegrationTest.csproj", "{6CA31F93-C681-40B5-833C-3BF69B570DAD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{2D822A6E-9E0D-4673-8118-F5067E2CDA72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D822A6E-9E0D-4673-8118-F5067E2CDA72}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D822A6E-9E0D-4673-8118-F5067E2CDA72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CA31F93-C681-40B5-833C-3BF69B570DAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CA31F93-C681-40B5-833C-3BF69B570DAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CA31F93-C681-40B5-833C-3BF69B570DAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CA31F93-C681-40B5-833C-3BF69B570DAD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

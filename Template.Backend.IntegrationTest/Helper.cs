@@ -1,59 +1,60 @@
-﻿using Template.Backend.Data;
-using Template.Backend.Data.Repositories;
-using Template.Backend.Model.Entities;
-using System.Data.Entity;
-
+﻿using Template.Backend.Model.Entities;
 
 namespace Template.Backend.IntegrationTest
 {
-    /// <summary>
-    /// Helper class
-    /// </summary>
-    public class Helper
+    public static class Helper
     {
-        public const string UserName = "UnitTest";
 
-        public static void InitializeLocalDatabase(IDbFactory dbFactory)
+        public static IEnumerable<Company> CompanyFactory(int count, string namePrefix = "Name")
         {
-            IDbContext context = dbFactory.Init();
-            if (context.Database.Exists())
+            IList<Company> list = new List<Company>(count);
+            for (int i = 1; i <= count; i++)
             {
-                // set the database to SINGLE_USER so it can be dropped
-                string cmd = "ALTER DATABASE [" + context.Database.Connection.Database + "] SET SINGLE_USER WITH ROLLBACK IMMEDIATE";
-                context.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction, cmd);
-                context.Database.Delete();
+                list.Add(
+                    new Company
+                    {
+                        CreationDate = DateTime.Now,
+                        ID = 0,
+                        Name = namePrefix + i,
+                        RowVersion = 0
+                    });
             }
-            context.Database.Initialize(true);
+            return list;
         }
 
-        public static Company CompanyFactory(string name)
+        public static IEnumerable<Employee> EmployeeFactory(int count, string namePrefix = "Name")
         {
-            return new Company
+            IList<Employee> list = new List<Employee>(count);
+            for (int i = 1; i <= count; i++)
             {
-                Name = name,
-                CreationDate = new System.DateTime(2020, 01, 01)
-            };
+                list.Add(
+                    new Employee
+                    {
+                        CompanyID = 1,
+                        BirthDate = DateTime.Now,
+                        Address = "Address",
+                        ID = 0,
+                        Name = namePrefix + i,
+                        RowVersion = 0
+                    });
+            }
+            return list;
         }
 
-        public static Employee EmployeeFactory(string name, int companyID, int? departmentID = null)
+        public static IEnumerable<Department> DepartmentFactory(int count, string namePrefix = "Name")
         {
-            return new Employee
+            IList<Department> list = new List<Department>(count);
+            for (int i = 1; i <= count; i++)
             {
-                Name = name,
-                Address = "TTEST",
-                BirthDate = new System.DateTime(2001, 01, 01),
-                CompanyID = companyID,
-                DepartmentID = departmentID,
-                Phone = null
-            };
-        }
-
-        public static Department DepartmentFactory(string name)
-        {
-            return new Department
-            {
-                Name = name
-            };
+                list.Add(
+                    new Department
+                    {
+                        ID = 0,
+                        Name = namePrefix + i,
+                        RowVersion = 0
+                    });
+            }
+            return list;
         }
     }
 }
