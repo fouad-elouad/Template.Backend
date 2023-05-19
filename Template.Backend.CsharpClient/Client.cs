@@ -1,9 +1,9 @@
-﻿using Template.Backend.CsharpClient.Exceptions;
-using Template.Backend.CsharpClient.Helpers;
-using System.Text.Json;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.Json;
+using Template.Backend.CsharpClient.Exceptions;
+using Template.Backend.CsharpClient.Helpers;
 using Template.Backend.Model.Exceptions;
 
 namespace Template.Backend.CsharpClient
@@ -78,7 +78,7 @@ namespace Template.Backend.CsharpClient
         /// or
         /// Problème Reseaux ou serveur Api distant</exception>
         /// <exception cref="System.Exception"></exception>
-        internal void Update(string address, string values, AuthenticationHeaderValue authHeaderValue = null)
+        internal void Update(string address, string values, AuthenticationHeaderValue? authHeaderValue = null)
         {
             UpdateAsync(address, values, authHeaderValue).ConfigureAwait(false).GetAwaiter().GetResult();
         }
@@ -99,7 +99,7 @@ namespace Template.Backend.CsharpClient
         /// or
         /// Problème Reseaux ou serveur Api distant</exception>
         /// <exception cref="System.Exception"></exception>
-        internal async Task UpdateAsync(string address, string values, AuthenticationHeaderValue authHeaderValue = null)
+        internal async Task UpdateAsync(string address, string values, AuthenticationHeaderValue? authHeaderValue = null)
         {
             try
             {
@@ -148,7 +148,7 @@ namespace Template.Backend.CsharpClient
         /// or
         /// Problème Reseaux ou serveur Api distant</exception>
         /// <exception cref="System.Exception"></exception>
-        internal void Restore(string address, AuthenticationHeaderValue authHeaderValue = null)
+        internal void Restore(string address, AuthenticationHeaderValue? authHeaderValue = null)
         {
             RestoreAsync(address, authHeaderValue).ConfigureAwait(false).GetAwaiter().GetResult();
         }
@@ -166,7 +166,7 @@ namespace Template.Backend.CsharpClient
         /// or
         /// Problème Reseaux ou serveur Api distant</exception>
         /// <exception cref="System.Exception"></exception>
-        internal async Task RestoreAsync(string address, AuthenticationHeaderValue authHeaderValue = null)
+        internal async Task RestoreAsync(string address, AuthenticationHeaderValue? authHeaderValue = null)
         {
             try
             {
@@ -213,7 +213,7 @@ namespace Template.Backend.CsharpClient
         /// or
         /// Problème Reseaux ou serveur Api distant</exception>
         /// <exception cref="System.Exception"></exception>
-        internal Entity Add(string address, string values, AuthenticationHeaderValue authHeaderValue = null)
+        internal Entity Add(string address, string values, AuthenticationHeaderValue? authHeaderValue = null)
         {
             return AddAsync(address, values, authHeaderValue).ConfigureAwait(false).GetAwaiter().GetResult();
         }
@@ -234,7 +234,7 @@ namespace Template.Backend.CsharpClient
         /// or
         /// Problème Reseaux ou serveur Api distant</exception>
         /// <exception cref="System.Exception"></exception>
-        internal async Task<Entity> AddAsync(string address, string values, AuthenticationHeaderValue authHeaderValue = null)
+        internal async Task<Entity> AddAsync(string address, string values, AuthenticationHeaderValue? authHeaderValue = null)
         {
             try
             {
@@ -288,7 +288,7 @@ namespace Template.Backend.CsharpClient
         /// or
         /// Problème Reseaux ou serveur Api distant</exception>
         /// <exception cref="System.Exception"></exception>
-        internal IEnumerable<Entity> AddRange(string address, string values, AuthenticationHeaderValue authHeaderValue = null)
+        internal IEnumerable<Entity> AddRange(string address, string values, AuthenticationHeaderValue? authHeaderValue = null)
         {
             return AddRangeAsync(address, values, authHeaderValue).ConfigureAwait(false).GetAwaiter().GetResult();
         }
@@ -309,7 +309,7 @@ namespace Template.Backend.CsharpClient
         /// or
         /// Problème Reseaux ou serveur Api distant</exception>
         /// <exception cref="System.Exception"></exception>
-        internal async Task<IEnumerable<Entity>> AddRangeAsync(string address, string values, AuthenticationHeaderValue authHeaderValue = null)
+        internal async Task<IEnumerable<Entity>> AddRangeAsync(string address, string values, AuthenticationHeaderValue? authHeaderValue = null)
         {
             try
             {
@@ -360,7 +360,7 @@ namespace Template.Backend.CsharpClient
         /// or
         /// Problème Reseaux ou serveur Api distant</exception>
         /// <exception cref="System.Exception"></exception>
-        internal void Delete(string address, AuthenticationHeaderValue authHeaderValue = null)
+        internal void Delete(string address, AuthenticationHeaderValue? authHeaderValue = null)
         {
             DeleteAsync(address, authHeaderValue).ConfigureAwait(false).GetAwaiter().GetResult();
         }
@@ -378,7 +378,7 @@ namespace Template.Backend.CsharpClient
         /// or
         /// Problème Reseaux ou serveur Api distant</exception>
         /// <exception cref="System.Exception"></exception>
-        internal async Task DeleteAsync(string address, AuthenticationHeaderValue authHeaderValue = null)
+        internal async Task DeleteAsync(string address, AuthenticationHeaderValue? authHeaderValue = null)
         {
             try
             {
@@ -419,7 +419,7 @@ namespace Template.Backend.CsharpClient
         /// or
         /// Problème Reseaux ou serveur Api distant</exception>
         /// <exception cref="System.Exception"></exception>
-        internal Entity GetAsObject(string address, AuthenticationHeaderValue authHeaderValue = null)
+        internal Entity GetAsObject(string address, AuthenticationHeaderValue? authHeaderValue = null)
         {
             return GetAsObjectAsync(address, authHeaderValue).ConfigureAwait(false).GetAwaiter().GetResult();
         }
@@ -437,7 +437,7 @@ namespace Template.Backend.CsharpClient
         /// or
         /// Problème Reseaux ou serveur Api distant</exception>
         /// <exception cref="System.Exception"></exception>
-        internal async Task<Entity> GetAsObjectAsync(string address, AuthenticationHeaderValue authHeaderValue = null)
+        internal async Task<Entity> GetAsObjectAsync(string address, AuthenticationHeaderValue? authHeaderValue = null)
         {
             try
             {
@@ -483,7 +483,7 @@ namespace Template.Backend.CsharpClient
         /// or
         /// Problème Reseaux ou serveur Api distant</exception>
         /// <exception cref="System.Exception"></exception>
-        internal int Count(string address, AuthenticationHeaderValue authHeaderValue = null)
+        internal int Count(string address, AuthenticationHeaderValue? authHeaderValue = null)
         {
             return CountAsync(address, authHeaderValue).ConfigureAwait(false).GetAwaiter().GetResult();
         }
@@ -501,7 +501,7 @@ namespace Template.Backend.CsharpClient
         /// or
         /// Problème Reseaux ou serveur Api distant</exception>
         /// <exception cref="System.Exception"></exception>
-        internal async Task<int> CountAsync(string address, AuthenticationHeaderValue authHeaderValue = null)
+        internal async Task<int> CountAsync(string address, AuthenticationHeaderValue? authHeaderValue = null)
         {
             try
             {
@@ -547,7 +547,7 @@ namespace Template.Backend.CsharpClient
         /// or
         /// Problème Reseaux ou serveur Api distant</exception>
         /// <exception cref="System.Exception"></exception>
-        internal IEnumerable<AuditEntity> GetAuditObjects(string address, AuthenticationHeaderValue authHeaderValue = null)
+        internal IEnumerable<AuditEntity> GetAuditObjects(string address, AuthenticationHeaderValue? authHeaderValue = null)
         {
             return GetAuditObjectsAsync(address, authHeaderValue).ConfigureAwait(false).GetAwaiter().GetResult();
         }
@@ -565,7 +565,7 @@ namespace Template.Backend.CsharpClient
         /// or
         /// Problème Reseaux ou serveur Api distant</exception>
         /// <exception cref="System.Exception"></exception>
-        internal async Task<IEnumerable<AuditEntity>> GetAuditObjectsAsync(string address, AuthenticationHeaderValue authHeaderValue = null)
+        internal async Task<IEnumerable<AuditEntity>> GetAuditObjectsAsync(string address, AuthenticationHeaderValue? authHeaderValue = null)
         {
             return await GetObjectsAsync<AuditEntity>(address, authHeaderValue).ConfigureAwait(false);
         }
@@ -583,7 +583,7 @@ namespace Template.Backend.CsharpClient
         /// or
         /// Problème Reseaux ou serveur Api distant</exception>
         /// <exception cref="System.Exception"></exception>
-        internal IEnumerable<Entity> GetObjects(string address, AuthenticationHeaderValue authHeaderValue = null)
+        internal IEnumerable<Entity> GetObjects(string address, AuthenticationHeaderValue? authHeaderValue = null)
         {
             return GetObjectsAsync(address, authHeaderValue).ConfigureAwait(false).GetAwaiter().GetResult();
         }
@@ -601,7 +601,7 @@ namespace Template.Backend.CsharpClient
         /// or
         /// Problème Reseaux ou serveur Api distant</exception>
         /// <exception cref="System.Exception"></exception>
-        internal async Task<IEnumerable<Entity>> GetObjectsAsync(string address, AuthenticationHeaderValue authHeaderValue = null)
+        internal async Task<IEnumerable<Entity>> GetObjectsAsync(string address, AuthenticationHeaderValue? authHeaderValue = null)
         {
             return await GetObjectsAsync<Entity>(address, authHeaderValue).ConfigureAwait(false);
         }
@@ -619,7 +619,7 @@ namespace Template.Backend.CsharpClient
         /// or
         /// Problème Reseaux ou serveur Api distant</exception>
         /// <exception cref="System.Exception"></exception>
-        internal async Task<IEnumerable<T>> GetObjectsAsync<T>(string address, AuthenticationHeaderValue authHeaderValue = null) where T : class
+        internal async Task<IEnumerable<T>> GetObjectsAsync<T>(string address, AuthenticationHeaderValue? authHeaderValue = null) where T : class
         {
             try
             {
@@ -664,7 +664,7 @@ namespace Template.Backend.CsharpClient
         /// or
         /// Problème Reseaux ou serveur Api distant</exception>
         /// <exception cref="System.Exception"></exception>
-        internal AuditEntity GetAudit(string address, AuthenticationHeaderValue authHeaderValue = null)
+        internal AuditEntity GetAudit(string address, AuthenticationHeaderValue? authHeaderValue = null)
         {
             return GetAuditAsync(address, authHeaderValue).ConfigureAwait(false).GetAwaiter().GetResult();
         }
@@ -682,7 +682,7 @@ namespace Template.Backend.CsharpClient
         /// or
         /// Problème Reseaux ou serveur Api distant</exception>
         /// <exception cref="System.Exception"></exception>
-        internal async Task<AuditEntity> GetAuditAsync(string address, AuthenticationHeaderValue authHeaderValue = null)
+        internal async Task<AuditEntity> GetAuditAsync(string address, AuthenticationHeaderValue? authHeaderValue = null)
         {
             try
             {
@@ -729,7 +729,7 @@ namespace Template.Backend.CsharpClient
         /// or
         /// Problème Reseaux ou serveur Api distant</exception>
         /// <exception cref="System.Exception"></exception>
-        internal IEnumerable<Entity> PostList(string address, string values, AuthenticationHeaderValue authHeaderValue = null)
+        internal IEnumerable<Entity> PostList(string address, string values, AuthenticationHeaderValue? authHeaderValue = null)
         {
             return PostListAsync(address, values, authHeaderValue).ConfigureAwait(false).GetAwaiter().GetResult();
         }
@@ -749,7 +749,7 @@ namespace Template.Backend.CsharpClient
         /// or
         /// Problème Reseaux ou serveur Api distant</exception>
         /// <exception cref="System.Exception"></exception>
-        internal async Task<IEnumerable<Entity>> PostListAsync(string address, string values, AuthenticationHeaderValue authHeaderValue = null)
+        internal async Task<IEnumerable<Entity>> PostListAsync(string address, string values, AuthenticationHeaderValue? authHeaderValue = null)
         {
             try
             {

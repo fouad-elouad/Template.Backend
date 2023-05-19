@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
-using Template.Backend.Api.Exceptions;
-using Template.Backend.Data;
 using NLog;
 using NLog.Web;
 using System.Text.Json.Serialization;
-using Template.Backend.Api.Utilities;
 using Template.Backend.Api;
+using Template.Backend.Api.Exceptions;
+using Template.Backend.Api.Utilities;
+using Template.Backend.Data;
 
 var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 

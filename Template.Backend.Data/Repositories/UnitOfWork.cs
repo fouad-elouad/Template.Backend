@@ -8,7 +8,7 @@ namespace Template.Backend.Data.Repositories
     /// </summary>
     public class UnitOfWork : IUnitOfWork
     {
-        private StarterDbContext _dbContext;
+        private readonly StarterDbContext _dbContext;
 
         /// <summary>
         /// Constuctor

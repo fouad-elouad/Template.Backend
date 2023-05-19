@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Linq.Expressions;
 using Template.Backend.Api.Controllers;
 using Template.Backend.Api.Models;
 using Template.Backend.Data.Audit;
@@ -13,7 +14,6 @@ using Template.Backend.Model.Exceptions;
 using Template.Backend.Service.Audit;
 using Template.Backend.Service.Services;
 using Template.Backend.Service.Validation;
-using System.Linq.Expressions;
 
 namespace Template.Backend.UnitTest
 {
@@ -73,7 +73,7 @@ namespace Template.Backend.UnitTest
             _companyRepositoryMock.Setup(cr => cr.GetPagedList(It.IsAny<int>(), It.IsAny<int>())).Returns(Helper.CompanyFactory(0)).Verifiable();
 
             // Action
-            Action act = () => companyApiController.GetPagedList(1, 2);
+            void act() => companyApiController.GetPagedList(1, 2);
             Assert.ThrowsException<NoElementFoundException>(act);
 
             Mock.Verify(_companyRepositoryMock);

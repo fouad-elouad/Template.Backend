@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Template.Backend.Api.Services;
+using Template.Backend.Data;
 using Template.Backend.Data.Audit;
 using Template.Backend.Data.Repositories;
 using Template.Backend.Data.SpecificRepositories;
-using Template.Backend.Data;
 using Template.Backend.Data.Utilities;
 using Template.Backend.Service.Audit;
 using Template.Backend.Service.Services;

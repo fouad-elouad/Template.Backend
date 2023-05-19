@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Diagnostics;
+﻿using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 
 
 namespace Template.Backend.Api.Controllers
@@ -30,12 +30,9 @@ namespace Template.Backend.Api.Controllers
                 _logger.LogError("exception occured {exception}", exceptionHandlerFeature?.Error?.ToString());
             }
 
-            if (!hostEnvironment.IsDevelopment())
-            {
-                return NotFound();
-            }
-
-            return Problem(
+            return !hostEnvironment.IsDevelopment()
+                ? NotFound()
+                : Problem(
                 detail: exceptionHandlerFeature?.Error?.StackTrace,
                 title: exceptionHandlerFeature?.Error?.Message);
         }

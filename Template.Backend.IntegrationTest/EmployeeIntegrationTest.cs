@@ -32,7 +32,7 @@ namespace Template.Backend.IntegrationTest
             var employees = Helper.EmployeeFactory(SeedCount);
             Fixture.Seed(employees);
 
-           
+
 
             StarterDbContext dbContext = Fixture.CreateContext();
             employeeRepository = new EmployeeRepository(dbContext);
@@ -99,7 +99,7 @@ namespace Template.Backend.IntegrationTest
         {
             Assert.AreEqual(SeedCount, employeeService.Count());
 
-            Employee employeeToDelete = employeeService.Get(e=>true);
+            Employee employeeToDelete = employeeService.Get(e => true);
             employeeService.Delete(employeeToDelete);
             employeeService.Save();
 
@@ -112,7 +112,7 @@ namespace Template.Backend.IntegrationTest
             Assert.AreEqual(SeedCount, employeeService.Count());
 
             Employee employeeToDelete = employeeService.Get(e => true);
-            employeeService.Delete(e=>e.Name == employeeToDelete.Name);
+            employeeService.Delete(e => e.Name == employeeToDelete.Name);
             employeeService.Save();
 
             Assert.AreEqual(SeedCount - 1, employeeService.Count());
@@ -146,7 +146,7 @@ namespace Template.Backend.IntegrationTest
             Assert.IsTrue(employeeService.GetValidationDictionary().IsValid());
 
             Employee employeeToDuplicate = employeeService.Get(e => true);
-            Employee newEmployee = new Employee { Name = employeeToDuplicate.Name, BirthDate = DateTime.Now, Address = "Address", CompanyID = 1};
+            Employee newEmployee = new() { Name = employeeToDuplicate.Name, BirthDate = DateTime.Now, Address = "Address", CompanyID = 1 };
             employeeService.Add(newEmployee);
             employeeService.Save();
 
@@ -157,7 +157,7 @@ namespace Template.Backend.IntegrationTest
         [TestMethod]
         public void Test_Employee_Update()
         {
-            Employee employee  = employeeService.GetById(1);
+            Employee employee = employeeService.GetById(1);
             string newName = "New Name";
 
             Assert.AreNotEqual(newName, employee.Name);

@@ -93,7 +93,7 @@ namespace Template.Backend.IntegrationTest
         {
             Assert.AreEqual(SeedCount, companyService.Count());
 
-            Company companyToDelete = companyService.Get(e=>true);
+            Company companyToDelete = companyService.Get(e => true);
             companyService.Delete(companyToDelete);
             companyService.Save();
 
@@ -106,7 +106,7 @@ namespace Template.Backend.IntegrationTest
             Assert.AreEqual(SeedCount, companyService.Count());
 
             Company companyToDelete = companyService.Get(e => true);
-            companyService.Delete(e=>e.Name == companyToDelete.Name);
+            companyService.Delete(e => e.Name == companyToDelete.Name);
             companyService.Save();
 
             Assert.AreEqual(SeedCount - 1, companyService.Count());
@@ -140,7 +140,7 @@ namespace Template.Backend.IntegrationTest
             Assert.IsTrue(companyService.GetValidationDictionary().IsValid());
 
             Company companyToDuplicate = companyService.Get(e => true);
-            Company newCompany = new Company { Name = companyToDuplicate.Name, CreationDate = DateTime.Now};
+            Company newCompany = new() { Name = companyToDuplicate.Name, CreationDate = DateTime.Now };
             companyService.Add(newCompany);
             companyService.Save();
 
@@ -151,7 +151,7 @@ namespace Template.Backend.IntegrationTest
         [TestMethod]
         public void Test_Company_Update()
         {
-            Company company  = companyService.GetById(1);
+            Company company = companyService.GetById(1);
             string newName = "New Name";
 
             Assert.AreNotEqual(newName, company.Name);

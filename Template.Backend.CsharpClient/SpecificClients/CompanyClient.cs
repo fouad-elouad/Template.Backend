@@ -1,10 +1,10 @@
-﻿using Template.Backend.CsharpClient.Helpers;
-using System.Net.Http.Headers;
-using Template.Backend.Model.Entities;
-using Template.Backend.Model.Audit.Entities;
-using Template.Backend.Model.Exceptions;
+﻿using System.Net.Http.Headers;
 using System.Text.Json;
+using Template.Backend.CsharpClient.Helpers;
+using Template.Backend.Model.Audit.Entities;
+using Template.Backend.Model.Entities;
 using Template.Backend.Model.Enums;
+using Template.Backend.Model.Exceptions;
 
 namespace Template.Backend.CsharpClient.SpecificClients
 {
@@ -22,7 +22,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         /// <returns>
         /// response of type string
         /// </returns>
-        Company Add(Company company, AuthenticationHeaderValue authHeaderValue = null);
+        Company Add(Company company, AuthenticationHeaderValue? authHeaderValue = null);
 
         /// <summary>
         /// Adds the specified Company.
@@ -32,7 +32,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         /// <returns>
         /// response of type string
         /// </returns>
-        Task<Company> AddAsync(Company company, AuthenticationHeaderValue authHeaderValue = null);
+        Task<Company> AddAsync(Company company, AuthenticationHeaderValue? authHeaderValue = null);
 
         /// <summary>
         /// Adds the specified Company List.
@@ -42,7 +42,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         /// <returns>
         /// list
         /// </returns>
-        IEnumerable<Company> Add(IEnumerable<Company> list, AuthenticationHeaderValue authHeaderValue = null);
+        IEnumerable<Company> Add(IEnumerable<Company> list, AuthenticationHeaderValue? authHeaderValue = null);
 
         /// <summary>
         /// Adds the specified Company List.
@@ -52,7 +52,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         /// <returns>
         /// list
         /// </returns>
-        Task<IEnumerable<Company>> AddAsync(IEnumerable<Company> list, AuthenticationHeaderValue authHeaderValue = null);
+        Task<IEnumerable<Company>> AddAsync(IEnumerable<Company> list, AuthenticationHeaderValue? authHeaderValue = null);
 
         /// <summary>
         /// Gets all Company.
@@ -61,7 +61,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         /// <returns>
         /// List of Company
         /// </returns>
-        IEnumerable<Company> GetAll(AuthenticationHeaderValue authHeaderValue = null);
+        IEnumerable<Company> GetAll(AuthenticationHeaderValue? authHeaderValue = null);
 
         /// <summary>
         /// Gets all Company.
@@ -70,7 +70,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         /// <returns>
         /// List of Company
         /// </returns>
-        Task<IEnumerable<Company>> GetAllAsync(AuthenticationHeaderValue authHeaderValue = null);
+        Task<IEnumerable<Company>> GetAllAsync(AuthenticationHeaderValue? authHeaderValue = null);
 
         /// <summary>
         /// Gets Company with the specified Id.
@@ -80,7 +80,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         /// <returns>
         /// Company object
         /// </returns>
-        Company Get(int id, AuthenticationHeaderValue authHeaderValue = null);
+        Company Get(int id, AuthenticationHeaderValue? authHeaderValue = null);
 
         /// <summary>
         /// Gets Company with the specified Id.
@@ -90,7 +90,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         /// <returns>
         /// Company object
         /// </returns>
-        Task<Company> GetAsync(int id, AuthenticationHeaderValue authHeaderValue = null);
+        Task<Company> GetAsync(int id, AuthenticationHeaderValue? authHeaderValue = null);
 
         /// <summary>
         /// Count.
@@ -99,7 +99,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         /// <returns>
         /// Count
         /// </returns>
-        int Count(AuthenticationHeaderValue authHeaderValue = null);
+        int Count(AuthenticationHeaderValue? authHeaderValue = null);
 
         /// <summary>
         /// Count.
@@ -108,7 +108,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         /// <returns>
         /// Count
         /// </returns>
-        Task<int> CountAsync(AuthenticationHeaderValue authHeaderValue = null);
+        Task<int> CountAsync(AuthenticationHeaderValue? authHeaderValue = null);
 
         /// <summary>
         /// Gets Company with the specified Id.
@@ -117,7 +117,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         /// <param name="nestedObjectDepth">The maximum level to achieve for navigation properties serialization.</param>
         /// <param name="authHeaderValue">The authentication header value.</param>
         /// <returns>Company object</returns>
-        Company Get(int id, NestedObjectDepth nestedObjectDepth, AuthenticationHeaderValue authHeaderValue = null);
+        Company Get(int id, NestedObjectDepth nestedObjectDepth, AuthenticationHeaderValue? authHeaderValue = null);
 
         /// <summary>
         /// Gets Company with the specified Id.
@@ -126,21 +126,21 @@ namespace Template.Backend.CsharpClient.SpecificClients
         /// <param name="nestedObjectDepth">The maximum level to achieve for navigation properties serialization.</param>
         /// <param name="authHeaderValue">The authentication header value.</param>
         /// <returns>Company object</returns>
-        Task<Company> GetAsync(int id, NestedObjectDepth nestedObjectDepth, AuthenticationHeaderValue authHeaderValue = null);
+        Task<Company> GetAsync(int id, NestedObjectDepth nestedObjectDepth, AuthenticationHeaderValue? authHeaderValue = null);
 
         /// <summary>
         /// Deletes Company with the specified Id.
         /// </summary>
         /// <param name="ID">The Company Id.</param>
         /// <param name="authHeaderValue">The authentication header value.</param>
-        void Delete(int ID, AuthenticationHeaderValue authHeaderValue = null);
+        void Delete(int ID, AuthenticationHeaderValue? authHeaderValue = null);
 
         /// <summary>
         /// Deletes Company with the specified Id.
         /// </summary>
         /// <param name="ID">The Company Id.</param>
         /// <param name="authHeaderValue">The authentication header value.</param>
-        Task DeleteAsync(int ID, AuthenticationHeaderValue authHeaderValue = null);
+        Task DeleteAsync(int ID, AuthenticationHeaderValue? authHeaderValue = null);
 
         /// <summary>
         /// Updates Company with specified Id.
@@ -148,7 +148,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         /// <param name="ID">The Company Id.</param>
         /// <param name="company">The company.</param>
         /// <param name="authHeaderValue">The authentication header value.</param>
-        void Update(int ID, Company company, AuthenticationHeaderValue authHeaderValue = null);
+        void Update(int ID, Company company, AuthenticationHeaderValue? authHeaderValue = null);
 
         /// <summary>
         /// Updates Company with specified Id.
@@ -156,7 +156,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         /// <param name="ID">The Company Id.</param>
         /// <param name="company">The company.</param>
         /// <param name="authHeaderValue">The authentication header value.</param>
-        Task UpdateAsync(int ID, Company company, AuthenticationHeaderValue authHeaderValue = null);
+        Task UpdateAsync(int ID, Company company, AuthenticationHeaderValue? authHeaderValue = null);
 
         /// <summary>
         /// Gets the audit list of Company.
@@ -166,7 +166,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         /// <returns>
         /// response of type string
         /// </returns>
-        IEnumerable<CompanyAudit> GetAuditListById(int ID, AuthenticationHeaderValue authHeaderValue = null);
+        IEnumerable<CompanyAudit> GetAuditListById(int ID, AuthenticationHeaderValue? authHeaderValue = null);
 
         /// <summary>
         /// Gets the audit list of Company.
@@ -176,7 +176,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         /// <returns>
         /// response of type string
         /// </returns>
-        Task<IEnumerable<CompanyAudit>> GetAuditListByIdAsync(int ID, AuthenticationHeaderValue authHeaderValue = null);
+        Task<IEnumerable<CompanyAudit>> GetAuditListByIdAsync(int ID, AuthenticationHeaderValue? authHeaderValue = null);
 
         /// <summary>
         /// Gets the audit row by Id.
@@ -186,7 +186,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         /// <returns>
         /// CompanyAudit object
         /// </returns>
-        CompanyAudit GetAuditById(int ID, AuthenticationHeaderValue authHeaderValue = null);
+        CompanyAudit GetAuditById(int ID, AuthenticationHeaderValue? authHeaderValue = null);
 
         /// <summary>
         /// Gets the audit row by Id.
@@ -196,7 +196,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         /// <returns>
         /// CompanyAudit object
         /// </returns>
-        Task<CompanyAudit> GetAuditByIdAsync(int ID, AuthenticationHeaderValue authHeaderValue = null);
+        Task<CompanyAudit> GetAuditByIdAsync(int ID, AuthenticationHeaderValue? authHeaderValue = null);
 
         /// <summary>
         /// Restores the Company by the spicified CompanyAudit Id.
@@ -204,7 +204,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         /// <param name="id">The Company Id.</param>
         /// <param name="auditId">The CompanyAudit Id.</param>
         /// <param name="authHeaderValue">The authentication header value.</param>
-        void Restore(int id, int auditId, AuthenticationHeaderValue authHeaderValue = null);
+        void Restore(int id, int auditId, AuthenticationHeaderValue? authHeaderValue = null);
 
         /// <summary>
         /// Restores the Company by the spicified CompanyAudit Id.
@@ -212,7 +212,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         /// <param name="id">The Company Id.</param>
         /// <param name="auditId">The CompanyAudit Id.</param>
         /// <param name="authHeaderValue">The authentication header value.</param>
-        Task RestoreAsync(int id, int auditId, AuthenticationHeaderValue authHeaderValue = null);
+        Task RestoreAsync(int id, int auditId, AuthenticationHeaderValue? authHeaderValue = null);
 
         /// <summary>
         /// Gets the paged list of Company.
@@ -223,7 +223,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         /// <returns>
         /// List of Company object
         /// </returns>
-        IEnumerable<Company> GetPagedList(int pageNo, int pageSize, AuthenticationHeaderValue authHeaderValue = null);
+        IEnumerable<Company> GetPagedList(int pageNo, int pageSize, AuthenticationHeaderValue? authHeaderValue = null);
 
         /// <summary>
         /// Gets the paged list of Company.
@@ -234,7 +234,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         /// <returns>
         /// List of Company object
         /// </returns>
-        Task<IEnumerable<Company>> GetPagedListAsync(int pageNo, int pageSize, AuthenticationHeaderValue authHeaderValue = null);
+        Task<IEnumerable<Company>> GetPagedListAsync(int pageNo, int pageSize, AuthenticationHeaderValue? authHeaderValue = null);
 
         /// <summary>
         /// Gets the snapshot of all entities at the specified date time.
@@ -244,7 +244,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         /// <returns>
         /// List snapshot
         /// </returns>
-        IEnumerable<Company> GetAllSnapshot(DateTime datetime, AuthenticationHeaderValue authHeaderValue = null);
+        IEnumerable<Company> GetAllSnapshot(DateTime datetime, AuthenticationHeaderValue? authHeaderValue = null);
 
         /// <summary>
         /// Gets the snapshot of all entities at the specified date time.
@@ -254,7 +254,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         /// <returns>
         /// List snapshot
         /// </returns>
-        Task<IEnumerable<Company>> GetAllSnapshotAsync(DateTime datetime, AuthenticationHeaderValue authHeaderValue = null);
+        Task<IEnumerable<Company>> GetAllSnapshotAsync(DateTime datetime, AuthenticationHeaderValue? authHeaderValue = null);
 
         /// <summary>
         /// Gets the snapshot at the specified date time.
@@ -265,7 +265,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         /// <returns>
         /// Company snapshot
         /// </returns>
-        Company GetIdSnapshot(DateTime datetime, int id, AuthenticationHeaderValue authHeaderValue = null);
+        Company GetIdSnapshot(DateTime datetime, int id, AuthenticationHeaderValue? authHeaderValue = null);
 
         /// <summary>
         /// Gets the snapshot at the specified date time.
@@ -276,7 +276,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         /// <returns>
         /// Company snapshot
         /// </returns>
-        Task<Company> GetIdSnapshotAsync(DateTime datetime, int id, AuthenticationHeaderValue authHeaderValue = null);
+        Task<Company> GetIdSnapshotAsync(DateTime datetime, int id, AuthenticationHeaderValue? authHeaderValue = null);
     }
 
     /// <summary>
@@ -293,7 +293,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         {
         }
 
-        public Company Add(Company company, AuthenticationHeaderValue authHeaderValue = null)
+        public Company Add(Company company, AuthenticationHeaderValue? authHeaderValue = null)
         {
             try
             {
@@ -310,7 +310,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
             }
         }
 
-        public async Task<Company> AddAsync(Company company, AuthenticationHeaderValue authHeaderValue = null)
+        public async Task<Company> AddAsync(Company company, AuthenticationHeaderValue? authHeaderValue = null)
         {
             try
             {
@@ -327,69 +327,69 @@ namespace Template.Backend.CsharpClient.SpecificClients
             }
         }
 
-        public IEnumerable<Company> Add(IEnumerable<Company> list, AuthenticationHeaderValue authHeaderValue = null)
+        public IEnumerable<Company> Add(IEnumerable<Company> list, AuthenticationHeaderValue? authHeaderValue = null)
         {
             string values = JsonSerializer.Serialize(list);
             return AddRange(ApiConfiguration.CompanyApiItemsRoute, values, authHeaderValue);
         }
 
-        public async Task<IEnumerable<Company>> AddAsync(IEnumerable<Company> list, AuthenticationHeaderValue authHeaderValue = null)
+        public async Task<IEnumerable<Company>> AddAsync(IEnumerable<Company> list, AuthenticationHeaderValue? authHeaderValue = null)
         {
             string values = JsonSerializer.Serialize(list);
             return await AddRangeAsync(ApiConfiguration.CompanyApiItemsRoute, values, authHeaderValue);
         }
 
-        public int Count(AuthenticationHeaderValue authHeaderValue = null)
+        public int Count(AuthenticationHeaderValue? authHeaderValue = null)
         {
             return Count(ApiConfiguration.CompanyApiCountRoute, authHeaderValue);
         }
 
-        public async Task<int> CountAsync(AuthenticationHeaderValue authHeaderValue = null)
+        public async Task<int> CountAsync(AuthenticationHeaderValue? authHeaderValue = null)
         {
             return await CountAsync(ApiConfiguration.CompanyApiCountRoute, authHeaderValue);
         }
 
-        public IEnumerable<Company> GetAll(AuthenticationHeaderValue authHeaderValue = null)
+        public IEnumerable<Company> GetAll(AuthenticationHeaderValue? authHeaderValue = null)
         {
             return GetObjects(ApiConfiguration.CompanyApiRoute, authHeaderValue);
         }
 
-        public async Task<IEnumerable<Company>> GetAllAsync(AuthenticationHeaderValue authHeaderValue = null)
+        public async Task<IEnumerable<Company>> GetAllAsync(AuthenticationHeaderValue? authHeaderValue = null)
         {
             return await GetObjectsAsync(ApiConfiguration.CompanyApiRoute, authHeaderValue);
         }
 
-        public void Delete(int ID, AuthenticationHeaderValue authHeaderValue = null)
+        public void Delete(int ID, AuthenticationHeaderValue? authHeaderValue = null)
         {
             Delete(ApiConfiguration.CompanyApiRoute + ID.ToString(), authHeaderValue);
         }
 
-        public async Task DeleteAsync(int ID, AuthenticationHeaderValue authHeaderValue = null)
+        public async Task DeleteAsync(int ID, AuthenticationHeaderValue? authHeaderValue = null)
         {
             await DeleteAsync(ApiConfiguration.CompanyApiRoute + ID.ToString(), authHeaderValue);
         }
 
-        public Company Get(int id, AuthenticationHeaderValue authHeaderValue = null)
+        public Company Get(int id, AuthenticationHeaderValue? authHeaderValue = null)
         {
             return GetAsObject(ApiConfiguration.CompanyApiRoute + id.ToString(), authHeaderValue);
         }
 
-        public async Task<Company> GetAsync(int id, AuthenticationHeaderValue authHeaderValue = null)
+        public async Task<Company> GetAsync(int id, AuthenticationHeaderValue? authHeaderValue = null)
         {
             return await GetAsObjectAsync(ApiConfiguration.CompanyApiRoute + id.ToString(), authHeaderValue);
         }
 
-        public Company Get(int id, NestedObjectDepth nestedObjectDepth, AuthenticationHeaderValue authHeaderValue = null)
+        public Company Get(int id, NestedObjectDepth nestedObjectDepth, AuthenticationHeaderValue? authHeaderValue = null)
         {
             return GetAsObject(ApiConfiguration.CompanyApiRoute + id.ToString() + "/" + nestedObjectDepth.ToString(), authHeaderValue);
         }
 
-        public async Task<Company> GetAsync(int id, NestedObjectDepth nestedObjectDepth, AuthenticationHeaderValue authHeaderValue = null)
+        public async Task<Company> GetAsync(int id, NestedObjectDepth nestedObjectDepth, AuthenticationHeaderValue? authHeaderValue = null)
         {
             return await GetAsObjectAsync(ApiConfiguration.CompanyApiRoute + id.ToString() + "/" + nestedObjectDepth.ToString(), authHeaderValue);
         }
 
-        public IEnumerable<Company> GetPagedList(int pageNo, int pageSize, AuthenticationHeaderValue authHeaderValue = null)
+        public IEnumerable<Company> GetPagedList(int pageNo, int pageSize, AuthenticationHeaderValue? authHeaderValue = null)
         {
             string url = string.Empty.AddQuery(nameof(pageNo), pageNo.ToString())
                                      .AddQuery(nameof(pageSize), pageSize.ToString());
@@ -397,7 +397,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
             return GetObjects(ApiConfiguration.CompanyApiPaginationRoute + "?" + url, authHeaderValue);
         }
 
-        public async Task<IEnumerable<Company>> GetPagedListAsync(int pageNo, int pageSize, AuthenticationHeaderValue authHeaderValue = null)
+        public async Task<IEnumerable<Company>> GetPagedListAsync(int pageNo, int pageSize, AuthenticationHeaderValue? authHeaderValue = null)
         {
             string url = string.Empty.AddQuery(nameof(pageNo), pageNo.ToString())
                                      .AddQuery(nameof(pageSize), pageSize.ToString());
@@ -405,7 +405,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
             return await GetObjectsAsync(ApiConfiguration.CompanyApiPaginationRoute + "?" + url, authHeaderValue);
         }
 
-        public void Update(int ID, Company company, AuthenticationHeaderValue authHeaderValue = null)
+        public void Update(int ID, Company company, AuthenticationHeaderValue? authHeaderValue = null)
         {
             try
             {
@@ -422,7 +422,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
             }
         }
 
-        public async Task UpdateAsync(int ID, Company company, AuthenticationHeaderValue authHeaderValue = null)
+        public async Task UpdateAsync(int ID, Company company, AuthenticationHeaderValue? authHeaderValue = null)
         {
             try
             {
@@ -439,37 +439,37 @@ namespace Template.Backend.CsharpClient.SpecificClients
             }
         }
 
-        public IEnumerable<CompanyAudit> GetAuditListById(int ID, AuthenticationHeaderValue authHeaderValue = null)
+        public IEnumerable<CompanyAudit> GetAuditListById(int ID, AuthenticationHeaderValue? authHeaderValue = null)
         {
             return GetAuditObjects(ApiConfiguration.CompanyApiAuditListRoute + ID.ToString(), authHeaderValue);
         }
 
-        public async Task<IEnumerable<CompanyAudit>> GetAuditListByIdAsync(int ID, AuthenticationHeaderValue authHeaderValue = null)
+        public async Task<IEnumerable<CompanyAudit>> GetAuditListByIdAsync(int ID, AuthenticationHeaderValue? authHeaderValue = null)
         {
             return await GetAuditObjectsAsync(ApiConfiguration.CompanyApiAuditListRoute + ID.ToString(), authHeaderValue);
         }
 
-        public CompanyAudit GetAuditById(int ID, AuthenticationHeaderValue authHeaderValue = null)
+        public CompanyAudit GetAuditById(int ID, AuthenticationHeaderValue? authHeaderValue = null)
         {
             return GetAudit(ApiConfiguration.CompanyApiAuditRoute + ID.ToString(), authHeaderValue);
         }
 
-        public async Task<CompanyAudit> GetAuditByIdAsync(int ID, AuthenticationHeaderValue authHeaderValue = null)
+        public async Task<CompanyAudit> GetAuditByIdAsync(int ID, AuthenticationHeaderValue? authHeaderValue = null)
         {
             return await GetAuditAsync(ApiConfiguration.CompanyApiAuditRoute + ID.ToString(), authHeaderValue);
         }
 
-        public void Restore(int id, int auditId, AuthenticationHeaderValue authHeaderValue = null)
+        public void Restore(int id, int auditId, AuthenticationHeaderValue? authHeaderValue = null)
         {
             Restore(ApiConfiguration.CompanyApiAuditListRoute + id.ToString() + "/" + auditId.ToString(), authHeaderValue);
         }
 
-        public async Task RestoreAsync(int id, int auditId, AuthenticationHeaderValue authHeaderValue = null)
+        public async Task RestoreAsync(int id, int auditId, AuthenticationHeaderValue? authHeaderValue = null)
         {
             await RestoreAsync(ApiConfiguration.CompanyApiAuditListRoute + id.ToString() + "/" + auditId.ToString(), authHeaderValue);
         }
 
-        public IEnumerable<Company> GetAllSnapshot(DateTime datetime, AuthenticationHeaderValue authHeaderValue = null)
+        public IEnumerable<Company> GetAllSnapshot(DateTime datetime, AuthenticationHeaderValue? authHeaderValue = null)
         {
             try
             {
@@ -486,7 +486,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
             }
         }
 
-        public async Task<IEnumerable<Company>> GetAllSnapshotAsync(DateTime datetime, AuthenticationHeaderValue authHeaderValue = null)
+        public async Task<IEnumerable<Company>> GetAllSnapshotAsync(DateTime datetime, AuthenticationHeaderValue? authHeaderValue = null)
         {
             try
             {
@@ -503,7 +503,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
             }
         }
 
-        public Company GetIdSnapshot(DateTime datetime, int id, AuthenticationHeaderValue authHeaderValue = null)
+        public Company GetIdSnapshot(DateTime datetime, int id, AuthenticationHeaderValue? authHeaderValue = null)
         {
             try
             {
@@ -520,7 +520,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
             }
         }
 
-        public async Task<Company> GetIdSnapshotAsync(DateTime datetime, int id, AuthenticationHeaderValue authHeaderValue = null)
+        public async Task<Company> GetIdSnapshotAsync(DateTime datetime, int id, AuthenticationHeaderValue? authHeaderValue = null)
         {
             try
             {

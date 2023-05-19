@@ -1,5 +1,4 @@
-﻿using System.Configuration;
-using System.Reflection;
+﻿using Microsoft.Extensions.Configuration;
 using Template.Backend.Model.Exceptions;
 
 namespace Template.Backend.CsharpClient
@@ -12,31 +11,23 @@ namespace Template.Backend.CsharpClient
         /// <summary>
         /// The configuration file name
         /// </summary>
-        private const string configFileName = "Template.Backend.CsharpClient.dll.config";
+        private const string configFileName = "Template.Backend.CsharpClient.dll.json";
 
-        /// <summary>
-        /// Gets the Api Routes configuration.
-        /// </summary>
-        /// <value>
-        /// The Api Routes configuration.
-        /// </value>
-        /// <exception cref="ConfigFileNotFoundException">Configuration file not found in Environment Directory, please contact Administrator</exception>
-        private static Configuration ClientConfig
+        private static readonly IConfiguration _configuration;
+
+        static ApiConfiguration()
         {
-            get
+            var configFilePath = Environment.CurrentDirectory + Path.DirectorySeparatorChar + configFileName;
+
+            if (!File.Exists(configFilePath))
             {
-                ExeConfigurationFileMap map = new ExeConfigurationFileMap();
-                string codeBase = Assembly.GetExecutingAssembly().CodeBase;
-                UriBuilder uri = new UriBuilder(codeBase);
-                string path = Uri.UnescapeDataString(uri.Path);
-                map.ExeConfigFilename = Path.GetDirectoryName(path) + "\\" + configFileName;
-                if (!File.Exists(map.ExeConfigFilename))
-                {
-                    throw new ConfigFileNotFoundException("Configuration file not found in Environment Directory ("+ configFileName+"), please contact Administrator");
-                }
-                Configuration libConfig = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
-                return libConfig;
+                throw new ConfigFileNotFoundException("Configuration file not found in Environment Directory (" + configFileName + "), please contact Administrator");
             }
+
+            var configBuilder = new ConfigurationBuilder()
+                .AddJsonFile(configFilePath, optional: false, reloadOnChange: true);
+
+            _configuration = configBuilder.Build();
         }
 
         /// <summary>
@@ -47,10 +38,7 @@ namespace Template.Backend.CsharpClient
         /// <exception cref="System.Collections.Generic.KeyNotFoundException"></exception>
         private static string GetSetting(string key)
         {
-            if (ClientConfig.AppSettings.Settings[key] == null)
-                throw new ApiKeyNotFoundException(key);
-
-            return ClientConfig.AppSettings.Settings[key].Value;
+            return _configuration[key] != null ? _configuration[key]! : throw new ApiKeyNotFoundException(key);
         }
 
         /// <summary>
@@ -61,12 +49,8 @@ namespace Template.Backend.CsharpClient
         /// <exception cref="System.Collections.Generic.KeyNotFoundException"></exception>
         private static int GetSettingInteger(string key)
         {
-            if (ClientConfig.AppSettings.Settings[key] == null)
-                throw new ApiKeyNotFoundException(key);
-            int value;
-            if (int.TryParse(ClientConfig.AppSettings.Settings[key].Value, out value))
-                return value;
-            throw new BusinessException("wrong value for the key " + key);
+            var s_Value = GetSetting(key);
+            return int.TryParse(s_Value, out int value) ? value : throw new BusinessException("wrong value for the key " + key);
         }
 
         /// <summary>

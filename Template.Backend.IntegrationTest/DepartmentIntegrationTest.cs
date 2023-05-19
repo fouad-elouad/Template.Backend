@@ -93,7 +93,7 @@ namespace Template.Backend.IntegrationTest
         {
             Assert.AreEqual(SeedCount, departmentService.Count());
 
-            Department departmentToDelete = departmentService.Get(e=>true);
+            Department departmentToDelete = departmentService.Get(e => true);
             departmentService.Delete(departmentToDelete);
             departmentService.Save();
 
@@ -106,7 +106,7 @@ namespace Template.Backend.IntegrationTest
             Assert.AreEqual(SeedCount, departmentService.Count());
 
             Department departmentToDelete = departmentService.Get(e => true);
-            departmentService.Delete(e=>e.Name == departmentToDelete.Name);
+            departmentService.Delete(e => e.Name == departmentToDelete.Name);
             departmentService.Save();
 
             Assert.AreEqual(SeedCount - 1, departmentService.Count());
@@ -140,7 +140,7 @@ namespace Template.Backend.IntegrationTest
             Assert.IsTrue(departmentService.GetValidationDictionary().IsValid());
 
             Department departmentToDuplicate = departmentService.Get(e => true);
-            Department newDepartment = new Department { Name = departmentToDuplicate.Name};
+            Department newDepartment = new() { Name = departmentToDuplicate.Name };
             departmentService.Add(newDepartment);
             departmentService.Save();
 
@@ -151,7 +151,7 @@ namespace Template.Backend.IntegrationTest
         [TestMethod]
         public void Test_Department_Update()
         {
-            Department department  = departmentService.GetById(1);
+            Department department = departmentService.GetById(1);
             string newName = "New Name";
 
             Assert.AreNotEqual(newName, department.Name);

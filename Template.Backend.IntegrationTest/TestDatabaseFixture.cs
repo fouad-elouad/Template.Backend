@@ -35,7 +35,7 @@ namespace Template.Backend.IntegrationTest
 
             ICurrentUserService fakeUserService = new FakeUserService();
             IDateTime fakeDateTimeService = new FakeDateTimeService();
-            StarterDbContext dbContext = new StarterDbContext(
+            StarterDbContext dbContext = new(
                 new DbContextOptionsBuilder<StarterDbContext>()
                     .UseSqlServer(config.GetConnectionString("DefaultConnection"))
                     .Options, new AuditSaveChangesInterceptor(fakeUserService, fakeDateTimeService)

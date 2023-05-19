@@ -18,7 +18,7 @@ namespace Template.Backend.Data
         private readonly IDateTime _dateTime;
 
         // Audit
-        public static Dictionary<Type, Type> _auditTypesMapping = new Dictionary<Type, Type>();
+        public static Dictionary<Type, Type> _auditTypesMapping = new();
 
         public StarterDbContext(DbContextOptions<StarterDbContext> options,
             AuditSaveChangesInterceptor auditDbCommandInterceptor,
@@ -176,8 +176,8 @@ namespace Template.Backend.Data
         /// <returns></returns>
         public static EntityEntry<T> GetEntityEntry<T>(this DbContext dbContext, Type auditType) where T : class
         {
-            var auditTypeInstance = Activator.CreateInstance(auditType);
-            return dbContext.Add<T>((T)auditTypeInstance);
+            var auditTypeInstance = (T) Activator.CreateInstance(auditType)!;
+            return dbContext.Add<T>(auditTypeInstance);
         }
     }
 }

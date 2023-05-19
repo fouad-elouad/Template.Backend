@@ -1,0 +1,33 @@
+﻿{
+	"BaseAddress": "http://localhost:5012/api/v1/",
+
+	"RequestTimeout": "180",
+	"PooledConnectionLifetime": "300",
+
+	"CompanyApiRoute": "Companies/",
+	"CompanyApiCountRoute": "Companies/Count",
+	"CompanyApiPaginationRoute": "Companies/Pagination",
+	"CompanyApiItemsRoute": "Companies/Items",
+	"CompanyApiSearchRoute": "Companies/Search/",
+	"CompanyApiAuditListRoute": "Companies/Audit/",
+	"CompanyApiAuditRoute": "Companies/AuditId/",
+	"CompanyApiSnapshotRoute": "Companies/Snapshot/",
+
+	"EmployeeApiRoute": "Employees/",
+	"EmployeeApiCountRoute": "Employees/Count",
+	"EmployeeApiPaginationRoute": "Employees/Pagination",
+	"EmployeeApiItemsRoute": "Employees/Items",
+	"EmployeeApiSearchRoute": "Employees/Search/",
+	"EmployeeApiAuditListRoute": "Employees/Audit/",
+	"EmployeeApiAuditRoute": "Employees/AuditId/",
+	"EmployeeApiSnapshotRoute": "Employees/Snapshot/",
+
+	"DepartmentApiRoute": "Departments/",
+	"DepartmentApiCountRoute": "Departments/Count",
+	"DepartmentApiPaginationRoute": "Departments/Pagination",
+	"DepartmentApiItemsRoute": "Departments/Items",
+	"DepartmentApiSearchRoute": "Departments/Search/",
+	"DepartmentApiAuditListRoute": "Departments/Audit/",
+	"DepartmentApiAuditRoute": "Departments/AuditId/",
+	"DepartmentApiSnapshotRoute": "Departments/Snapshot/"
+}

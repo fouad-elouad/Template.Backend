@@ -1,6 +1,6 @@
-﻿using Template.Backend.Data.Repositories;
+﻿using System.Linq.Expressions;
+using Template.Backend.Data.Repositories;
 using Template.Backend.Service.Validation;
-using System.Linq.Expressions;
 
 namespace Template.Backend.Service
 {
@@ -89,7 +89,7 @@ namespace Template.Backend.Service
         /// </summary>
         /// <param name="id">Id of entity to find</param>
         /// <returns>Founded entity</returns>
-        public virtual T GetById(int id)
+        public virtual T? GetById(int id)
         {
             return _repository.GetById(id);
         }
@@ -120,7 +120,7 @@ namespace Template.Backend.Service
         /// </summary>
         /// <param name="where">filter expression</param>
         /// <returns>First or default entity</returns>
-        public T Get(Expression<Func<T, bool>> where)
+        public T? Get(Expression<Func<T, bool>> where)
         {
             return _repository.Get(where);
         }
@@ -135,7 +135,7 @@ namespace Template.Backend.Service
             return _validationDictionary;
         }
 
-        public IEnumerable<T> GetPagedList(int page, int pageSize)
+        public IEnumerable<T>? GetPagedList(int page, int pageSize)
         {
             return _repository.GetPagedList(page, pageSize);
         }
@@ -145,7 +145,7 @@ namespace Template.Backend.Service
             return _repository.CheckIfExist(where);
         }
 
-        public int Count(Expression<Func<T, bool>> where = null)
+        public int Count(Expression<Func<T, bool>>? where = null)
         {
             return _repository.Count(where);
         }

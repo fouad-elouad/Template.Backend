@@ -1,6 +1,6 @@
-﻿using Template.Backend.Model;
+﻿using System.Linq.Expressions;
+using Template.Backend.Model;
 using Template.Backend.Service.Validation;
-using System.Linq.Expressions;
 
 namespace Template.Backend.Service
 {
@@ -106,6 +106,6 @@ namespace Template.Backend.Service
         /// <returns>
         /// The Count
         /// </returns>
-        int Count(Expression<Func<T, bool>> where = null);
+        int Count(Expression<Func<T, bool>>? where = null);
     }
 }

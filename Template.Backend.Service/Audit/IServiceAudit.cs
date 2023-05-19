@@ -1,5 +1,5 @@
-﻿using Template.Backend.Model.Audit;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
+using Template.Backend.Model.Audit;
 
 namespace Template.Backend.Service.Audit
 {
@@ -15,6 +15,6 @@ namespace Template.Backend.Service.Audit
         IEnumerable<T> GetAll();
         IEnumerable<T> GetMany(Expression<Func<T, bool>> where);
         IEnumerable<T> GetAllSnapshot(DateTime dateTime);
-        T GetByIdSnapshot(DateTime dateTime, int id);
+        T? GetByIdSnapshot(DateTime dateTime, int id);
     }
 }

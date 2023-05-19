@@ -1,29 +1,23 @@
-﻿using Template.Backend.Service;
-using Template.Backend.Service.Audit;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Template.Backend.Model.Exceptions;
-using Template.Backend.Service.Validation;
-using Template.Backend.Model;
-using Template.Backend.Model.Audit;
-using AutoMapper;
 using System.Globalization;
 using Template.Backend.Api.Utilities;
+using Template.Backend.Model;
+using Template.Backend.Model.Audit;
+using Template.Backend.Model.Exceptions;
+using Template.Backend.Service;
+using Template.Backend.Service.Audit;
+using Template.Backend.Service.Validation;
 
 namespace Template.Backend.Api.Controllers
 {
     public abstract class BaseApiController<Entity, AuditEntity> : ControllerBase where Entity : IEntity where AuditEntity : IAuditEntity
     {
-        protected const int _detailsDepth = 2;
-        protected const int _getAllDepth = 1;
         /// <summary>
         /// The date format for Snapshot method
         /// </summary>
         protected const string _dateFormat = "yyyyMMddTHHmmss";
 
-        /// <summary>
-        /// The media type
-        /// </summary>
-        protected const string _mediaType = "application/json";
         private readonly IService<Entity> _Service;
         private readonly IServiceAudit<AuditEntity> _AuditService;
         protected readonly IMapper _mapper;
@@ -243,7 +237,7 @@ namespace Template.Backend.Api.Controllers
             {
                 AddCountHeaders(list, count);
                 return Ok(list);
-            }  
+            }
             else
             {
                 throw new NoElementFoundException($"No element found for {typeof(Entity).Name} entity");
@@ -303,7 +297,7 @@ namespace Template.Backend.Api.Controllers
                 DateTime dateParsed = DateTime.ParseExact(dateTime, _dateFormat, CultureInfo.InvariantCulture,
                                                     DateTimeStyles.AdjustToUniversal);
 
-                AuditEntity auditEntity = _AuditService.GetByIdSnapshot(dateParsed, id);
+                AuditEntity? auditEntity = _AuditService.GetByIdSnapshot(dateParsed, id);
 
                 if (auditEntity != null)
                 {

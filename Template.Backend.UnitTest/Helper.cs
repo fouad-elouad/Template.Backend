@@ -1,6 +1,6 @@
 ﻿using Template.Backend.Api.Models;
-using Template.Backend.Model.Entities;
 using Template.Backend.Model;
+using Template.Backend.Model.Entities;
 
 namespace Template.Backend.UnitTest;
 
@@ -55,7 +55,7 @@ internal class Helper
                 new Employee
                 {
                     Address = "Address",
-                    BirthDate = new DateTime(2020,10,10),
+                    BirthDate = new DateTime(2020, 10, 10),
                     CompanyID = 1,
                     CreatedOn = DateTime.Now,
                     ID = i,

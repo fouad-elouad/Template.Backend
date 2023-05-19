@@ -1,14 +1,14 @@
-﻿using Template.Backend.Model.Audit.Entities;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using System.Net.Mime;
+using Template.Backend.Api.Configuration;
+using Template.Backend.Api.Models;
+using Template.Backend.Model.Audit.Entities;
 using Template.Backend.Model.Entities;
+using Template.Backend.Model.Enums;
+using Template.Backend.Model.Exceptions;
 using Template.Backend.Service.Audit;
 using Template.Backend.Service.Services;
-using Microsoft.AspNetCore.Mvc;
-using Template.Backend.Api.Models;
-using System.Net.Mime;
-using AutoMapper;
-using Template.Backend.Api.Configuration;
-using Template.Backend.Model.Exceptions;
-using Template.Backend.Model.Enums;
 
 namespace Template.Backend.Api.Controllers
 {
@@ -20,8 +20,8 @@ namespace Template.Backend.Api.Controllers
     [Route(ApiRouteConfiguration.DepartmentPrefix)]
     public class DepartmentApiController : BaseApiController<Department, DepartmentAudit>
     {
-        private IDepartmentService _DepartmentService;
-        private IDepartmentAuditService _DepartmentAuditService;
+        private readonly IDepartmentService _DepartmentService;
+        private readonly IDepartmentAuditService _DepartmentAuditService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DepartmentApiController"/> class.
@@ -37,7 +37,7 @@ namespace Template.Backend.Api.Controllers
 
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
         [HttpGet(ApiRouteConfiguration.CountSuffix)]
-        public IActionResult Count()
+        public new IActionResult Count()
         {
             return base.Count();
         }
@@ -48,7 +48,7 @@ namespace Template.Backend.Api.Controllers
         /// <returns>List of departments</returns>
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Department>))]
         [HttpGet]
-        public IActionResult Get()
+        public new IActionResult Get()
         {
             return base.Get();
         }
@@ -60,7 +60,7 @@ namespace Template.Backend.Api.Controllers
         /// <returns>department</returns>
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Department))]
         [HttpGet(ApiRouteConfiguration.IdSuffix)]
-        public IActionResult Get(int id)
+        public new IActionResult Get(int id)
         {
             return base.Get(id);
         }
@@ -96,7 +96,7 @@ namespace Template.Backend.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Department>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet(ApiRouteConfiguration.Pagination)]
-        public IActionResult GetPagedList([FromQuery] int pageNo, [FromQuery] int pageSize)
+        public new IActionResult GetPagedList([FromQuery] int pageNo, [FromQuery] int pageSize)
         {
             return base.GetPagedList(pageNo, pageSize);
         }
@@ -109,7 +109,7 @@ namespace Template.Backend.Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpDelete(ApiRouteConfiguration.IdSuffix)]
-        public IActionResult Delete(int id)
+        public new IActionResult Delete(int id)
         {
             return base.Delete(id);
         }
@@ -159,7 +159,7 @@ namespace Template.Backend.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<DepartmentAudit>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet(ApiRouteConfiguration.AuditSuffix)]
-        public IActionResult Audit(int id)
+        public new IActionResult Audit(int id)
         {
             return base.Audit(id);
         }
@@ -172,7 +172,7 @@ namespace Template.Backend.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DepartmentAudit))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet(ApiRouteConfiguration.AuditIdSuffix)]
-        public IActionResult AuditId(int id)
+        public new IActionResult AuditId(int id)
         {
             return base.AuditId(id);
         }
@@ -190,10 +190,10 @@ namespace Template.Backend.Api.Controllers
         public IActionResult RestoreAudit(int id, int auditId)
         {
             _logger.LogInformation($"RestoreAudit for {typeof(Department).Name} with Id {id} from {typeof(DepartmentAudit).Name} with Id {auditId}");
-            
+
 
             DepartmentAudit departmentAudit = _DepartmentAuditService.GetById(auditId);
-            if (departmentAudit == null )
+            if (departmentAudit == null)
                 throw new IdNotFoundException($"No element found for this auditId {auditId}");
 
             Department department = _DepartmentService.GetById(id);
@@ -237,7 +237,7 @@ namespace Template.Backend.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<DepartmentAudit>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet(ApiRouteConfiguration.SnapshotSuffix)]
-        public IActionResult GetSnapshot(string dateTime)
+        public new IActionResult GetSnapshot(string dateTime)
         {
             return base.GetSnapshot(dateTime);
         }
@@ -253,7 +253,7 @@ namespace Template.Backend.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Department))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet(ApiRouteConfiguration.SnapshotIdSuffix)]
-        public IActionResult GetSnapshot(string dateTime, int id)
+        public new IActionResult GetSnapshot(string dateTime, int id)
         {
             return base.GetSnapshot(dateTime, id);
         }

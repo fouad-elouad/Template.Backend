@@ -49,7 +49,7 @@ namespace Template.Backend.Data.Repositories
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        T GetById(int id);
+        T? GetById(int id);
 
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Template.Backend.Data.Repositories
         /// </summary>
         /// <param name="where">The where.</param>
         /// <returns>Entity</returns>
-        T Get(Expression<Func<T, bool>>? where);
+        T? Get(Expression<Func<T, bool>> where);
 
         /// <summary>
         /// Gets all Entites.
@@ -87,7 +87,7 @@ namespace Template.Backend.Data.Repositories
         /// <param name="page">The page.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <returns>List of entities</returns>
-        IEnumerable<T> GetPagedList(int page, int pageSize);
+        IEnumerable<T>? GetPagedList(int page, int pageSize);
 
         /// <summary>
         /// Checks if is unique based on where expression.

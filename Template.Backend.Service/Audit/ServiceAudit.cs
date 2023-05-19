@@ -1,6 +1,6 @@
-﻿using Template.Backend.Model.Audit;
+﻿using System.Linq.Expressions;
 using Template.Backend.Data.Audit;
-using System.Linq.Expressions;
+using Template.Backend.Model.Audit;
 using Template.Backend.Model.Enums;
 
 namespace Template.Backend.Service.Audit
@@ -57,9 +57,9 @@ namespace Template.Backend.Service.Audit
         public virtual IEnumerable<T> GetAllSnapshot(DateTime dateTime)
         {
             Expression<Func<T, bool>> where = a => a.CreatedDate <= dateTime;
-            Func<T, DateTime?> orderBy = a => a.CreatedDate;
-            Func<T, int> groupBy = a => a.ID;
-            Func<IGrouping<int, T>, T> selector = a => a.Last();
+            DateTime? orderBy(T a) => a.CreatedDate;
+            int groupBy(T a) => a.ID;
+            T selector(IGrouping<int, T> a) => a.Last();
             Expression<Func<T, bool>> AuditOperationwhere = a => a.AuditOperation != AuditOperations.DELETE;
 
             return _repository.GetAllSnapshot(where, orderBy, groupBy, selector, AuditOperationwhere);
@@ -73,16 +73,15 @@ namespace Template.Backend.Service.Audit
         /// <param name="id">The id.</param>
         /// <returns>audit Entity snapShot or null</returns>
         /// <exception cref="DateTimeFormatException">DateTime parameter format yyyyMMddThhmmss</exception>
-        public virtual T GetByIdSnapshot(DateTime dateTime, int id)
+        public virtual T? GetByIdSnapshot(DateTime dateTime, int id)
         {
             Expression<Func<T, bool>> where = a => a.CreatedDate <= dateTime && a.ID == id;
-            Func<T, DateTime?> orderBy = a => a.CreatedDate;
+
+            static DateTime? orderBy(T a) => a.CreatedDate;
             Expression<Func<T, bool>> AuditOperationwhere = a => a.AuditOperation != AuditOperations.DELETE;
 
             T auditEntity = _repository.GetByIdSnapshot(where, orderBy);
-            if (auditEntity == null || auditEntity.AuditOperation == AuditOperations.DELETE)
-                return null;
-            return auditEntity;
+            return auditEntity == default(T) || auditEntity.AuditOperation == AuditOperations.DELETE ? null : auditEntity;
         }
     }
 }

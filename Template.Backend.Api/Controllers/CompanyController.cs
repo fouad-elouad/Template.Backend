@@ -1,14 +1,14 @@
-﻿using Template.Backend.Model.Audit.Entities;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using System.Net.Mime;
+using Template.Backend.Api.Configuration;
+using Template.Backend.Api.Models;
+using Template.Backend.Model.Audit.Entities;
 using Template.Backend.Model.Entities;
+using Template.Backend.Model.Enums;
+using Template.Backend.Model.Exceptions;
 using Template.Backend.Service.Audit;
 using Template.Backend.Service.Services;
-using Microsoft.AspNetCore.Mvc;
-using Template.Backend.Api.Models;
-using System.Net.Mime;
-using AutoMapper;
-using Template.Backend.Api.Configuration;
-using Template.Backend.Model.Exceptions;
-using Template.Backend.Model.Enums;
 
 namespace Template.Backend.Api.Controllers
 {
@@ -20,8 +20,8 @@ namespace Template.Backend.Api.Controllers
     [Route(ApiRouteConfiguration.CompanyPrefix)]
     public class CompanyApiController : BaseApiController<Company, CompanyAudit>
     {
-        private ICompanyService _CompanyService;
-        private ICompanyAuditService _CompanyAuditService;
+        private readonly ICompanyService _CompanyService;
+        private readonly ICompanyAuditService _CompanyAuditService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CompanyApiController"/> class.
@@ -37,7 +37,7 @@ namespace Template.Backend.Api.Controllers
 
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
         [HttpGet(ApiRouteConfiguration.CountSuffix)]
-        public IActionResult Count()
+        public new IActionResult Count()
         {
             return base.Count();
         }
@@ -48,7 +48,7 @@ namespace Template.Backend.Api.Controllers
         /// <returns>List of companies</returns>
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Company>))]
         [HttpGet]
-        public IActionResult Get()
+        public new IActionResult Get()
         {
             return base.Get();
         }
@@ -60,7 +60,7 @@ namespace Template.Backend.Api.Controllers
         /// <returns>company</returns>
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Company))]
         [HttpGet(ApiRouteConfiguration.IdSuffix)]
-        public IActionResult Get(int id)
+        public new IActionResult Get(int id)
         {
             return base.Get(id);
         }
@@ -96,7 +96,7 @@ namespace Template.Backend.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Company>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet(ApiRouteConfiguration.Pagination)]
-        public IActionResult GetPagedList([FromQuery] int pageNo, [FromQuery] int pageSize)
+        public new IActionResult GetPagedList([FromQuery] int pageNo, [FromQuery] int pageSize)
         {
             return base.GetPagedList(pageNo, pageSize);
         }
@@ -109,7 +109,7 @@ namespace Template.Backend.Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpDelete(ApiRouteConfiguration.IdSuffix)]
-        public IActionResult Delete(int id)
+        public new IActionResult Delete(int id)
         {
             return base.Delete(id);
         }
@@ -159,7 +159,7 @@ namespace Template.Backend.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<CompanyAudit>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet(ApiRouteConfiguration.AuditSuffix)]
-        public IActionResult Audit(int id)
+        public new IActionResult Audit(int id)
         {
             return base.Audit(id);
         }
@@ -172,7 +172,7 @@ namespace Template.Backend.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CompanyAudit))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet(ApiRouteConfiguration.AuditIdSuffix)]
-        public IActionResult AuditId(int id)
+        public new IActionResult AuditId(int id)
         {
             return base.AuditId(id);
         }
@@ -190,10 +190,10 @@ namespace Template.Backend.Api.Controllers
         public IActionResult RestoreAudit(int id, int auditId)
         {
             _logger.LogInformation($"RestoreAudit for {typeof(Company).Name} with Id {id} from {typeof(CompanyAudit).Name} with Id {auditId}");
-            
+
 
             CompanyAudit companyAudit = _CompanyAuditService.GetById(auditId);
-            if (companyAudit == null )
+            if (companyAudit == null)
                 throw new IdNotFoundException($"No element found for this auditId {auditId}");
 
             Company company = _CompanyService.GetById(id);
@@ -237,7 +237,7 @@ namespace Template.Backend.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<CompanyAudit>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet(ApiRouteConfiguration.SnapshotSuffix)]
-        public IActionResult GetSnapshot(string dateTime)
+        public new IActionResult GetSnapshot(string dateTime)
         {
             return base.GetSnapshot(dateTime);
         }
@@ -253,7 +253,7 @@ namespace Template.Backend.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Company))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet(ApiRouteConfiguration.SnapshotIdSuffix)]
-        public IActionResult GetSnapshot(string dateTime, int id)
+        public new IActionResult GetSnapshot(string dateTime, int id)
         {
             return base.GetSnapshot(dateTime, id);
         }

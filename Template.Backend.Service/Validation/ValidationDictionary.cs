@@ -9,7 +9,7 @@ namespace Template.Backend.Service.Validation
     /// <seealso cref="IValidationDictionary" />
     public class ValidationDictionary : IValidationDictionary
     {
-        private Dictionary<string, IList<string>> ErrorsDictionary;
+        private readonly Dictionary<string, IList<string>> ErrorsDictionary;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ValidationDictionary"/> class.
@@ -27,9 +27,7 @@ namespace Template.Backend.Service.Validation
         /// </returns>
         public bool IsValid()
         {
-            if (ErrorsDictionary.Any())
-                return false;
-            return true;
+            return !ErrorsDictionary.Any();
         }
 
         /// <summary>
@@ -67,7 +65,7 @@ namespace Template.Backend.Service.Validation
         public IReadOnlyDictionary<string, IReadOnlyList<string>> ToReadOnlyDictionary()
         {
             return new ReadOnlyDictionary<string, IReadOnlyList<string>>
-                (ErrorsDictionary.ToDictionary(k => k.Key, v => (IReadOnlyList<string>) v.Value.ToList().AsReadOnly()));
+                (ErrorsDictionary.ToDictionary(k => k.Key, v => (IReadOnlyList<string>)v.Value.ToList().AsReadOnly()));
         }
     }
 }

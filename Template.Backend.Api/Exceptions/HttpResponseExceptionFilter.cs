@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Template.Backend.Model.Exceptions;
 
 namespace Template.Backend.Api.Exceptions
 {
     public class HttpResponseExceptionFilter : IActionFilter, IOrderedFilter
     {
-        ILogger<HttpResponseExceptionFilter> _logger;
+        readonly ILogger<HttpResponseExceptionFilter> _logger;
 
         public HttpResponseExceptionFilter(ILogger<HttpResponseExceptionFilter> logger)
         {
@@ -78,7 +78,7 @@ namespace Template.Backend.Api.Exceptions
                 }
                 context.ExceptionHandled = true;
             }
-            
+
             // return action result
         }
     }

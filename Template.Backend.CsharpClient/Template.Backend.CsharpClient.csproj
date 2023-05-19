@@ -7,17 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Template.Backend.CsharpClient.dll.config" />
+    <None Remove="Template.Backend.CsharpClient.dll.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Template.Backend.CsharpClient.dll.config">
+    <Content Include="Template.Backend.CsharpClient.dll.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>

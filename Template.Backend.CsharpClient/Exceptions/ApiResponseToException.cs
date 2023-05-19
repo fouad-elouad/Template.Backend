@@ -69,9 +69,9 @@ namespace Template.Backend.CsharpClient.Exceptions
                 try
                 {
                     string exceptionMessage = responseMessage.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-                    Dictionary<string, string> dicMessage = JsonSerializer.Deserialize<Dictionary<string, string>>(exceptionMessage, ClientHelper.globalJsonSerializerOptions);
-                    if (dicMessage.ContainsKey("Message"))
-                        throw new CanNotBeDeletedException(dicMessage["Message"]);
+                    Dictionary<string, string>? dicMessage = JsonSerializer.Deserialize<Dictionary<string, string>>(exceptionMessage, ClientHelper.globalJsonSerializerOptions);
+                    if (dicMessage.TryGetValue("Message", out string? value))
+                        throw new CanNotBeDeletedException(value);
                 }
                 catch (CanNotBeDeletedException)
                 {

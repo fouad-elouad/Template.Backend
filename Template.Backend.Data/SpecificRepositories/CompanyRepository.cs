@@ -1,6 +1,6 @@
-﻿using Template.Backend.Data.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using Template.Backend.Data.Repositories;
 using Template.Backend.Model.Entities;
-using Microsoft.EntityFrameworkCore;
 using Template.Backend.Model.Enums;
 
 namespace Template.Backend.Data.SpecificRepositories

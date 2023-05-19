@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Template.Backend.Model.Exceptions;
 using System.Linq.Expressions;
 using Template.Backend.Data.Utilities;
 using Template.Backend.Model;
+using Template.Backend.Model.Exceptions;
 
 namespace Template.Backend.Data.Repositories
 {
@@ -102,7 +102,7 @@ namespace Template.Backend.Data.Repositories
         /// </summary>
         /// <param name="id">Id of entity to find</param>
         /// <returns>Founded entity</returns>
-        public virtual T GetById(int id)
+        public virtual T? GetById(int id)
         {
             return _dbSet.Find(id);
         }
@@ -123,11 +123,9 @@ namespace Template.Backend.Data.Repositories
         /// <returns>
         /// The Count
         /// </returns>
-        public virtual int Count(Expression<Func<T, bool>> where = null)
+        public virtual int Count(Expression<Func<T, bool>>? where = null)
         {
-            if (where == null)
-                return _dbSet.Count();
-            return _dbSet.Count(where);
+            return where == null ? _dbSet.Count() : _dbSet.Count(where);
         }
 
         /// <summary>
@@ -147,7 +145,7 @@ namespace Template.Backend.Data.Repositories
         /// </summary>
         /// <param name="where">filter expression</param>
         /// <returns>First or default entity</returns>
-        public T Get(Expression<Func<T, bool>> where)
+        public T? Get(Expression<Func<T, bool>> where)
         {
             return _dbSet.Where(where).FirstOrDefault<T>();
         }
@@ -159,7 +157,7 @@ namespace Template.Backend.Data.Repositories
         /// </summary>
         /// <param name="where">filter expression</param>
         /// <returns>First or default entity</returns>
-        public T GetAsNoTraking(Expression<Func<T, bool>> where)
+        public T? GetAsNoTraking(Expression<Func<T, bool>> where)
         {
             return _dbSet.Where(where).AsNoTracking().FirstOrDefault<T>();
         }
@@ -182,7 +180,7 @@ namespace Template.Backend.Data.Repositories
             return orderBy;
         }
 
-        public IEnumerable<T> GetPagedList(int page, int pageSize)
+        public IEnumerable<T>? GetPagedList(int page, int pageSize)
         {
             if (pageSize > _defaultLimit)
                 pageSize = _defaultLimit;

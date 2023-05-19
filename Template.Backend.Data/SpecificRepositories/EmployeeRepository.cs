@@ -43,7 +43,7 @@ namespace Template.Backend.Data.SpecificRepositories
                     result = result.Where(b => b.Address == searchedEmployee.Address);
                 if (!string.IsNullOrEmpty(searchedEmployee.Phone))
                     result = result.Where(b => b.Phone == searchedEmployee.Phone);
-                
+
                 if (searchedEmployee.CompanyID != null)
                     result = result.Where(b => b.CompanyID == searchedEmployee.CompanyID);
                 if (searchedEmployee.DepartmentID != null)
@@ -55,9 +55,9 @@ namespace Template.Backend.Data.SpecificRepositories
             if (endBirthDate != null)
                 result = result.Where(b => b.BirthDate <= endBirthDate);
 
-            if (pageNo != null && pageSize != null)
-                return result.OrderByDescending(a => a.ID).ToPagedList(pageNo.Value, pageSize.Value);
-            return result.ToList();
+            return pageNo != null && pageSize != null
+                ? result.OrderByDescending(a => a.ID).ToPagedList(pageNo.Value, pageSize.Value)
+                : result.ToList();
         }
 
         /// <summary>
@@ -105,9 +105,9 @@ namespace Template.Backend.Data.SpecificRepositories
             switch (nestedObjectDepth)
             {
                 case NestedObjectDepth.FirstLevel:
-                    return _dbSet.Include(c => c.Company).Include(c=>c.Department).FirstOrDefault(c => c.ID == id);
+                    return _dbSet.Include(c => c.Company).Include(c => c.Department).FirstOrDefault(c => c.ID == id);
                 case NestedObjectDepth.SecondLevel:
-                    return _dbSet.Include(c => c.Company).ThenInclude(e=>e.Employees).Include(c => c.Department).ThenInclude(e=>e.Employees).FirstOrDefault(c => c.ID == id);
+                    return _dbSet.Include(c => c.Company).ThenInclude(e => e.Employees).Include(c => c.Department).ThenInclude(e => e.Employees).FirstOrDefault(c => c.ID == id);
                 default:
                     return _dbSet.Find(id);
             }
@@ -150,7 +150,7 @@ namespace Template.Backend.Data.SpecificRepositories
         /// <returns>
         /// Count
         /// </returns>
-        int SearchCount(Employee searchedEmployee, DateTime? startBirthDate,DateTime? endBirthDate);
+        int SearchCount(Employee searchedEmployee, DateTime? startBirthDate, DateTime? endBirthDate);
 
         Employee? FindById(int id, NestedObjectDepth nestedObjectDepth);
     }
