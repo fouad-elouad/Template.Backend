@@ -1,8 +1,6 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
+﻿using System.Net;
+using System.Text.Json;
+using Template.Backend.CsharpClient.Helpers;
 using Template.Backend.Model.Exceptions;
 
 namespace Template.Backend.CsharpClient.Exceptions
@@ -71,7 +69,7 @@ namespace Template.Backend.CsharpClient.Exceptions
                 try
                 {
                     string exceptionMessage = responseMessage.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-                    Dictionary<string, string> dicMessage = JsonConvert.DeserializeObject<Dictionary<string, string>>(exceptionMessage);
+                    Dictionary<string, string> dicMessage = JsonSerializer.Deserialize<Dictionary<string, string>>(exceptionMessage, ClientHelper.globalJsonSerializerOptions);
                     if (dicMessage.ContainsKey("Message"))
                         throw new CanNotBeDeletedException(dicMessage["Message"]);
                 }

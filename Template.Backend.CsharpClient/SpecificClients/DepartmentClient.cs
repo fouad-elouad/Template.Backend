@@ -1,11 +1,10 @@
 ﻿using Template.Backend.CsharpClient.Helpers;
-using System;
-using System.Collections.Generic;
 using System.Net.Http.Headers;
 using Template.Backend.Model.Entities;
 using Template.Backend.Model.Audit.Entities;
 using Template.Backend.Model.Exceptions;
-using System.Threading.Tasks;
+using System.Text.Json;
+using Template.Backend.Model.Enums;
 
 namespace Template.Backend.CsharpClient.SpecificClients
 {
@@ -36,6 +35,26 @@ namespace Template.Backend.CsharpClient.SpecificClients
         Task<Department> AddAsync(Department department, AuthenticationHeaderValue authHeaderValue = null);
 
         /// <summary>
+        /// Adds the specified Department List.
+        /// </summary>
+        /// <param name="list">The list.</param>
+        /// <param name="authHeaderValue">The authentication header value.</param>
+        /// <returns>
+        /// list
+        /// </returns>
+        IEnumerable<Department> Add(IEnumerable<Department> list, AuthenticationHeaderValue authHeaderValue = null);
+
+        /// <summary>
+        /// Adds the specified Department List.
+        /// </summary>
+        /// <param name="list">The list.</param>
+        /// <param name="authHeaderValue">The authentication header value.</param>
+        /// <returns>
+        /// list
+        /// </returns>
+        Task<IEnumerable<Department>> AddAsync(IEnumerable<Department> list, AuthenticationHeaderValue authHeaderValue = null);
+
+        /// <summary>
         /// Gets all Department.
         /// </summary>
         /// <param name="authHeaderValue">The authentication header value.</param>
@@ -57,23 +76,57 @@ namespace Template.Backend.CsharpClient.SpecificClients
         /// Gets Department with the specified Id.
         /// </summary>
         /// <param name="id">The Id.</param>
-        /// <param name="depth">The maximum level to achieve for navigation properties serialization.</param>
         /// <param name="authHeaderValue">The authentication header value.</param>
         /// <returns>
         /// Department object
         /// </returns>
-        Department Get(int id, int depth = 1, AuthenticationHeaderValue authHeaderValue = null);
+        Department Get(int id, AuthenticationHeaderValue authHeaderValue = null);
 
         /// <summary>
         /// Gets Department with the specified Id.
         /// </summary>
         /// <param name="id">The Id.</param>
-        /// <param name="depth">The maximum level to achieve for navigation properties serialization.</param>
         /// <param name="authHeaderValue">The authentication header value.</param>
         /// <returns>
         /// Department object
         /// </returns>
-        Task<Department> GetAsync(int id, int depth = 1, AuthenticationHeaderValue authHeaderValue = null);
+        Task<Department> GetAsync(int id, AuthenticationHeaderValue authHeaderValue = null);
+
+        /// <summary>
+        /// Count.
+        /// </summary>
+        /// <param name="authHeaderValue">The authentication header value.</param>
+        /// <returns>
+        /// Count
+        /// </returns>
+        int Count(AuthenticationHeaderValue authHeaderValue = null);
+
+        /// <summary>
+        /// Count.
+        /// </summary>
+        /// <param name="authHeaderValue">The authentication header value.</param>
+        /// <returns>
+        /// Count
+        /// </returns>
+        Task<int> CountAsync(AuthenticationHeaderValue authHeaderValue = null);
+
+        /// <summary>
+        /// Gets Department with the specified Id.
+        /// </summary>
+        /// <param name="id">The Id.</param>
+        /// <param name="nestedObjectDepth">The maximum level to achieve for navigation properties serialization.</param>
+        /// <param name="authHeaderValue">The authentication header value.</param>
+        /// <returns>Department object</returns>
+        Department Get(int id, NestedObjectDepth nestedObjectDepth, AuthenticationHeaderValue authHeaderValue = null);
+
+        /// <summary>
+        /// Gets Department with the specified Id.
+        /// </summary>
+        /// <param name="id">The Id.</param>
+        /// <param name="nestedObjectDepth">The maximum level to achieve for navigation properties serialization.</param>
+        /// <param name="authHeaderValue">The authentication header value.</param>
+        /// <returns>Department object</returns>
+        Task<Department> GetAsync(int id, NestedObjectDepth nestedObjectDepth, AuthenticationHeaderValue authHeaderValue = null);
 
         /// <summary>
         /// Deletes Department with the specified Id.
@@ -244,7 +297,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         {
             try
             {
-                string values = ToJson(department);
+                string values = JsonSerializer.Serialize(department);
                 return Add(ApiConfiguration.DepartmentApiRoute, values, authHeaderValue);
             }
             catch (BusinessException)
@@ -261,7 +314,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         {
             try
             {
-                string values = ToJson(department);
+                string values = JsonSerializer.Serialize(department);
                 return await AddAsync(ApiConfiguration.DepartmentApiRoute, values, authHeaderValue);
             }
             catch (BusinessException)
@@ -272,6 +325,28 @@ namespace Template.Backend.CsharpClient.SpecificClients
             {
                 throw new Exception(ex.Message);
             }
+        }
+
+        public IEnumerable<Department> Add(IEnumerable<Department> list, AuthenticationHeaderValue authHeaderValue = null)
+        {
+            string values = JsonSerializer.Serialize(list);
+            return AddRange(ApiConfiguration.DepartmentApiItemsRoute, values, authHeaderValue);
+        }
+
+        public async Task<IEnumerable<Department>> AddAsync(IEnumerable<Department> list, AuthenticationHeaderValue authHeaderValue = null)
+        {
+            string values = JsonSerializer.Serialize(list);
+            return await AddRangeAsync(ApiConfiguration.DepartmentApiItemsRoute, values, authHeaderValue);
+        }
+
+        public int Count(AuthenticationHeaderValue authHeaderValue = null)
+        {
+            return Count(ApiConfiguration.DepartmentApiCountRoute, authHeaderValue);
+        }
+
+        public async Task<int> CountAsync(AuthenticationHeaderValue authHeaderValue = null)
+        {
+            return await CountAsync(ApiConfiguration.DepartmentApiCountRoute, authHeaderValue);
         }
 
         public IEnumerable<Department> GetAll(AuthenticationHeaderValue authHeaderValue = null)
@@ -286,28 +361,32 @@ namespace Template.Backend.CsharpClient.SpecificClients
 
         public void Delete(int ID, AuthenticationHeaderValue authHeaderValue = null)
         {
-             Delete(ApiConfiguration.DepartmentApiRoute + ID.ToString(), authHeaderValue);
+            Delete(ApiConfiguration.DepartmentApiRoute + ID.ToString(), authHeaderValue);
         }
 
         public async Task DeleteAsync(int ID, AuthenticationHeaderValue authHeaderValue = null)
         {
-           await DeleteAsync(ApiConfiguration.DepartmentApiRoute + ID.ToString(), authHeaderValue);
+            await DeleteAsync(ApiConfiguration.DepartmentApiRoute + ID.ToString(), authHeaderValue);
         }
 
-        public Department Get(int id, int depth = 1, AuthenticationHeaderValue authHeaderValue = null)
+        public Department Get(int id, AuthenticationHeaderValue authHeaderValue = null)
         {
-            if (depth != 1)
-                return GetAsObject(ApiConfiguration.DepartmentApiRoute + id.ToString() + "/" + depth.ToString(), authHeaderValue);
-
             return GetAsObject(ApiConfiguration.DepartmentApiRoute + id.ToString(), authHeaderValue);
         }
 
-        public async Task<Department> GetAsync(int id, int depth = 1, AuthenticationHeaderValue authHeaderValue = null)
+        public async Task<Department> GetAsync(int id, AuthenticationHeaderValue authHeaderValue = null)
         {
-            if (depth != 1)
-                return await GetAsObjectAsync(ApiConfiguration.DepartmentApiRoute + id.ToString() + "/" + depth.ToString(), authHeaderValue);
-
             return await GetAsObjectAsync(ApiConfiguration.DepartmentApiRoute + id.ToString(), authHeaderValue);
+        }
+
+        public Department Get(int id, NestedObjectDepth nestedObjectDepth, AuthenticationHeaderValue authHeaderValue = null)
+        {
+            return GetAsObject(ApiConfiguration.DepartmentApiRoute + id.ToString() + "/" + nestedObjectDepth.ToString(), authHeaderValue);
+        }
+
+        public async Task<Department> GetAsync(int id, NestedObjectDepth nestedObjectDepth, AuthenticationHeaderValue authHeaderValue = null)
+        {
+            return await GetAsObjectAsync(ApiConfiguration.DepartmentApiRoute + id.ToString() + "/" + nestedObjectDepth.ToString(), authHeaderValue);
         }
 
         public IEnumerable<Department> GetPagedList(int pageNo, int pageSize, AuthenticationHeaderValue authHeaderValue = null)
@@ -315,7 +394,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
             string url = string.Empty.AddQuery(nameof(pageNo), pageNo.ToString())
                                      .AddQuery(nameof(pageSize), pageSize.ToString());
 
-            return GetObjects(ApiConfiguration.DepartmentApiRoute + "?" + url, authHeaderValue);
+            return GetObjects(ApiConfiguration.DepartmentApiPaginationRoute + "?" + url, authHeaderValue);
         }
 
         public async Task<IEnumerable<Department>> GetPagedListAsync(int pageNo, int pageSize, AuthenticationHeaderValue authHeaderValue = null)
@@ -323,14 +402,14 @@ namespace Template.Backend.CsharpClient.SpecificClients
             string url = string.Empty.AddQuery(nameof(pageNo), pageNo.ToString())
                                      .AddQuery(nameof(pageSize), pageSize.ToString());
 
-            return await GetObjectsAsync(ApiConfiguration.DepartmentApiRoute + "?" + url, authHeaderValue);
+            return await GetObjectsAsync(ApiConfiguration.DepartmentApiPaginationRoute + "?" + url, authHeaderValue);
         }
 
         public void Update(int ID, Department department, AuthenticationHeaderValue authHeaderValue = null)
         {
             try
             {
-                string values = ToJson(department, _listDepth);
+                string values = JsonSerializer.Serialize(department);
                 base.Update(ApiConfiguration.DepartmentApiRoute + ID.ToString(), values, authHeaderValue);
             }
             catch (BusinessException)
@@ -347,7 +426,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         {
             try
             {
-                string values = ToJson(department, _listDepth);
+                string values = JsonSerializer.Serialize(department);
                 await base.UpdateAsync(ApiConfiguration.DepartmentApiRoute + ID.ToString(), values, authHeaderValue);
             }
             catch (BusinessException)
@@ -387,7 +466,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
 
         public async Task RestoreAsync(int id, int auditId, AuthenticationHeaderValue authHeaderValue = null)
         {
-           await RestoreAsync(ApiConfiguration.DepartmentApiAuditListRoute + id.ToString() + "/" + auditId.ToString(), authHeaderValue);
+            await RestoreAsync(ApiConfiguration.DepartmentApiAuditListRoute + id.ToString() + "/" + auditId.ToString(), authHeaderValue);
         }
 
         public IEnumerable<Department> GetAllSnapshot(DateTime datetime, AuthenticationHeaderValue authHeaderValue = null)

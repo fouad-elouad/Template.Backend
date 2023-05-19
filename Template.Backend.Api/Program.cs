@@ -1,19 +1,12 @@
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Template.Backend.Api.Exceptions;
-using Template.Backend.Api.Services;
-using Template.Backend.Data.Audit;
-using Template.Backend.Data.Repositories;
-using Template.Backend.Data.SpecificRepositories;
-using Template.Backend.Data.Utilities;
 using Template.Backend.Data;
-using Template.Backend.Service.Audit;
-using Template.Backend.Service.Services;
-using Template.Backend.Service.Validation;
 using NLog;
 using NLog.Web;
 using System.Text.Json.Serialization;
 using Template.Backend.Api.Utilities;
+using Template.Backend.Api;
 
 var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 
@@ -80,23 +73,7 @@ try
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
-    builder.Services.AddTransient<ICompanyService, CompanyService>();
-    builder.Services.AddTransient<ICompanyRepository, CompanyRepository>();
-
-    builder.Services.AddTransient<ICompanyAuditService, CompanyAuditService>();
-    builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
-    builder.Services.AddTransient<IValidationDictionary, ValidationDictionary>();
-    builder.Services.AddScoped(typeof(IAuditRepository<>), typeof(AuditRepository<>));
-
-    builder.Services.AddScoped<AuditSaveChangesInterceptor>();
-    builder.Services.AddSingleton<IDateTime, DateTimeService>();
-    builder.Services.AddSingleton<ICurrentUserService, CurrentUserService>();
-
-    builder.Services.AddHttpContextAccessor();
-
-    builder.Services.AddDbContext<StarterDbContext>(options =>
-        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-        );
+    builder.Services.AddAllServices(builder.Configuration);
 
     var app = builder.Build();
 

@@ -10,6 +10,6 @@ namespace Template.Backend.Model.Entities
         public DateTime? CreatedOn { get; set; }
 
         // One2many relation
-        public IList<Employee> Employees { get; private set; } = new List<Employee>();
+        public IList<Employee> Employees { get; set; } = new List<Employee>();
     }
 }

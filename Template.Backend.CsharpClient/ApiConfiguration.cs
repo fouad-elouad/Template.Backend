@@ -1,6 +1,4 @@
-﻿using System;
-using System.Configuration;
-using System.IO;
+﻿using System.Configuration;
 using System.Reflection;
 using Template.Backend.Model.Exceptions;
 
@@ -87,8 +85,19 @@ namespace Template.Backend.CsharpClient
         /// </value>
         public static int RequestTimeout { get { return GetSettingInteger("RequestTimeout"); } }
 
+        /// <summary>
+        /// request timeout
+        /// </summary>
+        /// <value>
+        /// The request timeout.
+        /// </value>
+        public static int PooledConnectionLifetime { get { return GetSettingInteger("PooledConnectionLifetime"); } }
+
         // Company
         public static string CompanyApiRoute { get { return GetSetting("CompanyApiRoute"); } }
+        public static string CompanyApiCountRoute { get { return GetSetting("CompanyApiCountRoute"); } }
+        public static string CompanyApiPaginationRoute { get { return GetSetting("CompanyApiPaginationRoute"); } }
+        public static string CompanyApiItemsRoute { get { return GetSetting("CompanyApiItemsRoute"); } }
         public static string CompanyApiSearchRoute { get { return GetSetting("CompanyApiSearchRoute"); } }
         public static string CompanyApiAuditListRoute { get { return GetSetting("CompanyApiAuditListRoute"); } }
         public static string CompanyApiAuditRoute { get { return GetSetting("CompanyApiAuditRoute"); } }
@@ -96,6 +105,9 @@ namespace Template.Backend.CsharpClient
 
         // Employee
         public static string EmployeeApiRoute { get { return GetSetting("EmployeeApiRoute"); } }
+        public static string EmployeeApiCountRoute { get { return GetSetting("EmployeeApiCountRoute"); } }
+        public static string EmployeeApiPaginationRoute { get { return GetSetting("EmployeeApiPaginationRoute"); } }
+        public static string EmployeeApiItemsRoute { get { return GetSetting("EmployeeApiItemsRoute"); } }
         public static string EmployeeApiSearchRoute { get { return GetSetting("EmployeeApiSearchRoute"); } }
         public static string EmployeeApiAuditListRoute { get { return GetSetting("EmployeeApiAuditListRoute"); } }
         public static string EmployeeApiAuditRoute { get { return GetSetting("EmployeeApiAuditRoute"); } }
@@ -103,6 +115,9 @@ namespace Template.Backend.CsharpClient
 
         // Department
         public static string DepartmentApiRoute { get { return GetSetting("DepartmentApiRoute"); } }
+        public static string DepartmentApiCountRoute { get { return GetSetting("DepartmentApiCountRoute"); } }
+        public static string DepartmentApiPaginationRoute { get { return GetSetting("DepartmentApiPaginationRoute"); } }
+        public static string DepartmentApiItemsRoute { get { return GetSetting("DepartmentApiItemsRoute"); } }
         public static string DepartmentApiSearchRoute { get { return GetSetting("DepartmentApiSearchRoute"); } }
         public static string DepartmentApiAuditListRoute { get { return GetSetting("DepartmentApiAuditListRoute"); } }
         public static string DepartmentApiAuditRoute { get { return GetSetting("DepartmentApiAuditRoute"); } }

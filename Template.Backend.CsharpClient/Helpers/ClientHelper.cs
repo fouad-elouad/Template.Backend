@@ -1,6 +1,5 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.IO;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Template.Backend.CsharpClient.Helpers
 {
@@ -9,44 +8,13 @@ namespace Template.Backend.CsharpClient.Helpers
     /// </summary>
     public static class ClientHelper
     {
-        /// <summary>
-        /// Serializes an object with maximum depth.
-        /// its ignore looping by default
-        /// maxDepth = -1 ignore depth and preserve looping with Object reference
-        /// </summary>
-        /// <param name="obj">The object to Serialize.</param>
-        /// <param name="maxDepth">The maximum level to achieve for navigation properties serialization.</param>
-        /// <returns>Json representation of serialized object</returns>
-        public static string SerializeObjectDepth(object obj, int maxDepth)
+        public static JsonSerializerOptions globalJsonSerializerOptions
         {
-            ReferenceLoopHandling referenceLoopHandling = ReferenceLoopHandling.Ignore;
-
-            if (maxDepth == -1)
+            get
             {
-                var serializerSettings = new JsonSerializerSettings
-                {
-                    ReferenceLoopHandling = referenceLoopHandling,
-                    PreserveReferencesHandling = PreserveReferencesHandling.Objects
-
-                };
-
-                return JsonConvert.SerializeObject(obj, serializerSettings);
-            }
-
-            using (var strWriter = new StringWriter())
-            {
-                using (var jsonWriter = new CustomJsonTextWriter(strWriter))
-                {
-                    Func<bool> include = () => jsonWriter.CurrentDepth <= maxDepth;
-                    var resolver = new CustomContractResolver(include);
-                    var serializer = new JsonSerializer
-                    {
-                        ContractResolver = resolver,
-                        ReferenceLoopHandling = referenceLoopHandling
-                    };
-                    serializer.Serialize(jsonWriter, obj);
-                }
-                return strWriter.ToString();
+                JsonSerializerOptions options = new(JsonSerializerOptions.Default) { PropertyNameCaseInsensitive = true };
+                options.Converters.Add(new JsonStringEnumConverter());
+                return options;
             }
         }
     }

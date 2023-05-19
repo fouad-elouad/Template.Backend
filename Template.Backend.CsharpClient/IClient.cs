@@ -11,16 +11,6 @@ namespace Template.Backend.CsharpClient
     public interface IClient<Entity, AuditEntity> where Entity : class where AuditEntity : class
     {
         /// <summary>
-        /// Serializes an object with maximum depth.
-        /// its ignore looping by default
-        /// maxDepth = -1 ignore depth and preserve looping with Object reference
-        /// </summary>
-        /// <param name="obj">The object to Serialize.</param>
-        /// <param name="depth">The maximum level to achieve for navigation properties serialization.</param>
-        /// <returns>Json representation of serialized object</returns>
-        string ToJson(object obj, int depth = 1);
-
-        /// <summary>
         /// Adds the value of bearer authentication header for HTTP request.
         /// </summary>
         /// <param name="AuthHeaderValue">The authentication header value.</param>

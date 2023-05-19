@@ -36,8 +36,8 @@ namespace Template.Backend.Api.Controllers
         }
 
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
-        [Route(ApiRouteConfiguration.CountSuffix), HttpGet]
-        public override IActionResult Count()
+        [HttpGet(ApiRouteConfiguration.CountSuffix)]
+        public IActionResult Count()
         {
             return base.Count();
         }
@@ -95,7 +95,7 @@ namespace Template.Backend.Api.Controllers
         /// <returns>List of Companies</returns>
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Company>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Route(ApiRouteConfiguration.Pagination), HttpGet]
+        [HttpGet(ApiRouteConfiguration.Pagination)]
         public IActionResult GetPagedList([FromQuery] int pageNo, [FromQuery] int pageSize)
         {
             return base.GetPagedList(pageNo, pageSize);

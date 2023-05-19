@@ -1,12 +1,8 @@
 ﻿using Template.Backend.CsharpClient.Exceptions;
 using Template.Backend.CsharpClient.Helpers;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+using System.Text.Json;
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Threading.Tasks;
 using System.Text;
 using Template.Backend.Model.Exceptions;
 
@@ -53,8 +49,17 @@ namespace Template.Backend.CsharpClient
         /// </summary>
         static Client()
         {
-            httpClient = new HttpClient { BaseAddress = new Uri(ApiConfiguration.BaseAddress) };
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
+            var socketsHandler = new SocketsHttpHandler
+            {
+                PooledConnectionLifetime = TimeSpan.FromSeconds(ApiConfiguration.PooledConnectionLifetime),
+            };
+            httpClient = new HttpClient(socketsHandler)
+            {
+                BaseAddress = new Uri(ApiConfiguration.BaseAddress),
+                Timeout = TimeSpan.FromSeconds(ApiConfiguration.RequestTimeout)
+            };
+
+            //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
         }
 
         /// <summary>
@@ -246,8 +251,83 @@ namespace Template.Backend.CsharpClient
 
                     throw new ApiResponseToException(response);
                 }
-                string json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                return JsonConvert.DeserializeObject<Entity>(json);
+                using Stream stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                return await JsonSerializer.DeserializeAsync<Entity>(stream, ClientHelper.globalJsonSerializerOptions);
+            }
+            catch (HttpRequestException ex)
+            {
+                if (ex.InnerException != null && ex.InnerException.GetType() == typeof(WebException))
+                {
+                    throw new ApiServerException(Constants.ExceptionMessage_UnableToConnect);
+                }
+                throw new ApiServerException(Constants.ExceptionMessage_NetworkProblem);
+            }
+            catch (BusinessException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Send a POST request to the specified Uri with the specified values.
+        /// </summary>
+        /// <param name="address">The Uri the request is sent to.</param>
+        /// <param name="values">The HTTP request content sent to the server.
+        /// object values to add.</param>
+        /// <param name="authHeaderValue">The authentication header value.</param>
+        /// <returns>
+        /// response of type string
+        /// </returns>
+        /// <exception cref="ModelStateException"></exception>
+        /// <exception cref="ApiResponseToException"></exception>
+        /// <exception cref="ApiServerException">Impossible de se connecter au serveur Api distant
+        /// or
+        /// Problème Reseaux ou serveur Api distant</exception>
+        /// <exception cref="System.Exception"></exception>
+        internal IEnumerable<Entity> AddRange(string address, string values, AuthenticationHeaderValue authHeaderValue = null)
+        {
+            return AddRangeAsync(address, values, authHeaderValue).ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Send a POST request to the specified Uri with the specified values.
+        /// </summary>
+        /// <param name="address">The Uri the request is sent to.</param>
+        /// <param name="values">The HTTP request content sent to the server.
+        /// object values to add.</param>
+        /// <param name="authHeaderValue">The authentication header value.</param>
+        /// <returns>
+        /// response of type string
+        /// </returns>
+        /// <exception cref="ModelStateException"></exception>
+        /// <exception cref="ApiResponseToException"></exception>
+        /// <exception cref="ApiServerException">Impossible de se connecter au serveur Api distant
+        /// or
+        /// Problème Reseaux ou serveur Api distant</exception>
+        /// <exception cref="System.Exception"></exception>
+        internal async Task<IEnumerable<Entity>> AddRangeAsync(string address, string values, AuthenticationHeaderValue authHeaderValue = null)
+        {
+            try
+            {
+                HttpContent httpContent = new StringContent(values, Encoding.UTF8, _mediaType);
+                HttpResponseMessage response = await httpClient.PostAsyncExtension(address, httpContent,
+                        x => x.Headers.Authorization = authHeaderValue).ConfigureAwait(false);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    if (response.ReasonPhrase == nameof(ModelStateException))
+                    {
+                        throw new ModelStateException(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+                    }
+
+                    throw new ApiResponseToException(response);
+                }
+                using Stream stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                return await JsonSerializer.DeserializeAsync<IEnumerable<Entity>>(stream, ClientHelper.globalJsonSerializerOptions);
             }
             catch (HttpRequestException ex)
             {
@@ -366,8 +446,72 @@ namespace Template.Backend.CsharpClient
 
                 if (response.IsSuccessStatusCode)
                 {
-                    string json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    return JsonConvert.DeserializeObject<Entity>(json);
+                    using Stream stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                    return await JsonSerializer.DeserializeAsync<Entity>(stream, ClientHelper.globalJsonSerializerOptions);
+                }
+
+                throw new ApiResponseToException(response);
+            }
+            catch (HttpRequestException ex)
+            {
+                if (ex.InnerException != null && ex.InnerException.GetType() == typeof(WebException))
+                {
+                    throw new ApiServerException(Constants.ExceptionMessage_UnableToConnect);
+                }
+                throw new ApiServerException(Constants.ExceptionMessage_NetworkProblem);
+            }
+            catch (BusinessException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Gets Entity object.
+        /// </summary>
+        /// <param name="address">The Uri the request is sent to.</param>
+        /// <param name="authHeaderValue">The authentication header value.</param>
+        /// <returns>
+        /// Entity object
+        /// </returns>
+        /// <exception cref="ApiResponseToException"></exception>
+        /// <exception cref="ApiServerException">Impossible de se connecter au serveur Api distant
+        /// or
+        /// Problème Reseaux ou serveur Api distant</exception>
+        /// <exception cref="System.Exception"></exception>
+        internal int Count(string address, AuthenticationHeaderValue authHeaderValue = null)
+        {
+            return CountAsync(address, authHeaderValue).ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Count async.
+        /// </summary>
+        /// <param name="address">The Uri the request is sent to.</param>
+        /// <param name="authHeaderValue">The authentication header value.</param>
+        /// <returns>
+        /// Entity object
+        /// </returns>
+        /// <exception cref="ApiResponseToException"></exception>
+        /// <exception cref="ApiServerException">Impossible de se connecter au serveur Api distant
+        /// or
+        /// Problème Reseaux ou serveur Api distant</exception>
+        /// <exception cref="System.Exception"></exception>
+        internal async Task<int> CountAsync(string address, AuthenticationHeaderValue authHeaderValue = null)
+        {
+            try
+            {
+                HttpResponseMessage response = await httpClient.GetAsyncExtension(address,
+                           x => x.Headers.Authorization = authHeaderValue).ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    using Stream stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                    return await JsonSerializer.DeserializeAsync<int>(stream, ClientHelper.globalJsonSerializerOptions);
                 }
 
                 throw new ApiResponseToException(response);
@@ -484,8 +628,8 @@ namespace Template.Backend.CsharpClient
 
                 if (response.IsSuccessStatusCode)
                 {
-                    string json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    return JsonConvert.DeserializeObject<IEnumerable<T>>(json);
+                    using Stream stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                    return await JsonSerializer.DeserializeAsync<IEnumerable<T>>(stream, ClientHelper.globalJsonSerializerOptions).ConfigureAwait(false);
                 }
                 throw new ApiResponseToException(response);
             }
@@ -547,8 +691,8 @@ namespace Template.Backend.CsharpClient
 
                 if (response.IsSuccessStatusCode)
                 {
-                    string json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    return JsonConvert.DeserializeObject<AuditEntity>(json);
+                    using Stream stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                    return await JsonSerializer.DeserializeAsync<AuditEntity>(stream, ClientHelper.globalJsonSerializerOptions).ConfigureAwait(false);
                 }
                 throw new ApiResponseToException(response);
             }
@@ -618,8 +762,8 @@ namespace Template.Backend.CsharpClient
                 {
                     throw new ApiResponseToException(response);
                 }
-                string json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                return JsonConvert.DeserializeObject<IEnumerable<Entity>>(json);
+                using Stream stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                return await JsonSerializer.DeserializeAsync<IEnumerable<Entity>>(stream, ClientHelper.globalJsonSerializerOptions).ConfigureAwait(false);
             }
             catch (HttpRequestException ex)
             {
@@ -637,21 +781,6 @@ namespace Template.Backend.CsharpClient
             {
                 throw new Exception(ex.Message);
             }
-        }
-
-        /// <summary>
-        /// Serializes an object with maximum depth.
-        /// its ignore looping by default
-        /// maxDepth = -1 ignore depth and preserve looping with Object reference
-        /// </summary>
-        /// <param name="obj">The object to Serialize.</param>
-        /// <param name="depth">The maximum level to achieve for navigation properties serialization.</param>
-        /// <returns>
-        /// Json representation of serialized object
-        /// </returns>
-        public string ToJson(object obj, int depth = 1)
-        {
-            return ClientHelper.SerializeObjectDepth(obj, depth);
         }
 
         /// <summary>

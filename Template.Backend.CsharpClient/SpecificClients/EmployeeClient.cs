@@ -1,11 +1,10 @@
 ﻿using Template.Backend.CsharpClient.Helpers;
-using System;
-using System.Collections.Generic;
 using System.Net.Http.Headers;
 using Template.Backend.Model.Entities;
 using Template.Backend.Model.Audit.Entities;
 using Template.Backend.Model.Exceptions;
-using System.Threading.Tasks;
+using System.Text.Json;
+using Template.Backend.Model.Enums;
 
 namespace Template.Backend.CsharpClient.SpecificClients
 {
@@ -36,6 +35,26 @@ namespace Template.Backend.CsharpClient.SpecificClients
         Task<Employee> AddAsync(Employee employee, AuthenticationHeaderValue authHeaderValue = null);
 
         /// <summary>
+        /// Adds the specified Employee List.
+        /// </summary>
+        /// <param name="list">The list.</param>
+        /// <param name="authHeaderValue">The authentication header value.</param>
+        /// <returns>
+        /// list
+        /// </returns>
+        IEnumerable<Employee> Add(IEnumerable<Employee> list, AuthenticationHeaderValue authHeaderValue = null);
+
+        /// <summary>
+        /// Adds the specified Employee List.
+        /// </summary>
+        /// <param name="list">The list.</param>
+        /// <param name="authHeaderValue">The authentication header value.</param>
+        /// <returns>
+        /// list
+        /// </returns>
+        Task<IEnumerable<Employee>> AddAsync(IEnumerable<Employee> list, AuthenticationHeaderValue authHeaderValue = null);
+
+        /// <summary>
         /// Gets all Employee.
         /// </summary>
         /// <param name="authHeaderValue">The authentication header value.</param>
@@ -57,23 +76,57 @@ namespace Template.Backend.CsharpClient.SpecificClients
         /// Gets Employee with the specified Id.
         /// </summary>
         /// <param name="id">The Id.</param>
-        /// <param name="depth">The maximum level to achieve for navigation properties serialization.</param>
         /// <param name="authHeaderValue">The authentication header value.</param>
         /// <returns>
         /// Employee object
         /// </returns>
-        Employee Get(int id, int depth = 1, AuthenticationHeaderValue authHeaderValue = null);
+        Employee Get(int id, AuthenticationHeaderValue authHeaderValue = null);
 
         /// <summary>
         /// Gets Employee with the specified Id.
         /// </summary>
         /// <param name="id">The Id.</param>
-        /// <param name="depth">The maximum level to achieve for navigation properties serialization.</param>
         /// <param name="authHeaderValue">The authentication header value.</param>
         /// <returns>
         /// Employee object
         /// </returns>
-        Task<Employee> GetAsync(int id, int depth = 1, AuthenticationHeaderValue authHeaderValue = null);
+        Task<Employee> GetAsync(int id, AuthenticationHeaderValue authHeaderValue = null);
+
+        /// <summary>
+        /// Count.
+        /// </summary>
+        /// <param name="authHeaderValue">The authentication header value.</param>
+        /// <returns>
+        /// Count
+        /// </returns>
+        int Count(AuthenticationHeaderValue authHeaderValue = null);
+
+        /// <summary>
+        /// Count.
+        /// </summary>
+        /// <param name="authHeaderValue">The authentication header value.</param>
+        /// <returns>
+        /// Count
+        /// </returns>
+        Task<int> CountAsync(AuthenticationHeaderValue authHeaderValue = null);
+
+        /// <summary>
+        /// Gets Employee with the specified Id.
+        /// </summary>
+        /// <param name="id">The Id.</param>
+        /// <param name="nestedObjectDepth">The maximum level to achieve for navigation properties serialization.</param>
+        /// <param name="authHeaderValue">The authentication header value.</param>
+        /// <returns>Employee object</returns>
+        Employee Get(int id, NestedObjectDepth nestedObjectDepth, AuthenticationHeaderValue authHeaderValue = null);
+
+        /// <summary>
+        /// Gets Employee with the specified Id.
+        /// </summary>
+        /// <param name="id">The Id.</param>
+        /// <param name="nestedObjectDepth">The maximum level to achieve for navigation properties serialization.</param>
+        /// <param name="authHeaderValue">The authentication header value.</param>
+        /// <returns>Employee object</returns>
+        Task<Employee> GetAsync(int id, NestedObjectDepth nestedObjectDepth, AuthenticationHeaderValue authHeaderValue = null);
 
         /// <summary>
         /// Deletes Employee with the specified Id.
@@ -244,7 +297,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         {
             try
             {
-                string values = ToJson(employee);
+                string values = JsonSerializer.Serialize(employee);
                 return Add(ApiConfiguration.EmployeeApiRoute, values, authHeaderValue);
             }
             catch (BusinessException)
@@ -261,7 +314,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         {
             try
             {
-                string values = ToJson(employee);
+                string values = JsonSerializer.Serialize(employee);
                 return await AddAsync(ApiConfiguration.EmployeeApiRoute, values, authHeaderValue);
             }
             catch (BusinessException)
@@ -272,6 +325,28 @@ namespace Template.Backend.CsharpClient.SpecificClients
             {
                 throw new Exception(ex.Message);
             }
+        }
+
+        public IEnumerable<Employee> Add(IEnumerable<Employee> list, AuthenticationHeaderValue authHeaderValue = null)
+        {
+            string values = JsonSerializer.Serialize(list);
+            return AddRange(ApiConfiguration.EmployeeApiItemsRoute, values, authHeaderValue);
+        }
+
+        public async Task<IEnumerable<Employee>> AddAsync(IEnumerable<Employee> list, AuthenticationHeaderValue authHeaderValue = null)
+        {
+            string values = JsonSerializer.Serialize(list);
+            return await AddRangeAsync(ApiConfiguration.EmployeeApiItemsRoute, values, authHeaderValue);
+        }
+
+        public int Count(AuthenticationHeaderValue authHeaderValue = null)
+        {
+            return Count(ApiConfiguration.EmployeeApiCountRoute, authHeaderValue);
+        }
+
+        public async Task<int> CountAsync(AuthenticationHeaderValue authHeaderValue = null)
+        {
+            return await CountAsync(ApiConfiguration.EmployeeApiCountRoute, authHeaderValue);
         }
 
         public IEnumerable<Employee> GetAll(AuthenticationHeaderValue authHeaderValue = null)
@@ -286,28 +361,32 @@ namespace Template.Backend.CsharpClient.SpecificClients
 
         public void Delete(int ID, AuthenticationHeaderValue authHeaderValue = null)
         {
-             Delete(ApiConfiguration.EmployeeApiRoute + ID.ToString(), authHeaderValue);
+            Delete(ApiConfiguration.EmployeeApiRoute + ID.ToString(), authHeaderValue);
         }
 
         public async Task DeleteAsync(int ID, AuthenticationHeaderValue authHeaderValue = null)
         {
-           await DeleteAsync(ApiConfiguration.EmployeeApiRoute + ID.ToString(), authHeaderValue);
+            await DeleteAsync(ApiConfiguration.EmployeeApiRoute + ID.ToString(), authHeaderValue);
         }
 
-        public Employee Get(int id, int depth = 1, AuthenticationHeaderValue authHeaderValue = null)
+        public Employee Get(int id, AuthenticationHeaderValue authHeaderValue = null)
         {
-            if (depth != 1)
-                return GetAsObject(ApiConfiguration.EmployeeApiRoute + id.ToString() + "/" + depth.ToString(), authHeaderValue);
-
             return GetAsObject(ApiConfiguration.EmployeeApiRoute + id.ToString(), authHeaderValue);
         }
 
-        public async Task<Employee> GetAsync(int id, int depth = 1, AuthenticationHeaderValue authHeaderValue = null)
+        public async Task<Employee> GetAsync(int id, AuthenticationHeaderValue authHeaderValue = null)
         {
-            if (depth != 1)
-                return await GetAsObjectAsync(ApiConfiguration.EmployeeApiRoute + id.ToString() + "/" + depth.ToString(), authHeaderValue);
-
             return await GetAsObjectAsync(ApiConfiguration.EmployeeApiRoute + id.ToString(), authHeaderValue);
+        }
+
+        public Employee Get(int id, NestedObjectDepth nestedObjectDepth, AuthenticationHeaderValue authHeaderValue = null)
+        {
+            return GetAsObject(ApiConfiguration.EmployeeApiRoute + id.ToString() + "/" + nestedObjectDepth.ToString(), authHeaderValue);
+        }
+
+        public async Task<Employee> GetAsync(int id, NestedObjectDepth nestedObjectDepth, AuthenticationHeaderValue authHeaderValue = null)
+        {
+            return await GetAsObjectAsync(ApiConfiguration.EmployeeApiRoute + id.ToString() + "/" + nestedObjectDepth.ToString(), authHeaderValue);
         }
 
         public IEnumerable<Employee> GetPagedList(int pageNo, int pageSize, AuthenticationHeaderValue authHeaderValue = null)
@@ -315,7 +394,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
             string url = string.Empty.AddQuery(nameof(pageNo), pageNo.ToString())
                                      .AddQuery(nameof(pageSize), pageSize.ToString());
 
-            return GetObjects(ApiConfiguration.EmployeeApiRoute + "?" + url, authHeaderValue);
+            return GetObjects(ApiConfiguration.EmployeeApiPaginationRoute + "?" + url, authHeaderValue);
         }
 
         public async Task<IEnumerable<Employee>> GetPagedListAsync(int pageNo, int pageSize, AuthenticationHeaderValue authHeaderValue = null)
@@ -323,14 +402,14 @@ namespace Template.Backend.CsharpClient.SpecificClients
             string url = string.Empty.AddQuery(nameof(pageNo), pageNo.ToString())
                                      .AddQuery(nameof(pageSize), pageSize.ToString());
 
-            return await GetObjectsAsync(ApiConfiguration.EmployeeApiRoute + "?" + url, authHeaderValue);
+            return await GetObjectsAsync(ApiConfiguration.EmployeeApiPaginationRoute + "?" + url, authHeaderValue);
         }
 
         public void Update(int ID, Employee employee, AuthenticationHeaderValue authHeaderValue = null)
         {
             try
             {
-                string values = ToJson(employee, _listDepth);
+                string values = JsonSerializer.Serialize(employee);
                 base.Update(ApiConfiguration.EmployeeApiRoute + ID.ToString(), values, authHeaderValue);
             }
             catch (BusinessException)
@@ -347,7 +426,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
         {
             try
             {
-                string values = ToJson(employee, _listDepth);
+                string values = JsonSerializer.Serialize(employee);
                 await base.UpdateAsync(ApiConfiguration.EmployeeApiRoute + ID.ToString(), values, authHeaderValue);
             }
             catch (BusinessException)
@@ -387,7 +466,7 @@ namespace Template.Backend.CsharpClient.SpecificClients
 
         public async Task RestoreAsync(int id, int auditId, AuthenticationHeaderValue authHeaderValue = null)
         {
-           await RestoreAsync(ApiConfiguration.EmployeeApiAuditListRoute + id.ToString() + "/" + auditId.ToString(), authHeaderValue);
+            await RestoreAsync(ApiConfiguration.EmployeeApiAuditListRoute + id.ToString() + "/" + auditId.ToString(), authHeaderValue);
         }
 
         public IEnumerable<Employee> GetAllSnapshot(DateTime datetime, AuthenticationHeaderValue authHeaderValue = null)
