@@ -24,6 +24,7 @@ namespace Template.Backend.IntegrationTest
                 {
                     context.Database.EnsureDeleted();
                     context.Database.EnsureCreated();
+                    context.Database.SetCommandTimeout(TimeSpan.FromSeconds(120));
                 }
             }
         }
