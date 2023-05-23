@@ -242,7 +242,7 @@ public const string FooPrefix = "api/v{version:apiVersion}/Foos";
   ```
 
 ## Support
-If you are having problems, please let us know by [raising a new issue](https://github.com/fouadapps/Template.Backend/issues/new/choose).
+If you are having problems, please let us know by [raising a new issue](https://github.com/fouad-elouad/Template.Backend/issues/new/choose).
 
 ## License
 This project is licensed with the [MIT license](LICENSE).
