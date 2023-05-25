@@ -23,6 +23,6 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore ./Template.Backend.Api/Template.Backend.Api.csproj
     - name: Build
-      run: dotnet build ./Template.Backend.Api/Template.Backend.Api.csproj --configuration Release --no-restore
+      run: dotnet build ./Template.Backend.sln --configuration Release --no-restore
     - name: Test
       run: dotnet test ./Template.Backend.sln --no-build --verbosity normal --configuration Release
