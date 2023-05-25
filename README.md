@@ -84,8 +84,47 @@ When you run the application the database will be automatically created (if nece
  
  ### Docker
 
+ Make sure you have docker installed (on windows install docker desktop)
+
  In order to build and start the solution with Docker, you will need to point to a SQL Server instance instead of using LocalDB (supported only on windows). 
 
+ ### Docker Compose
+
+ There are some prerequisites for using the included docker-compose.yml files:
+
+ You can find [Microsoft Docs](https://learn.microsoft.com/en-us/aspnet/core/security/docker-compose-https?view=aspnetcore-7.0) that describe the steps required for Windows, macOS, and Linux.
+
+ #### Windows using Linux containers
+
+ 1- Create and install an https certificate:
+
+    ```
+    dotnet dev-certs https -ep $env:USERPROFILE\.aspnet\https\aspnetapp.pfx -p yourStrongP@ssw0rd
+    ```
+
+ Make sure you have the same password ```yourStrongP@ssw0rd``` in the docker-compose.yml file ```ASPNETCORE_Kestrel__Certificates__Default__Password=yourStrongP@ssw0rd``` configuration
+
+ 2- It's possible that the above step gives you an `A valid HTTPS certificate is already present` error.
+   In that case you will have to run the following command, and then  `Re-Run Step 1`
+
+    ```
+     dotnet dev-certs https --clean
+    ```
+
+ 3- Trust the certificate
+
+    ```
+     dotnet dev-certs https --trust
+    ```
+
+ 4- Build and run docker containers
+    
+    Move to ```docker-compose.yml``` file directory
+
+    ```
+     docker-compose -f 'docker-compose.yml' up --build
+    ```
+    
  ### Add New Model
  
 1- Create a new class for the new model: In the Models folder of the project, create a new class for the new model you want to add. Give the class a descriptive name that reflects what the model represents.
