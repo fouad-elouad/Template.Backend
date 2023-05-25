@@ -98,32 +98,32 @@ When you run the application the database will be automatically created (if nece
 
  1- Create and install an https certificate:
 
-    ```
+```
     dotnet dev-certs https -ep $env:USERPROFILE\.aspnet\https\aspnetapp.pfx -p yourStrongP@ssw0rd
-    ```
+```
 
  Make sure you have the same password ```yourStrongP@ssw0rd``` in the docker-compose.yml file ```ASPNETCORE_Kestrel__Certificates__Default__Password=yourStrongP@ssw0rd``` configuration
 
  2- It's possible that the above step gives you an `A valid HTTPS certificate is already present` error.
    In that case you will have to run the following command, and then  `Re-Run Step 1`
 
-    ```
-     dotnet dev-certs https --clean
-    ```
+```
+ dotnet dev-certs https --clean
+```
 
  3- Trust the certificate
 
-    ```
-     dotnet dev-certs https --trust
-    ```
+```
+ dotnet dev-certs https --trust
+```
 
  4- Build and run docker containers
     
-    Move to ```docker-compose.yml``` file directory
+ Move to ```docker-compose.yml``` file directory
 
-    ```
-     docker-compose -f 'docker-compose.yml' up --build
-    ```
+```
+ docker-compose -f 'docker-compose.yml' up --build
+```
     
  ### Add New Model
  
