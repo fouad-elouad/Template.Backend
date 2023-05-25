@@ -25,4 +25,4 @@ jobs:
     - name: Build
       run: dotnet build ./Template.Backend.Api/Template.Backend.Api.csproj --configuration Release --no-restore
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test ./Template.Backend.sln --no-build --verbosity normal
