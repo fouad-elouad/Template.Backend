@@ -176,20 +176,20 @@ namespace Template.Backend.Model.Audit.Entities
  5- Add Database configuration for new models
 
  ```csharp
-class FooConfiguration : EntityTypeConfiguration<Foo>
+class FooConfiguration : IEntityTypeConfiguration<Foo>
     {
-        public FooConfiguration()
+        public void Configure(EntityTypeBuilder<Foo> builder)
         {
-            ToTable("Foos");
-            Property(a => a.Name).IsRequired()
+            builder.ToTable("Foos");
+            builder.Property(a => a.Name).IsRequired()
         }
     }
     
-    class FooAuditConfiguration : EntityTypeConfiguration<FooAudit>
+    class FooAuditConfiguration : IEntityTypeConfiguration<FooAudit>
     {
-        public FooAuditConfiguration()
+        public void Configure(EntityTypeBuilder<Foo> builder)
         {
-            ToTable("FooAudit");
+            builder.ToTable("FooAudit");
         }
     }
  ```
@@ -203,7 +203,7 @@ class FooConfiguration : EntityTypeConfiguration<Foo>
   ```csharp
   public class FooRepository : RepositoryBase<Foo>, IFooRepository
     {
-        public FooRepository(IDbFactory dbFactory) : base(dbFactory)
+        public FooRepository(StarterDbContext dbContext) : base(dbContext)
         {
         }
     }
@@ -260,6 +260,7 @@ public const string FooPrefix = "api/v{version:apiVersion}/Foos";
   
    ```csharp
   
+    [ApiController]
     [ApiVersion("1")]
     [Route(ApiRouteConfiguration.FooPrefix)]
     public class FooApiController : BaseApiController<Foo, FooAudit>
